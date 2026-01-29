@@ -1,0 +1,12 @@
+\newcounter{compt}\setcounter{compt}{1}%
+\loop
+\begin{tabular}{m{1cm}m{6.25cm}m{1cm}m{6.25cm}}
+\ifnum\thecompt<90\gdef\scl{0.325}\else\gdef\scl{1}\fi%
+\tiny{\No\thecompt:}&\hfil\psvectorian[scale=\scl]{\thecompt}\hfil&
+\addtocounter{compt}{1}
+\ifnum\thecompt<90\gdef\scl{0.325}\else\gdef\scl{1}\fi%
+\hfill\tiny{\No\thecompt:}&
+\hfil\psvectorian[scale=\scl]{\thecompt}\hfil\\
+\end{tabular}\par
+\ifnum\thecompt<196 \addtocounter{compt}{1}
+\repeat

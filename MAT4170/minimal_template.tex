@@ -1,0 +1,174 @@
+\documentclass{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{mathtools, amsfonts, amsthm}
+
+\usepackage{psvectorian} % This is the only specific package you need
+\usepackage[svgnames]{xcolor}
+
+\title{HW 0}
+\author{Sam Ly}
+
+\begin{document}
+\maketitle
+
+\section*{Exercise 1 [2 pts]}
+
+I posted an image of my music player and headphones into the 
+Discord introduction channel. Finding the assignment on Gradescope
+was straightforward enough.
+
+\pagebreak
+
+\section*{Exercise 2 [8 pts]}
+
+\begin{enumerate}
+    \item[i.] {
+        I already feel comfortable with \LaTeX.
+    }
+    \item[iv.] {
+        First, when using enumerate tag, for each item, using the 
+        square braces lets you define custom "numbers" for the list. Here,
+        we use this feature to use Roman numerals and skip some numbers.
+        \begin{verbatim}
+            \begin{enumerate}
+                \item[i.] First.
+                \item[iii.] Third!
+            \end{enumerate}
+        \end{verbatim}
+
+        Then, you can use `.sty' files to add whimsical ornaments to your
+        document! This is from the \begin{verbatim}
+            \usepackage{psvectorian}
+        \end{verbatim}
+        package.
+
+        \psvectorian[width=0.25\textwidth]{105}
+        \psvectorian[width=0.4\textwidth]{84}
+        \psvectorian[width=0.25\textwidth]{106}
+
+        Not sure how well the discord bot will handle this.
+    }
+\end{enumerate}
+
+\section*{Exercise 3 [4 pts]}
+
+\begin{enumerate}
+    \item {
+        Watched.
+    }
+    \item {
+        Although I was able to get the ``gist'' of the video, some details left 
+        me a little bit confused. The first is what he means at 14:30, when he 
+        says that certain groups can be ``factored'' into smaller groups. I get 
+        that at some point, groups can be viewed as their own objects, but for 
+        now, I struggle to conceptualize the act of "composing" groups themselves.
+        It feels like there is some higher level of abstraction that I am not yet 
+        familiar with. Another thing I am curious about is what the ``families''
+        of groups entail. What properties constitute a family? He explains some 
+        basic examples, but I want to see more of what families are.
+    }
+\end{enumerate}
+
+\section*{Exercise 4 [3 pts]}
+
+Although I have already read this article, I found some new ideas that I will 
+try to implement more heavily. First, I want to get better at deciding what is 
+important to say. Although I feel as though I \emph{can} get my ideas accross,
+sometimes I feels like I am not necessarily doing it in the most effective way.
+Especially in a more abstract (literally) class, where abstractions are literally
+the point, I want to get better at dicerning the level of abstract I should 
+explain to. Secondly, I want to think more deeply about the structure of my 
+arguments. I feel as though the arguments in this class may grow longer, increasing
+the importance of good structure.
+
+
+\section*{Choice Exercise 5 [3 pts]}
+
+\begin{enumerate}
+    \item[a.] {
+        I understood most of what I went through. For example, the process of 
+        listing out the composition of rotations was relatively straightforward.
+    }
+    \item[b.] {
+        One thing I didn't quite fully grasp is page 9. Although I can see that 
+        rotations can compose together to form a specific rotation that we have 
+        seen, I struggle to see the exact formula for the square and triangle. 
+    }
+    \item[c.] {
+        One thing I am curious about is the impact of spacial dimensions when counting
+        symmetries. For example, I noticed that rotations about axis that are 
+        parallel to the plain of the shape itself in 3D is analogous to flips 
+        in 2D. I feel as though this is significant,
+        as it may allow us to conceptualize higher dimensional symmetries by 
+        building lower dimensional analogs.
+    }
+\end{enumerate}
+
+\section*{Choice Exercise 7 [5 pts]}
+
+\begin{enumerate}
+    \item[2.] {
+        \begin{enumerate}
+            \item {
+                Let
+
+                \[A =
+                    \begin{bmatrix}
+                    a^1_1 & a^1_2 & \cdots & a^1_n \\
+                    a^2_1 & a^2_2 & \cdots & a^2_n \\
+                    \vdots & \vdots & \ddots & \vdots \\
+                    a^m_1 & a^m_2 & \cdots & a^m_n
+                    \end{bmatrix},
+                B = 
+                \begin{bmatrix}
+                    
+                    b^1_1 & b^1_2 & \cdots & b^1_n \\
+                    b^2_1 & b^2_2 & \cdots & b^2_n \\
+                    \vdots & \vdots & \ddots & \vdots \\
+                    b^m_1 & b^m_2 & \cdots & b^m_n
+                \end{bmatrix}.
+                \]
+
+                Then, we have \(C = AB\) where
+                \[C = 
+                \begin{bmatrix}
+                    
+                    c^1_1 & c^1_2 & \cdots & c^1_n \\
+                    c^2_1 & c^2_2 & \cdots & c^2_n \\
+                    \vdots & \vdots & \ddots & \vdots \\
+                    c^m_1 & c^m_2 & \cdots & c^m_n
+                \end{bmatrix}.
+                \]
+                such that \(c^i_j = \sum{a^i_k b^k_j}\).
+            }
+            \item {
+                To show that the the operation of matrix multiplication is 
+                associative, we must show that \(A(BM) = (AB)M\), where 
+                \(A, B,\) and \(M\) are \(n\times n\) matrices. By the definition
+                of matrix multiplication, we see that 
+                \[(AB)^i_j = \sum_k^n{a^i_kb^k_j}.\]
+                Then, we see that
+                \[((AB)M)^i_j = \sum_k^n{(AB)^i_k m^k_j}.\]
+                By expanding \((AB)^i_j\), we get 
+                \[((AB)M)^i_j = \sum_k^n{\sum_l^n{a^i_l b^l_j} m^k_j}.\]
+
+                Then, we perform similar manipulations for \(A(BM)\) to see that
+                \[(BM)^i_j = \sum_k^n{b^i_k m^k_j}.\]
+
+                Then, we see that 
+                \[(A(BM))^i_j = \sum_l^n{a^i_l (BM)^i_j}.\]
+
+                By expanding \((BM)^i_j\), we see 
+                \[(A(BM))^i_j = \sum_l^n{a^i_l \sum_k^n{b^i_k m^k_j}},\]
+                
+                which can be rewritten as
+                \[(A(BM))^i_j = \sum_l^n{\sum_k^n a^i_l b^i_k m^k_j}.\]
+
+                Thus, \((A(BM) = (AB)M\) for any \(n \times n\) matrices \(A, B, C\),
+                so matrix multiplication is associative.
+            }
+        \end{enumerate}
+    }
+\end{enumerate}
+
+\end{document}

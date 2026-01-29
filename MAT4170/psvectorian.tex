@@ -1,0 +1,173 @@
+\documentclass[11pt,a4paper,frenchb]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc} 
+\usepackage{lmodern}
+\usepackage[charter]{mathdesign}
+\renewcommand{\ttdefault}{lmtt}
+\usepackage[margin=2.25cm,headheight=15pt]{geometry}
+\usepackage[svgnames]{xcolor}
+\usepackage[]{pstricks}
+\usepackage[blur]{bclogo}
+\usepackage{psvectorian}
+\usepackage{fancyvrb,array}
+\usepackage{fancyhdr,lastpage}%style fancy
+\usepackage[babel=true]{microtype}
+\usepackage{babel}
+\usepackage[pdfstartview = FitH,colorlinks, urlcolor=blue, linkcolor=blue]{hyperref}
+
+%\definecolor{mycolor}{rgb}{0,1,1}
+%\pagecolor{Moccasin}
+
+\hypersetup{% Information sur le document
+pdfauthor = {P.Fradin},% Auteurs
+pdftitle = {psvectorian},% Titre du document
+pdfsubject = {Documentation de psvectorian},% Sujet
+%pdfkeywords = {},% Mots-clefs
+%pdfproducer = {}
+} %
+
+\pagestyle{fancyplain}
+\renewcommand{\sectionmark}[1]{\markright{#1}}
+\lhead{\rightmark}
+\rhead{\textsl{psvectorian v0.4}}
+\cfoot{\thepage/\pageref{LastPage}}%
+
+\title{%
+\renewcommand*{\psvectorianDefaultColor}{Maroon}%
+\rput[r](-3pt,3pt){\psvectorian[scale=0.6]{72}}%
+\Huge{Motifs d'ornements}%
+\rput[l](3pt,3pt){\psvectorian[scale=0.6]{73}}\\
+\psvectorian[scale=0.6]{85}%
+}
+
+\author{\href{mailto:patrick.fradin@gmail.com}{P. Fradin}}%
+\newcommand*{\coloropt}{violet}
+\newcommand*{\opt}[2]{\textcolor{\coloropt}{#1 = $\langle$ #2 $\rangle$}}
+
+\newenvironment*{showCode}[1]{%
+\gdef\titre{#1}%
+\VerbatimOut{file.txt}}%
+{%
+\endVerbatimOut
+\begin{bclogo}[logo=\bccrayon,couleurTexte=Maroon,couleur=AliceBlue,epBord=0.4,barre=wave,blur,couleurOmbre=gray!80,couleurBarre=DarkGreen]{\titre}%
+\begin{small}%
+\itshape%
+\VerbatimInput{file.txt}%
+\end{small}%
+\end{bclogo}
+\begin{center}
+\input{file.txt}%
+\end{center}
+}%
+
+\begin{document}
+
+\maketitle
+
+\rput[tl](-1cm,0){\psvectorian[opacity=0.1,width=16cm]{103}}%
+
+\begin{abstract}
+Ce document dresse la liste des $196$ motifs d'ornements fournis avec le paquet \emph{psvectorian.sty}. Ceux-ci sont contenus dans le fichier prologue pour postscript \emph{psvectorian.pro}, et sont utilisables avec \emph{pstricks}. Ils ont été extraits d'un fichier \emph{eps} que l'on peut trouver sur le site:
+
+{\centering \url{http://www.vectorian.net/} (free sample)\par}
+ C'est d'ailleurs avec l'aimable autorisation de l'auteur de ce site, Vincent \textsc{Le Moign}, que ces ornements peuvent être distribués au format pstricks pour \LaTeX. 
+
+Je remercie Herbert \textsc{Voss} pour son aide dans la mise au point de ce paquet. Je remercie également Jean-Michel \textsc{Sarlat} pour la mise à
+disposition de toutes les ressources que l'on trouve sur le serveur Syracuse \url{http://melusine.eu.org/syracuse/}, 
+et pour tout le travail de \og mise en forme\fg{} qu'il réalise. Je remercie également Juergen \textsc{Gilg} qui est à l'origine de l'option \emph{opacity}.
+\end{abstract}
+
+\hfil\psvectorian[height=2mm]{88}\hfil
+
+\begin{center}
+\begin{minipage}{14cm}%
+\tableofcontents
+\end{minipage}
+\end{center}
+
+\bigskip
+\hfil\psvectorian[height=2mm]{88}\hfil
+
+\vfill
+
+\hfil\psvectorian[scale=0.95,color=Maroon]{60}\hfil
+
+\vfill
+
+\clearpage
+
+\section{La macro \emph{psvectorian}}
+
+L'affichage d'un motif à l'endroit $(x,y)$ se fait avec la macro \verb|\rput| de \emph{pstricks}, de la manière suivante:\par\medskip
+{\centering \textbf{$\backslash$rput[refpoint]\{angle\}(x,y)\{$\backslash$psvectorian[options]\{numéro\}\} }\par}
+\medskip
+
+La macro \verb|\psvectorian[options]{numéro}| dessine le motif correspondant au numéro demandé, celui-ci doit être entre $1$ et $196$. Cette macro peut aussi s'utiliser seule, elle représente un environnement \emph{pspicture} qui sera donc placé au point courant. Les options possibles sont:
+
+\medskip
+\begin{itemize}
+\item \opt{scale}{échelle}. L'échelle est un nombre entre $0$ et $1$ ($1$ par défaut).
+\item \opt{opacity}{nombre}. L'opacité est un nombre entre $0$ et $1$ qui permet d'avoir de la transparence lorsque celui-ci est strictement inférieur à $1$  ($1$ par défaut).
+\item \opt{width}{nombre+unité} permet d'imposer une largeur. Si la hauteur n'est pas précisée, alors le ratio est conservé.
+\item \opt{height}{nombre+unité} permet d'imposer une hauteur. Si la largeur n'est pas précisée, alors le ratio est conservé.
+\item \opt{color}{couleur} permet de définir la couleur du motif. Par défaut la couleur est définie par la macro \verb|\psvectorianDefaultColor|, cette macro peut-être redéfinie par l'utilisateur, elle contient la couleur \emph{black} au chargement du paquet.
+\item \opt{flip}{true/false}. Avec la valeur \emph{true} le motif subit une symétrie axiale, l'axe est horizontal et passe par le centre de la boîte englobante. La valeur par défaut est \emph{false}.
+\item \opt{mirror}{true/false}. Avec la valeur \emph{true} le motif subit une symétrie axiale, l'axe est vertical et passe par le centre de la boîte englobante. La valeur par défaut est \emph{false}.
+\end{itemize}
+
+
+\section{Exemples}
+
+\begin{showCode}{Dans un \emph{pspicture}}
+\begin{pspicture}(-5,-5)(5,5)%
+\renewcommand*{\psvectorianDefaultColor}{blue}%
+\psframe[linewidth=0.4pt,fillstyle=solid,fillcolor=Beige](-5,-5)(5,5)%
+%haut+bas
+\rput[tl](-3,5){\psvectorian[width=6cm]{71}}
+\rput[bl](-3,-5){\psvectorian[width=6cm,flip]{71}}
+%coins
+\rput[tl](-5,5){\psvectorian[width=2cm]{63}}
+\rput[tr](5,5){\psvectorian[width=2cm,mirror]{63}}
+\rput[bl](-5,-5){\psvectorian[width=2cm,flip]{63}}
+\rput[br](5,-5){\psvectorian[width=2cm,flip,mirror]{63}}
+% cotes
+\rput[bl]{-90}(-5,3){\psvectorian[width=6cm]{46}}
+\rput[bl]{90}(5,-3){\psvectorian[width=6cm]{46}}
+%texte+soulignement+chapeau
+\rput(0,0){\Huge Ornaments}
+\rput[t](0,-0.5){\psvectorian[width=5cm]{75}}
+\rput[b](0,0.5){\psvectorian[width=5cm]{69}}
+%oiseaux
+\rput[tr]{-30}(-1,2.5){\psvectorian[width=2cm]{113}}
+\rput[tl]{30}(1,2.5){\psvectorian[width=2cm,mirror]{113}}
+\end{pspicture}%
+\end{showCode}
+
+\bigskip
+
+\begin{showCode}{Hors d'un \emph{pspicture}}
+\rput[r](0pt,3pt){\psvectorian[color=black,height=1cm]{102}}%
+\Large Texte%
+\rput[l](0pt,3pt){\psvectorian[color=black,height=1cm,mirror]{102}}% 
+\end{showCode}
+
+
+\section{La liste des motifs}
+
+
+\begin{showCode}{Code}
+\newcounter{compt}\setcounter{compt}{1}%
+\loop
+\begin{tabular}{m{1cm}m{6.25cm}m{1cm}m{6.25cm}}
+\ifnum\thecompt<90\gdef\scl{0.325}\else\gdef\scl{1}\fi%
+\tiny{\No\thecompt:}&\hfil\psvectorian[scale=\scl]{\thecompt}\hfil&
+\addtocounter{compt}{1}
+\ifnum\thecompt<90\gdef\scl{0.325}\else\gdef\scl{1}\fi%
+\hfill\tiny{\No\thecompt:}&
+\hfil\psvectorian[scale=\scl]{\thecompt}\hfil\\
+\end{tabular}\par
+\ifnum\thecompt<196 \addtocounter{compt}{1}
+\repeat
+\end{showCode}
+
+\end{document}
