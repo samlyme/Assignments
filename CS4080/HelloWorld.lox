@@ -1,0 +1,16 @@
+fun helloWorld() {
+    print "Hello, World!";
+}
+
+class MyClass {
+    init(name) {
+        this.name = name;
+    }
+
+    printName() {
+        print this.name;
+    }
+}
+
+var myObject = MyClass("bob");
+myObject.printName();
