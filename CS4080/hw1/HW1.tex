@@ -79,7 +79,31 @@ class LinkedListStack {
     }
 }
         \end{lstlisting}
+
+        This behaves as I expect since Lox is meant to be a simple language.
+        Nested classes introduce a lot of complexity into the implementation.
+    }
+
+    \item {
+        One unanswered question I have relates to the idea of ``truthy-ness''.
+        In languages like Python and JavaScript, certain can evaluate to values 
+        when used as the predicate for an ``if'' statement. Also, these two 
+        languages even have different implementations of truthy-ness!
+
+        Example in JS:
+        \lstinputlisting[]{./truthyness.js}
+
+        Example in Python:
+        \lstinputlisting[language=Python]{./truthyness.py}
+    }
+
+    \item {
+        The most important feature that is missing in my opinion is the ability 
+        to define return types for functions. I am a big fan of type safety, 
+        but I am aware that type safety is quite difficult to implement
     }
 \end{enumerate}
+
+
 
 \end{document}
