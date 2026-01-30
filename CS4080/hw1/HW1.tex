@@ -1,0 +1,44 @@
+\documentclass{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{mathtools, amsfonts, amsthm}
+
+\usepackage{listings}
+
+
+\title{HW 0}
+\author{Sam Ly}
+
+\begin{document}
+\maketitle
+
+\section*{Chapter 1}
+
+\begin{enumerate}
+    \item {
+        One potential edge case that wasn't defined in the book is nested classes.
+        For example, if you were to make a Linked List class, the Node class may 
+        be an inner class that doesn't need to exist outside of the Linked List class 
+        scope. 
+
+        Attempting to use inner classes actually leads to a compile error:
+
+        \begin{lstlisting}
+class LinkedListStack {
+    class Node {
+        init(data, next) {
+            self.data = data;
+            self.next = next;
+        }
+    }
+
+    init() {
+        self.head = nil;
+    }
+    // ...
+}
+
+        \end{lstlisting}
+    }
+\end{enumerate}
+
+\end{document}
