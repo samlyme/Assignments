@@ -1,10 +1,10 @@
-
 class Node {
     init(data, next) {
         this.data = data;
         this.next = next;
     }
 }
+
 class LinkedListStack {
 
     init() {
@@ -39,4 +39,4 @@ stack.push("second");
 
 print stack.pop().data;
 print stack.pop().data;
-print stack.pop(); // should return nil!
+print stack.pop(); // should return n

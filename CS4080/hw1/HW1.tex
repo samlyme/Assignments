@@ -37,6 +37,47 @@ class LinkedListStack {
     // ...
 }
 
+---------------------------------------------
+[line 2] Error at 'class': Expect method name.
+
+        \end{lstlisting}
+
+        The correct way to implement this is to write:
+        \begin{lstlisting}
+class Node {
+    init(data, next) {
+        this.data = data;
+        this.next = next;
+    }
+}
+
+class LinkedListStack {
+
+    init() {
+        this.head = nil;
+    }
+
+    push(data) {
+        if (this.head == nil) {
+            this.head = Node(data, nil);
+        }
+        else {
+            var next = Node(data, this.head);
+            this.head = next;
+        }
+    }
+
+    pop() {
+        if (this.head == nil) {
+            return nil;
+        } 
+        else {
+            var out = this.head;
+            this.head = this.head.next;
+            return out;
+        }
+    }
+}
         \end{lstlisting}
     }
 \end{enumerate}
