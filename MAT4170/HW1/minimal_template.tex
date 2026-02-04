@@ -46,11 +46,19 @@ Tools and resources used: On Exercise 1, I used ChatGPT to help me figure out ho
     {\color{brown} Difficulty: 1/10}.
     {\color{green!50!black} Self-assessed score: 1}.
     {\color{magenta} Questions/Feedback: None.}
+  \item[Exercise 8]
+    {\color{red} Points attempted: 7}.
+    {\color{blue} Time spent: 40 minutes}.
+    {\color{brown} Difficulty: 4/10}.
+    {\color{green!50!black} Self-assessed score: 7}.
+    {\color{magenta} Questions/Feedback: Mathematical correctness.}
 \end{enumerate}
+\pagebreak
 
 \section*{Exercise 2 [1]}
-
 Done! Posted an image of a marker with rotational symmetry.
+\pagebreak
+
 
 \section*{Exercise 3 [6]}
 \begin{enumerate}
@@ -69,7 +77,7 @@ Done! Posted an image of a marker with rotational symmetry.
     \item {
         In the diagram, let \(a=f_L\) and \(b=s\).
 
-        \includegraphics[width=\linewidth]{ex3.png}
+        \includegraphics[width=0.7\linewidth]{ex3.png}
     }
     \item {
         I used 2 generators.
@@ -80,6 +88,7 @@ Done! Posted an image of a marker with rotational symmetry.
         then swapping.
     }
 \end{enumerate}
+\pagebreak
 
 \section*{Exercise 4 [5]}
 \begin{enumerate}
@@ -114,6 +123,7 @@ Done! Posted an image of a marker with rotational symmetry.
         order 4, we have \(2341\). 
     }
 \end{enumerate}
+\pagebreak
 
 \section*{Exercise 5 [1]}
 \begin{enumerate}
@@ -129,6 +139,7 @@ Done! Posted an image of a marker with rotational symmetry.
         The function \(f \circ g\) behaves like \(f\) after \(h\). 
     }
 \end{enumerate}
+\pagebreak
 
 \section*{Exercise 8 [7]} 
 \begin{enumerate}
@@ -183,4 +194,39 @@ Done! Posted an image of a marker with rotational symmetry.
         \lstinputlisting[language=python]{./orders.py}
     }
 \end{enumerate}
+
+\pagebreak
+\section*{Choice Exercise 10 [3 + 3]}
+
+In class, we found that we can represent \(120^\circ\) rotation of the plane (one of the dihedral symmetries) with the matrix \[ R = \begin{pmatrix}   -\frac{1}{2} & -\frac{\sqrt{3}}{2} \\   \frac{\sqrt{3}}{2} & -\frac{1}{2} \\ \end{pmatrix}. \]
+\begin{enumerate}
+    \item {
+        [3] Write down the matrix that corresponds to \(f\), a left-to-right flip, and then write down the matrices for the remaining four dihedral symmetries of the triangle \(D_3\).
+
+        We write the matrix \(F\) to represent the `left-to-right flip' as:
+        \[ 
+            F = 
+            \begin{pmatrix}   
+                -1 & 0 \\   
+                0 & 1 \\ 
+            \end{pmatrix}. 
+        \]
+
+        First, we also define the id symmetry as the identity matrix:
+        \[
+            I =
+            \begin{pmatrix}
+                1 & 0 \\   
+                0 & 1 \\ 
+            \end{pmatrix}.
+        \]
+
+        Then, we can construct all other symmetries of \(D_3\) by composing 
+        \(F\) with \(R\), meaning we take the matrix products of \(F\) and \(R\).
+        By convention, I will apply the \(F\) last.
+
+        So, we also have the symmetries \(R^2\), \(F \times R\), and \(F \times R^2\).
+    }
+\end{enumerate}
+
 \end{document}
