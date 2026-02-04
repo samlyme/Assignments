@@ -1,6 +1,7 @@
 \documentclass{article}
 \usepackage[margin=1in]{geometry}
-\usepackage{mathtools, amsfonts, amsthm, xcolor}
+\usepackage{mathtools, amsfonts, amsthm, xcolor, listings}
+
 
 \title{Title}
 \author{Your name here}
@@ -126,6 +127,60 @@ Done! Posted an image of a marker with rotational symmetry.
     }
     \item {
         The function \(f \circ g\) behaves like \(f\) after \(h\). 
+    }
+\end{enumerate}
+
+\section*{Exercise 8 [7]} 
+\begin{enumerate}
+    \item { 
+        [1]
+    Write the word \(2716543 \in S_7\) in cycle notation.
+
+        The word \(2716543 \in S_7\) is equal to \((2731)(64)\) in cycle notation.
+    }
+    \item {
+        [1] Write the permutation \((3)(514)(726)(8) \in S_8\) as a word.
+
+        The permutation \((514)(726) \in S_8\) is equal to the word \(46351728\).
+    }
+    \item {
+        [1] Let \(\pi = (514)(726)\) and let \(\sigma = (618)(45)\). 
+        Write \(\pi * \sigma\) in cycle notation, where \(*\) means "followed by"?
+
+        Let \(\pi = (514)(726)\) and let \(\sigma = (618)(45)\). 
+        \[\pi * \sigma = (586721).\]
+    }
+    \item {
+    [1]
+    Recall that the order of an element is the smallest positive number of times we have to apply it to get back to the identity.
+    The order of the element \(\tau = (123)(456)(7) \in S_7\) is \(3\) because \(\tau \neq e \neq \tau^2\), but \(\tau^3 = e\)
+    What is the order of the element \((51)(632) \in S_7\)?
+    
+    The order of the element \(\tau = (123)(456)(7) \in S_7\) is \(3\) because \(\tau \neq e \neq \tau^2\), but \(\tau^3 = e\)
+    What is the order of the element \((51)(632) \in S_7\)?
+    }
+    \item {
+        [1]
+    Can you find an element in \(S_5\) that has order \(>5\)? If so, give an example (written in cycle notation). If not, explain why not.
+
+    Yes. The element \((12)(345)\) has an order of 6.
+    }
+    \item {
+        [2]
+        What is the greatest order an element in \(S_7\) can have? In \(S_{10}\)?
+
+        The greatest order of an element in \(S_7\) is (maybe) 12. This is done 
+        by making an element with two cycles, one with ``size'' 3 and order 3 and 
+        another cycle with ``size'' 4 and order 4. Then \(\text{LCM(3, 4)} = 12\).
+        I am actually unsure of whether this is the true max value for the order 
+        of elements in \(S_7\), since that would seemingly require checking many
+        subcases.
+
+        For elements of \(S_{10}\), I believe the max value is 30. In doing this 
+        problem, I decided to write a Python script to brute force all combos.
+        The result ended up being 30.
+
+        \lstinputlisting[language=python]{./orders.py}
     }
 \end{enumerate}
 \end{document}
