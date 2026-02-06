@@ -52,7 +52,39 @@ BAR; // changes to (x), likely an error.
         sure to handle newlines in them. Consider allowing them to nest. Is 
         adding support for nesting more work than you expected? Why?
 
-        
+        Adding support for nesting was not very difficult because it is 
+        very explicit where the comments start and end. We can recursively 
+        call a function that consumes the comment within the block comment method.
+        That way, we can consume all comments properly.
+
+        \begin{lstlisting}
+            // In the scanToken method.
+            case '/': 
+                if (match('/')) {
+                    // A comment goes until the end of the line.
+                    while (peek() != '\n' && !isAtEnd()) advance();
+                } else if (match('*')) {
+                    blockComment();
+                } else {
+                    addToken(SLASH);
+                }
+                break;
+
+    ...
+    private void blockComment() {
+        while (!isAtEnd()) {
+            char curr = advance();
+            if (curr == '\n') line++;
+            if (curr == '*' && match('/')) {
+                break;
+            }
+            if (curr == '/' && match('*')) {
+                blockComment();
+            }
+        }
+    }
+
+        \end{lstlisting}
     }
 \end{enumerate}
 
