@@ -88,4 +88,38 @@ BAR; // changes to (x), likely an error.
     }
 \end{enumerate}
 
+\section*{Chapter 5}
+
+\begin{enumerate}
+    \item I would write this as: 
+
+    \begin{verbatim}
+field -> "." IDENTIFIER;
+field -> "." IDENTIFIER field;
+
+params -> ""; 
+params -> expr
+params -> expr n_params
+
+n_params -> "," expr n_params
+n_params -> "," expr 
+
+method -> "(" params ")"
+
+expr -> expr field;
+expr -> expr method;
+expr -> IDENTIFIER;
+expr -> NUMBER;
+
+    \end{verbatim}
+    \emph{Bonus:} This grammar seems to encode (as the hints imply) some kind of 
+    object member access. First, the `\verb|.|' notation lets you access members via a 
+    identifier, whether that be a field name or method name. Then, it allows you 
+    to call the member, assuming that it is a method, using (...params).
+
+    One strange thing is that I notice you can construct something allong the lines 
+    of \verb*|123(n)| and it would be valid, treating the number as a method name.
+    \item
+\end{enumerate}
+
 \end{document}
