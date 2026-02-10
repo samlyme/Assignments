@@ -119,7 +119,16 @@ expr -> NUMBER;
 
     One strange thing is that I notice you can construct something allong the lines 
     of \verb*|123(n)| and it would be valid, treating the number as a method name.
-    \item
+
+    \item {
+        I chose to use Haskell for this task. For the grammar, I chose Markdown's \emph{inline} syntax.
+        this includes things like \textbf{bold}, \emph{italics}, and links, but not 
+        ``block'' styling like lists or headings. Interestingly, Haskell's type system 
+        feels like a one-to-one mapping of the grammar! Similarly, we can pattern 
+        match each of the expression types and we have a working Markdown AST in Haskell!
+
+        \lstinputlisting[]{md.hs}
+    }
 \end{enumerate}
 
 \end{document}
