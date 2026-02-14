@@ -282,6 +282,53 @@ of the applications of groups and group theory. For example, I believe that they
 could have mentioned how group theory in engineering for describing rotations in 
 3D space, allowing engineers to reason about complex 3D motion.
 
+\section*{Choice Exercise 9 [7]}
 
+\begin{enumerate}
+    \item 
+        Write a function that takes in a positive integer n and outputs a list 
+        of all of the possible orders of elements in \(S_n\). For example, f(10)
+        should output [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 15, 20, 21, 30].
+
+        \lstinputlisting[language=Python, lastline=34]{./orders.py}
+
+    \item 
+        Write a script that outputs \verb|max(f(n))| for \(1 \leq n \leq 20\), and 
+        another script that outputs length(f(n)) for \(1 \leq n \leq 20\).
+
+        \lstinputlisting[language=Python, firstline=36, lastline=43]{./orders.py}
+
+    \item 
+        How many of the \(8! = 40320\) elements of \(S_{8}\) have order \(15\)? 
+        How many have order \(16\)?
+    
+        First, no elements have order 16. When running \verb|f(8)|, we see that 
+        16 is not an element of the output.
+        Then, we can find the elements that have order 15 by counting the number 
+        of ways to create a an element with order 15. In our case, we can enumerate 
+        the \emph{partitions} of 8 that have LCM 15. We also filter for duplicates.
+
+        \lstinputlisting[language=Python, lastline=30]{./count_orders.py}
+
+        Then, we count the number of ways to arange the sequence via the formula:
+        \[C(8, 3) * \frac{3!}{3} * \frac{5!}{5}.\]
+
+        The intuition behind this formula is that we first find the ways to `group'
+        the elements, so we choose 3 for the first group and 5 for the other group.
+        Then, within each group, we can permute them however we want. However,
+        we must remember that certain permutations are equivalent when reasoning 
+        with cycle notation. eg. \((1,2,3) = (2,3,1) = (3,1,2)\). When the permutations 
+        are actually a cyclic permutation, they are considered equal, so we divide 
+        out the ways we can cyclically permute. 
+        \[C(8, 3) * (3-1)! * (5-1)! = C(8,3) * 2! * 4! = 2688.\]
+
+        This leaves us with a final result of 2688.
+
+    \item
+        How many of the more than 121 quadrillion elements in \(S_{19}\) have order \(210\)?
+
+
+    
+\end{enumerate}
 
 \end{document}
