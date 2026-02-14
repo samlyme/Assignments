@@ -327,7 +327,32 @@ could have mentioned how group theory in engineering for describing rotations in
     \item
         How many of the more than 121 quadrillion elements in \(S_{19}\) have order \(210\)?
 
+        We apply similar logic as the previous problem. However, now the problem 
+        requires us to generalize the final output since we have more than 
+        two terms in each cycle.
 
+        \lstinputlisting[language=Python, firstline=35, lastline=38]{./count_orders.py}
+
+        With the help of Google, I found that counting the ways to partition a 
+        set into `boxes' of size \(n_1, n_2, ..., n_k\) is known as the \emph{Multinomial Coefficient}:
+        $$\frac{N!}{n_1! * n_2! * \dots * n_k!}.$$
+
+        We must make a modification because groups of the same size are actually 
+        not distinct, and divide by the factorial of the number of groups with the 
+        same size:
+        $$\frac{N!}{n_1! * n_2! * \dots * n_k!} * \frac{1}{j!}.$$
+        where \(j\) is the number of duplicate box sizes.
+
+        \lstinputlisting[language=Python, firstline=40, lastline=50]{./count_orders.py}
+
+        Thus our final formula for each partition (the tuple items in the list) is:
+        \[
+            \frac{N!}{n_1! * n_2! * \dots * n_k!} * \frac{1}{j!} * (n_1-1)! * (n_2-1)! * \dots * (n_k-1)!.
+        \]
+
+        \lstinputlisting[language=Python, firstline=52]{./count_orders.py}
+
+        This leaves us with a final result of 1013709170073600.
     
 \end{enumerate}
 
