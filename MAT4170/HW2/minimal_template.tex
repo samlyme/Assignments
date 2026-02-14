@@ -48,6 +48,13 @@ Tools and resources used: I used
     {\color{brown} Difficulty: 7/10}.
     {\color{green!50!black} Self-assessed score: 7}.
     {\color{magenta} Questions/Feedback: mathematical correctness.}
+
+    \item[Choice Exercise 10]
+    {\color{red} Points attempted: 3}.
+    {\color{blue} Time spent: 3 minutes}.
+    {\color{brown} Difficulty: 1/10}.
+    {\color{green!50!black} Self-assessed score: 3}.
+    {\color{magenta} Questions/Feedback: none.}
 \end{enumerate}
 \pagebreak
     
@@ -289,6 +296,28 @@ of the applications of groups and group theory. For example, I believe that they
 could have mentioned how group theory in engineering for describing rotations in 
 3D space, allowing engineers to reason about complex 3D motion.
 
+\section*{Choice Exercise 7 [3]}
+Notice that the following \(5 \times 5\) multiplication table has the Latin Square property, in that each row and column has no duplicate values. You will determine whether or not this is a Cayley table for a group.1
+    \[       \begin{array}{c|ccccc}         * & e & a & b & c & d \\         \hline         e & e & a & b & c & d \\         a & a & e & c & d & b \\         b & b & d & e & a & c \\         c & c & b & d & e & a \\         d & d & c & a & b & e       \end{array}     \]
+\begin{enumerate}
+    \item 
+        Is this binary operation associative? Prove why or why not.
+        
+        This operation is not associative. \(a * (a * b) \not= (a * a) * b\).
+
+    \item Does this operation have an identity element? Prove why or why not.
+    
+    Yes. The element \(e\) behaves like the identity element because for all \(n\)
+    in \(\{ e, a, b, c, d \}\), \(n * e = e * n = n\).
+
+    \item Does this operation have inverses? Prove why or why not.
+    Yes, every element is its own inverse because for all \(n\)
+    in \(\{ e, a, b, c, d \}\), \(n * n = e\). 
+\end{enumerate}
+
+\lstinputlisting[language=python]{./is_associative.py}
+\pagebreak
+
 \section*{Choice Exercise 9 [7]}
 
 \begin{enumerate}
@@ -360,6 +389,28 @@ could have mentioned how group theory in engineering for describing rotations in
         \lstinputlisting[language=Python, firstline=52]{./count_orders.py}
 
         This leaves us with a final result of 1013709170073600.
+    
+\end{enumerate}
+\pagebreak
+
+\section*{Choice Exercise 10 [3]}
+\begin{enumerate}
+    \item 
+        Why doesn't the set of strings under concatenation form a group?
+
+        The set of strings under concatenation does not form a group because there 
+        is no inverse element for any string.
+
+    \item 
+        Suppose that we add a new "backspace" character that we'll denote \verb|\b|, 
+        which deletes the character before it so that
+        \verb|"hello" + "\bworld" = "hellworld"|.
+        If there is no character before it, it does nothing:
+        \verb|"\b" + "hello" = "hello"|.
+        Does this form a group? Which axioms does it satisfy, and which does it fail to satisfy?
+
+        This group still does not form a group because now the \verb|\b| element
+        as no inverse.
     
 \end{enumerate}
 
