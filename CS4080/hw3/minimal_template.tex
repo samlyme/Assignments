@@ -148,4 +148,63 @@ primary        → NUMBER | STRING | "true" | "false" | "nil"
 
 \end{enumerate}
 
+\section*{Chapter 7}
+\begin{enumerate}
+    \item {
+        Allowing comparisons on types other than numbers could be useful. The operators might have a reasonable interpretation for strings. Even comparisons among mixed types, like 3 < "pancake" could be handy to enable things like ordered collections of heterogeneous types. Or it could simply lead to bugs and confusion.
+
+        Would you extend Lox to support comparing other types? If so, which pairs of types do you allow and how do you define their ordering? Justify your choices and compare them to other languages.
+
+        I personally would not extend Lox to support comparing other types for 
+        two reasons: 1) ambiguity and unexpected behavior. Lox is already 
+        dynamically typed, so incorporating this could lead to cursed situations 
+        where you need to reason about the hypotheical behavior of an operator 
+        based on the hypotheical type of its operands. 2) implementation difficulty.
+        There is no good way to perform dynamic dispatch at this level. Sure, we 
+        can override each `internal' type to have a custom comparing method, but that
+        method would then need to somehow infer the `absolute value' of arbitrary 
+        objects. A good example of this is Java itself! Java explicitly does not 
+        allow for comparing different types.
+    }
+    \item {
+        Many languages define + such that if either operand is a string, the other is converted to a string and the results are then concatenated. For example, "scone" + 4 would yield scone4. Extend the code in visitBinaryExpr() to support that.
+
+        \begin{lstlisting}
+            case PLUS:
+                if (left instanceof Double && right instanceof Double) {
+                    return (double)left + (double)right;
+                }
+                if (left instanceof String || right instanceof String) {
+                    return stringify(left) + stringify(right);
+                }
+                throw new RuntimeError(expr.operator,
+                        "Operands must be two numbers or two strings.");
+        \end{lstlisting}
+    }
+
+    \item {
+        What happens right now if you divide a number by zero? What do you think should happen? Justify your choice. How do other languages you know handle division by zero, and why do they make the choices they do?
+
+        Change the implementation in visitBinaryExpr() to detect and report a runtime error for this case.
+
+        Now, if we divide by zero, we get `Infinity'. This is a natural consequence 
+        of Java's implementation of the Double class. I think this actually makes 
+        sense! It gives a good way for the program to gracefully handle edge cases
+        that is also obvious for users to debug. Some other languages either return 
+        a special `NaN' value or throw an exception. These choices also make sense.
+        By returning `NaN', the downstream mathematical operations can be halted,
+        and also gives the user a good idea of the source of the bug. By throwing
+        an exception, the user is forced to handle the edge case. 
+
+        \begin{lstlisting}
+            case SLASH:
+                checkNumberOperands(expr.operator, left, right);
+                if (right.equals(0.0)) 
+                    throw new RuntimeError(
+                        expr.operator, "Can't divide by zero.");
+                return (double)left / (double)right;
+        \end{lstlisting}
+
+    }
+\end{enumerate}
 \end{document}
