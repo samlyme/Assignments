@@ -7,7 +7,7 @@ public enum TokenType {
 
     // One or two character tokens.
     BANG, BANG_EQUAL,
-    EQUAL, EQUAL_EQUAL,
+    EQUAL, EQUAL_EQUAL, // In my opinion, the `EQUAL` token should be called `ASSIGNMENT`
     GREATER, GREATER_EQUAL,
     LESS, LESS_EQUAL,
 
