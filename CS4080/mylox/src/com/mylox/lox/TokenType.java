@@ -5,6 +5,9 @@ public enum TokenType {
     LEFT_PAREN, RIGHT_PAREN, LEFT_BRACE, RIGHT_BRACE,
     COMMA, DOT, MINUS, PLUS, SEMICOLON, SLASH, STAR,
 
+    // Ternary
+    QUESTION, COLON,
+
     // One or two character tokens.
     BANG, BANG_EQUAL,
     EQUAL, EQUAL_EQUAL, // In my opinion, the `EQUAL` token should be called `ASSIGNMENT`

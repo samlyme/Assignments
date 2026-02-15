@@ -23,7 +23,9 @@ actually has the lowest precedence here, so we match against that next.
 Notice that if
 
 expression     → comma;     // CHALLENGE!!
-comma         -> equality ("," equality)*;
+comma         -> ternary ("," ternary)*;
+ternary       -> ternary "?" ternary ":" ternary;
+               | equality;
 equality       → comparison ( ( "!=" | "==" ) comparison )* ;
 comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
 term           → factor ( ( "-" | "+" ) factor )* ;
@@ -60,13 +62,30 @@ class Parser {
     }
 
     private Expr comma() {
-        Expr expr = equality();
+        Expr expr = ternary();
 
         while (match(COMMA)) {
             Token op = previous();
-            Expr right = equality();
+            Expr right = ternary();
             expr = new Expr.Binary(expr, op, right);
         }
+        return expr;
+    }
+
+    private Expr ternary() {
+        Expr expr = equality();
+
+        if (match(QUESTION)) {
+            Token leftOp = previous();
+            Expr center = equality();
+
+            consume(COLON, "Expect ':' in ternary.");
+            Token rightOp = previous();
+            Expr right = equality();
+
+            expr = new Expr.Trinary(expr, leftOp, center, rightOp, right);
+        }
+
         return expr;
     }
 
