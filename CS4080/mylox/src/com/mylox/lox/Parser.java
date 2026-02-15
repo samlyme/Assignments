@@ -22,7 +22,8 @@ which immediately matches it to the `equality` type. Equality (assignment)
 actually has the lowest precedence here, so we match against that next.
 Notice that if
 
-expression     → equality ;
+expression     → comma;     // CHALLENGE!!
+comma         -> equality ("," equality)*;
 equality       → comparison ( ( "!=" | "==" ) comparison )* ;
 comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
 term           → factor ( ( "-" | "+" ) factor )* ;
@@ -54,11 +55,22 @@ class Parser {
     }
 
     private Expr expression() {
-        return equality();
+        return comma();
+   }
+
+   private Expr comma() {
+        Expr expr = equality();
+
+        while (match(COMMA)) {
+            Token op = previous();
+            Expr right = equality();
+            expr = new Expr.Binary(expr, op, right);
+        }
+        return expr;
    }
 
    private Expr equality() {
-        Expr expr = comparison(); // TODO
+        Expr expr = comparison();
 
        while (match(BANG_EQUAL, EQUAL_EQUAL)) {
            Token operator = previous();
