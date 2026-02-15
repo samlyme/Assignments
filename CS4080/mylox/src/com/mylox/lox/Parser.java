@@ -157,6 +157,12 @@ class Parser {
             return new Expr.Grouping(expr);
         }
 
+        if (match(PLUS, MINUS, STAR, SLASH, BANG_EQUAL, EQUAL_EQUAL, GREATER, GREATER_EQUAL, LESS, LESS_EQUAL)) {
+            error(previous(), "Missing left operand");
+            term();
+            return  null;
+        }
+
         throw error(peek(), "Expect expression.");
     }
 
