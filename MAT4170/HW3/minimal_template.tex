@@ -90,4 +90,64 @@ Done! I discussed my solution to HW02 Exercise 9.4.
 \end{enumerate}
 \pagebreak
 
+\section*{Choice Exercise 6 [15]}
+\begin{enumerate}
+    \item {
+    [4]
+        Prove that the set of \(3 \times 3\) matrices that have one \(\pm 1\) per row and column forms a group under matrix multiplication. This group is called the octahedral group, sometimes written \(B_3\). Without looking it up, determine the order of this group.
+
+        \begin{proof}
+            To prove that a given set of matrices forms a group under matrix multiplication,
+            we must prove that it satisfies the group axioms. 
+
+            First, associativity is inherited from matrix multiplication.
+            Then, we see that the set of \(3 \times 3\) matrices that have one 
+            \(\pm 1\) per row and column includes the identity matrix \(I\). 
+
+            Also, we see that this set of matrices must have linearly independent 
+            columns, because each of the columns has an element in a unique row. 
+            Thus, the matrices are invertible. 
+
+            The most difficult part of this proof is proving that this is set of 
+            matrices is closed under matrix multiplication. First, let \(a, b \in B_3\).
+            Let the 3 rows of \(a\) be the vectors \(a^1, a^2, a^3\) (this 
+            non-standard notation, however it is helpful for this proof), and the 3
+            columns of \(b\) be the vectors \(b_1, b_2, b_3\). 
+
+            Notice that having ``one \(\pm 1\) per row and column'' implies that 
+            the the vectors \(a^1, a^2, a^3\) each must have its non-zero element 
+            be in a unique index. That is, if \(a^1 = (1,0,0)\), then \(a^2, a^3\) can't 
+            be \((1,0,0)\) or \((-1,0,0)\). This same property applies to \(b_1, b_2, b_3\).
+
+            Now, let \(c = a \times b\). I will denote each element of \(c\) as 
+            \(c^i_j\), for \(i, j \in \{1, 2, 3\}\), where \(i\) is the row index 
+            and \(j\) is the column index. By definition of matrix multiplication,
+            \(c^i_j = a^i \cdot b_j\) (dot product). The only time this value is 
+            non-zero is if the the index of the non-zero element in \(a^i\) and \(b_j\) match. 
+
+            Because the index of the non-zero element of the rows of \(a\) and 
+            the columns of \(b\) are unique, if \(c^i_j = a^i \cdot b_j \not= 0\), 
+            all other elements of \(c\) in the same row/col of \(c^i_j\) must be 0.
+            
+            Therefore, the set of \(3 \times 3\) matrices that have one \(\pm 1\) 
+            per row and column is closed under matrix multiplication, so, they form 
+            a group \(B_3\).
+        \end{proof}
+    }
+
+    \item {
+        Done!
+
+        \begin{lstlisting}
+module blob() {
+  cylinder(20,10,5);
+  translate([-5,0,10]) rotate([45,0,0]) cube([20,10,5]);
+}
+
+blob();
+        \end{lstlisting}
+    }
+\end{enumerate}
+\pagebreak
+
 \end{document}
