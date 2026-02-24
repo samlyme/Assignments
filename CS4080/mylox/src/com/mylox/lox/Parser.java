@@ -18,7 +18,7 @@ its children!
 This idea maps nicely to defining the grammar, because we treat
 lower precedence tokens as the "entry point". When a token is
 parsed, it is first matched against the generic `expression` type,
-which immediately matches it to the `equality` type. Equality (assignment)
+which immediately matches it to the `equality` type. Equality (comparison)
 actually has the lowest precedence here, so we match against that next.
 Notice that if
 
@@ -31,6 +31,17 @@ unary          → ( "!" | "-" ) unary
                | primary ;
 primary        → NUMBER | STRING | "true" | "false" | "nil"
                | "(" expression ")" ;
+
+~~~ CHAPTER 8 ~~~
+Now, we must add functionality for parsing statements, that
+mutate state.
+
+program        → statement* EOF ;
+statement      → exprStmt
+               | printStmt ;
+exprStmt       → expression ";" ;
+printStmt      → "print" expression ";" ;
+
  */
 
 class Parser {
