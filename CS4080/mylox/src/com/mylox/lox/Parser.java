@@ -23,7 +23,9 @@ which immediately matches it to the `equality` type. Equality (comparison)
 actually has the lowest precedence here, so we match against that next.
 Notice that if
 
-expression     → equality ;
+expression     → assignment ;
+assignment     → IDENTIFIER "=" assignment
+               | equality ;
 equality       → comparison ( ( "!=" | "==" ) comparison )* ;
 comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
 term           → factor ( ( "-" | "+" ) factor )* ;
@@ -107,7 +109,25 @@ class Parser {
     }
 
     private Expr expression() {
-        return equality();
+        return assignment();
+   }
+
+   private Expr assignment() {
+        Expr expr = equality();
+
+        if (match(EQUAL)) {
+            Token equals = previous();
+            Expr value = assignment();
+
+            if (expr instanceof Expr.Variable) {
+                Token name = ((Expr.Variable)expr).name;
+                return new Expr.Assign(name, value);
+            }
+
+            //noinspection ThrowableNotThrown
+            error(equals, "Invalid assignment target.");
+        }
+        return expr;
    }
 
    private Expr equality() {
