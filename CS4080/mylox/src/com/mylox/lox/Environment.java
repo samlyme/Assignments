@@ -1,11 +1,14 @@
 package com.mylox.lox;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 class Environment {
     final Environment enclosing;
     private final Map<String, Object> values = new HashMap<>();
+    private final Set<String> initialized = new HashSet<>();
 
     Environment() {
         this.enclosing = null;
@@ -17,10 +20,14 @@ class Environment {
 
     void define(String name, Object value) {
         values.put(name, value);
+        if (value != null) initialized.add(name);
     }
 
     Object get(Token name) {
         if (values.containsKey(name.lexeme)) {
+            if (!initialized.contains(name.lexeme)) {
+                throw new RuntimeError(name, "Variable not initialized.");
+            }
             return values.get(name.lexeme);
         }
 
@@ -33,6 +40,7 @@ class Environment {
     void assign(Token name, Object value) {
         if (values.containsKey(name.lexeme)) {
             values.put(name.lexeme, value);
+            initialized.add(name.lexeme);
             return;
         }
 
