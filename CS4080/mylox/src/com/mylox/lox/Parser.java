@@ -59,6 +59,10 @@ class Parser {
         this.tokens = tokens;
     }
 
+    public Expr parseExpression() {
+        return expression();
+    }
+
     List<Stmt> parse() {
         List<Stmt> statements = new ArrayList<>();
         while (!isAtEnd()) {

@@ -56,15 +56,26 @@ public class Lox {
     private static void run(String source) {
         Scanner scanner = new Scanner(source);
         List<Token> tokens = scanner.scanTokens();
-
         Parser parser = new Parser(tokens);
-        List<Stmt> statements = parser.parse();
 
-        if (hadError) return; // Remember, we mutated this state from the parser!
+        boolean hasSemicolon = false;
+        for (Token token : tokens) {
+            if (token.type == TokenType.SEMICOLON) {
+                hasSemicolon = true;
+                break;
+            }
+        }
 
-        interpreter.interpret(statements);
+        if (hasSemicolon) {
+            List<Stmt> statements = parser.parse();
 
-//        System.out.println(new AstPrinter().print(expr));
+            if (hadError) return;
+
+            interpreter.interpret(statements);
+        } else {
+            Expr expr = parser.parseExpression();
+            System.out.println(interpreter.evaluate(expr));
+        }
     }
 
     static void error(int line, String message) {
