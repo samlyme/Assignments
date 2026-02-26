@@ -47,7 +47,12 @@ statement      → exprStmt
                | printStmt
                | whileStmt
                | forStmt
-               | block ;
+               | block
+               | break ;
+break         -> "break" + ";" ;
+# NOTE: just because it is a valid grammar, doesn't
+mean it is valid syntax. break must be inside a loop.
+we can express this in the grammar, but I am lazy lol.
 # Note: The for statement is directly "desugared" into a while loop!
 forStmt        → "for" "(" ( varDecl | exprStmt | ";" )
                  expression? ";"
@@ -67,6 +72,7 @@ class Parser {
 
     private final List<Token> tokens;
     private int current = 0;
+    private boolean inLoopBody = false;
 
     Parser(List<Token> tokens) {
         this.tokens = tokens;
@@ -95,6 +101,7 @@ class Parser {
         if (match(PRINT)) return printStatement();
         if (match(FOR)) return forStatement();
         if (match(WHILE)) return whileStatement();
+        if (match(BREAK)) return breakStatement();
         if (match(LEFT_BRACE)) return new Stmt.Block(block());
 
         return expressionStatement();
@@ -162,8 +169,20 @@ class Parser {
         Expr condition = expression();
         consume(RIGHT_PAREN, "Expect ')' after condition.");
 
+        inLoopBody = true;
         Stmt body = statement();
+        inLoopBody = false;
         return new Stmt.While(condition, body);
+    }
+
+    private Stmt breakStatement() {
+        Token breakToken = previous();
+        if (!inLoopBody)
+            throw error(breakToken, "Unexpected 'break': needs to be in loop.");
+
+
+        consume(SEMICOLON, "Expect ';' after 'break'");
+        return new Stmt.Break(breakToken);
     }
 
     private Stmt varDeclaration() {
