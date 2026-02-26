@@ -191,6 +191,50 @@ https://github.com/samlyme/Assignments/tree/cs4080/ch9/challenge
         data anymore. This way, we reduce our memory complexity from \(\mathcal{O}(n)\)
         to \(\mathcal{O}(1)\) where \(n\) is the number of interations.
     }
+
+    \item {
+        Unlike Lox, most other C-style languages also support break and continue statements inside loops. Add support for break statements.
+
+        The syntax is a break keyword followed by a semicolon. It should be a syntax error to have a break statement appear outside of any enclosing loop. At runtime, a break statement causes execution to jump to the end of the nearest enclosing loop and proceeds from there. Note that the break may be nested inside other blocks and if statements that also need to be exited.
+
+        To do this, we must first parse for the break statements.
+        We update the TokenType enum to include a \verb|BREAK| type.
+        Then, we update the scanner to actually be able to output the \verb|BREAK|
+        Token. Lastly, in the Parser, we need to make it not only parse the breaks
+        into the syntax tree, but also check that the break statement is in a valid 
+        location. We do this by creating a flag that we set to \verb|true| before 
+        entering a loop body, and \verb|false| after exiting a loop body.
+        Then, in the \verb|breakStatement| method, we do a check for whether the 
+        \verb|break| is in a loop body. If not, we report a syntax error.
+
+        Now, to interpret, we use a little trick by throwing an Exception when 
+        we encounter a \verb|break| statement. This exception is caught by
+        the \verb|visitWhileStmt| method, which in turn break's. This essentially
+        borrow's Java's break implementation!
+
+        \begin{verbatim}
+    @Override
+    public Void visitWhileStmt(Stmt.While stmt) {
+        while (isTruthy(evaluate(stmt.condition))) {
+            try {
+                execute(stmt.body);
+            } catch (BreakException e) {
+//                System.out.println("breaking!");
+                break;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Void visitBreakStmt(Stmt.Break stmt) {
+        throw new BreakException();
+    }
+        \end{verbatim}
+
+        The Parser, Scanner, and AST code is too much to include in this paper.
+        To see, please visit the repo at the \verb|/cs4080/ch9/challenge| branch.
+    }
 \end{enumerate}
 
 
