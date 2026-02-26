@@ -138,4 +138,60 @@ var a = 1;
     }
 \end{enumerate}
 
+\section*{Chapter 9}
+
+The code for the challenge questions can be found here: 
+
+https://github.com/samlyme/Assignments/tree/cs4080/ch9/challenge
+
+\begin{enumerate}
+    \item {
+        A few chapters from now, when Lox supports first-class functions and dynamic dispatch, we technically won’t need branching statements built into the language. Show how conditional execution can be implemented in terms of those. Name a language that uses this technique for its control flow.
+
+        To be clear, branching statements will be needed for the actual implementation,
+        but at the language level (user-facing), we can use a ``boolean class''. 
+        In fact, at the very low level, dynamic dispatch is still just a branch 
+        or jump statement.
+
+        The boolean class will have a method like \verb|cond|, or in the case of 
+        SmallTalk, \verb|thenElse|. This method takes in two functions/closures, 
+        \verb|then| and \verb|else|.
+        The boolean class will also have two sub-classes, a `Truthy' and a `Falsy'.
+
+        Objects of the `Truthy' class will always execute the \verb|then| function when 
+        the \verb|thenElse| method is called. Conversely, objects of the `Falsy'
+        class will always execute the \verb|else| function.
+
+        When we instantiate an object of the boolean class, the implementation/vm
+        actually returns an instance of either `Truthy' or `Falsy'. Remember, 
+        this is how the language ``hides'' the branching logic. In a sense, 
+        we turn tradidtional boolean operations into a factory function that 
+        returns instances of the boolean class.
+    }
+
+    \item {
+        Likewise, looping can be implemented using those same tools, provided our interpreter supports an important optimization. What is it, and why is it necessary? Name a language that uses this technique for iteration.
+
+        To implement \verb|while| loops without branching statements, we can 
+        use a similar trick, but now we translate the looping logic into a recursive 
+        call. This is because without branching, we must use another dynamic 
+        dispatch to end the loop. 
+
+        So, we would implement a \verb|while| method that takes in two functions,
+        a \verb|stmt| and \verb|nextCond|, which returns a boolean object. The 
+        \verb|while| method will execute \verb|stmt|, and then evaluate 
+        \verb|nextCond|. Then, we will call into the value returned by \verb|nextCond.while|.
+        If \verb|nextCond| returns a Falsy object, we are done with the loop.
+
+        One issue that can arise is stack usage because each recursive call 
+        requires a new stack frame when implemented naively. However, we can 
+        fix this by using Tail Recursion. When we make the recursive call as 
+        the very last statement in a stack frame, we can actually overwrite the 
+        stack frame in place, since we know we do not need the current frame's 
+        data anymore. This way, we reduce our memory complexity from \(\mathcal{O}(n)\)
+        to \(\mathcal{O}(1)\) where \(n\) is the number of interations.
+    }
+\end{enumerate}
+
+
 \end{document}
