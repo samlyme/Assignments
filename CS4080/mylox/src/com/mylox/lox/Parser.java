@@ -85,7 +85,7 @@ class Parser {
             if (match(VAR)) return varDeclaration();
             return statement();
         } catch (ParseError error) {
-            synchronize();;
+            synchronize();
             return null;
         }
     }
@@ -143,7 +143,7 @@ class Parser {
     private Stmt ifStatement() {
         consume(LEFT_PAREN, "Expect '(' after 'if'.");
         Expr condition = expression();
-        consume(RIGHT_PAREN, "Expect ')' after if conidtion.");
+        consume(RIGHT_PAREN, "Expect ')' after if condition.");
 
         Stmt thenBranch = statement();
         Stmt elseBranch = match(ELSE) ? statement() : null;
