@@ -204,9 +204,23 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     @Override
     public Void visitWhileStmt(Stmt.While stmt) {
         while (isTruthy(evaluate(stmt.condition))) {
-            execute(stmt.body);
+            try {
+                execute(stmt.body);
+            } catch (BreakException e) {
+//                System.out.println("breaking!");
+                break;
+            }
         }
         return null;
+    }
+
+    @Override
+    public Void visitBreakStmt(Stmt.Break stmt) {
+        throw new BreakException();
+    }
+
+    private static class BreakException extends RuntimeException {
+//        filler!
     }
 
     private void checkNumberOperand(Token operator, Object operand) {

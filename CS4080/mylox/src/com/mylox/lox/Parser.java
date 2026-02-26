@@ -131,7 +131,9 @@ class Parser {
         }
         consume(RIGHT_PAREN, "Expect ')' after for clauses.");
 
+        inLoopBody = true;
         Stmt body = statement();
+        inLoopBody = false;
 
         if (increment != null) {
             body = new Stmt.Block(Arrays.asList(body, new Stmt.Expression(increment)));
