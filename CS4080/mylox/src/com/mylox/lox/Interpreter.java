@@ -135,21 +135,19 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         Object callee = evaluate(expr.callee);
 
         List<Object> arguments = new ArrayList<>();
-        for (Expr arg : expr.arguments) {
-            arguments.add(arg);
+        for (Expr argument : expr.arguments) {
+            arguments.add(evaluate(argument));
         }
 
         if (!(callee instanceof LoxCallable)) {
             throw new RuntimeError(expr.paren,
                     "Can only call functions and classes.");
         }
-        LoxCallable function = (LoxCallable)callee;
-        // Notice that this is a runtime error! We do not have the capability to do this check
-        // at parse/compile time.
+        LoxCallable function = (LoxCallable) callee;
         if (arguments.size() != function.arity()) {
             throw new RuntimeError(expr.paren, "Expected " +
                     function.arity() + " arguments but got " +
-                    arguments.size() + "." );
+                    arguments.size() + ".");
         }
         return function.call(this, arguments);
     }
@@ -212,6 +210,13 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     @Override
     public Void visitExpressionStmt(Stmt.Expression stmt) {
         evaluate(stmt.expression);
+        return null;
+    }
+
+    @Override
+    public Void visitFunctionStmt(Stmt.Function stmt) {
+        LoxFunction function = new LoxFunction(stmt);
+        environment.define(stmt.name.lexeme, function);
         return null;
     }
 
