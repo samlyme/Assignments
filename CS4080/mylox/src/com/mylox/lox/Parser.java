@@ -33,8 +33,10 @@ equality       → comparison ( ( "!=" | "==" ) comparison )* ;
 comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
 term           → factor ( ( "-" | "+" ) factor )* ;
 factor         → unary ( ( "/" | "*" ) unary )* ;
-unary          → ( "!" | "-" ) unary
-               | primary ;
+unary          → ( "!" | "-" ) unary | call;
+call          -> primary ( "(" arguments? ")" );
+arguments     ->  expression ("," expression)*;
+
 primary        → NUMBER | STRING | IDENTIFIER | "true" | "false" | "nil"
                | "(" expression ")" ;
 
@@ -290,7 +292,39 @@ class Parser {
 
    private Expr unary() {
         if (match(BANG, MINUS)) return new Expr.Unary(previous(), unary());
-        return primary();
+        return call();
+   }
+
+   private Expr call() {
+        Expr expr = primary();
+
+        while (true) {
+            if (match(LEFT_PAREN)) {
+                expr = finishCall(expr);
+            } else {
+                break;
+            }
+        }
+
+        return expr;
+   }
+
+   private Expr finishCall(Expr callee) {
+        List<Expr> arguments = new ArrayList<>();
+        if (!check(RIGHT_PAREN)) {
+            do {
+                if (arguments.size() >= 255) {
+                    //noinspection ThrowableNotThrown
+                    error(peek(), "Can't have more than 255 arguments.");
+                    // This error is intentionally not thrown. The parser is in a valid state still,
+                    // but found too many args. It knows what to do.
+                }
+                arguments.add(expression());
+            } while (match(COMMA));
+        }
+
+        Token paren = consume(RIGHT_PAREN, "Expect ')' after arguments.");
+        return new Expr.Call(callee, paren, arguments);
    }
 
    private Expr primary() {
