@@ -24,7 +24,8 @@ which immediately matches it to the `equality` type. Equality (comparison)
 actually has the lowest precedence here, so we match against that next.
 Notice that if
 
-expression     → assignment ;
+expression     → lambda ;
+lambda        -> "fun" "(" parameters? ")" block | assignment;
 assignment     → IDENTIFIER "=" assignment
                | equality ;
 logic_or       → logic_and ( "or" logic_and )* ;
@@ -89,7 +90,10 @@ class Parser {
 
     private Stmt declaration() {
         try {
-            if (match(FUN)) return function("function");
+            if (match(FUN)) {
+                if (check(IDENTIFIER)) return function("function");
+                current--;
+            }
             if (match(VAR)) return varDeclaration();
             return statement();
         } catch (ParseError error) {
@@ -211,6 +215,7 @@ class Parser {
         if (!check(RIGHT_PAREN)) {
             do {
                 if (parameters.size() >= 255) {
+                    //noinspection ThrowableNotThrown
                     error(peek(), "Can't have more than 255 parameters.");
                 }
 
@@ -237,7 +242,30 @@ class Parser {
     }
 
     private Expr expression() {
-        return assignment();
+        return lambda();
+   }
+
+   private Expr lambda() {
+        if (!match(FUN))  return assignment();
+
+       consume(LEFT_PAREN, "Expect '(' after lambda start.");
+       List<Token> parameters = new ArrayList<>();
+       if (!check(RIGHT_PAREN)) {
+           do {
+               if (parameters.size() >= 255) {
+                   //noinspection ThrowableNotThrown
+                   error(peek(), "Can't have more than 255 parameters.");
+               }
+
+               parameters.add(
+                       consume(IDENTIFIER, "Expect parameter name."));
+           } while (match(COMMA));
+       }
+       consume(RIGHT_PAREN, "Expect ')' after parameters.");
+
+       consume(LEFT_BRACE, "Expect '{' before lambda body.");
+       List<Stmt> body = block();
+       return new Expr.Lambda(parameters, body);
    }
 
    private Expr assignment() {
@@ -283,7 +311,7 @@ class Parser {
    }
 
    private Expr equality() {
-        Expr expr = comparison(); // TODO
+        Expr expr = comparison();
 
        while (match(BANG_EQUAL, EQUAL_EQUAL)) {
            Token operator = previous();
