@@ -128,6 +128,48 @@ fun scope(a) {
     }
 \end{enumerate}
 
-% \section*{Chapter 11}
+\section*{Chapter 11}
+
+\begin{enumerate}
+    \item {
+        Why is it safe to eagerly define the variable bound to a function’s name when other variables must wait until after they are initialized before they can be used?
+
+        As opposed to variable declarations, the function body isn't evaluated
+        until it is called. Thus, nothing can change between declaration and 
+        definition.
+    }
+
+    \item {
+        How do other languages you know handle local variables that refer to the same name in their initializer, like:
+
+        \begin{verbatim}
+var a = "outer";
+{
+  var a = a;
+}
+        \end{verbatim}
+Is it a runtime error? Compile error? Allowed? Do they treat global variables differently? Do you agree with their choices? Justify your answer.
+
+        Other languages typically just let it happen. They define the inner scope 
+        a to have the same initial value as the outer scope a. Then, if the inner 
+        scope mutates a with \verb|a = "new value"|, the other scope is unaffected.
+        I feel like this makes more sense, as it lets us clearly define boundaries,
+        even when the names are the same.
+    }
+
+    \item {
+        Extend the resolver to report an error if a local variable is never used.
+
+        Done. The code can be found in the github.
+    }
+
+    \item {
+        Our resolver calculates which environment the variable is found in, but it’s still looked up by name in that map. A more efficient environment representation would store local variables in an array and look them up by index.
+
+Extend the resolver to associate a unique index for each local variable declared in a scope. When resolving a variable access, look up both the scope the variable is in and its index and store that. In the interpreter, use that to quickly access a variable by its index instead of using a map.
+
+        Done. The code can be found in the github.
+    }
+\end{enumerate}
 
 \end{document}
