@@ -1,5 +1,7 @@
 var a = "global";
 {
+  var b = "unused";
+
   fun showA() {
     print a;
   }
