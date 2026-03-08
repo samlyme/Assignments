@@ -1,13 +1,10 @@
 package com.mylox.lox;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 
 class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     private final Interpreter interpreter;
-    private final Stack<Map<String, VarObj>> scopes = new Stack<>();
+    private final Stack<List<VarObj>> scopes = new Stack<>();
     private static class VarObj {
         VarType type;
         Token token;
@@ -17,6 +14,8 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
             this.token = token;
         }
     }
+    private final Map<String, Integer> index = new HashMap<>();
+
     private  enum VarType {
         DECLARED,
         DEFINED,
@@ -38,9 +37,9 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         beginScope();
         resolve(stmt.statements);
 
-        for (Map.Entry<String, VarObj> entry : scopes.peek().entrySet()) {
-            if (entry.getValue().type != VarType.USED) {
-                Lox.error(entry.getValue().token, "Unused variable " + entry.getKey());
+        for (VarObj entry : scopes.peek()) {
+            if (entry.type != VarType.USED) {
+                Lox.error(entry.token, "Unused variable " + entry.token.lexeme);
             }
         }
         endScope();
@@ -163,7 +162,8 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
     @Override
     public Void visitVariableExpr(Expr.Variable expr) {
-        if (!scopes.isEmpty() && scopes.peek().get(expr.name.lexeme) != null && scopes.peek().get(expr.name.lexeme).type == VarType.DECLARED) {
+        int varIndex = index.getOrDefault(expr.name.lexeme, -1);
+        if (varIndex != -1 && !scopes.isEmpty() && varIndex < scopes.peek().size() && scopes.peek().get(varIndex).type == VarType.DECLARED) {
             Lox.error(expr.name, "Can't read local variable in its own initializer.");
         }
 
@@ -180,8 +180,9 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
     private void resolveLocal(Expr expr, Token name) {
         for (int i = scopes.size() - 1; i >= 0; i--) {
-            if (scopes.get(i).containsKey(name.lexeme)) {
-                scopes.get(i).get(name.lexeme).type = VarType.USED;
+            int varIndex = index.getOrDefault(name.lexeme, -1);
+            if (varIndex != -1 && varIndex < scopes.get(i).size()) {
+                scopes.get(i).get(varIndex).type = VarType.USED;
                 interpreter.resolve(expr, scopes.size() - 1 - i);
                 return;
             }
@@ -203,7 +204,7 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     }
 
     private void beginScope() {
-        scopes.push(new HashMap<>());
+        scopes.push(new ArrayList<>());
     }
 
     private void endScope() {
@@ -213,18 +214,20 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     private void declare(Token name) {
         if (scopes.isEmpty()) return;
 
-        Map<String, VarObj> scope = scopes.peek();
-        if (scope.containsKey(name.lexeme)) {
+        List<VarObj> scope = scopes.peek();
+        int varIndex = index.getOrDefault(name.lexeme, -1);
+        if (varIndex != -1 && varIndex < scope.size()) {
             Lox.error(name,
                     "Already a variable with this name in this scope.");
         }
 
-        scope.put(name.lexeme, new VarObj(VarType.DECLARED, name));
+        index.put(name.lexeme, scope.size());
+        scope.addLast(new VarObj(VarType.DECLARED, name));
     }
 
     private void define(Token name) {
         if (scopes.isEmpty()) return;
 
-        scopes.peek().get(name.lexeme).type = VarType.DEFINED;
+        scopes.peek().get(index.get(name.lexeme)).type = VarType.DEFINED;
     }
 }
