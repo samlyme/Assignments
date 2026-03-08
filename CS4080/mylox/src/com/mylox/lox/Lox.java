@@ -62,6 +62,11 @@ public class Lox {
 
         if (hadError) return; // Remember, we mutated this state from the parser!
 
+        Resolver resolver = new Resolver(interpreter);
+        resolver.resolve(statements);
+
+        if (hadError) return;
+
         interpreter.interpret(statements);
 
 //        System.out.println(new AstPrinter().print(expr));
