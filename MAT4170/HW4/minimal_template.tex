@@ -341,11 +341,43 @@ Tools and resources used: Mainly Google, and Gemini when I got really stuck.
         \end{enumerate}
     }
 \end{enumerate}
+\pagebreak
 
 \section*{Exercise 3 [1]}
-
 My favorite resource from this class is OpenSCAD. Although I will likely never use 
 it again, it was very fun to play around with. The backstory for the development 
 of it is also really cool.
+\pagebreak
+
+\section*{Choice Exercise 6 [10]}
+\begin{enumerate}
+    \item {
+        [3] Write a function that takes a word in \(S_n\) and outputs it in cycle notation. For instance, if the word is \(\pi = 156243 \in S_n\) then the input to your program would be [1,5,6,2,4,3], and since \(\pi = (254)(36)\) in cycle notation, the output would be [[254],[36]] or something equivalent.
+
+        \lstinputlisting[lastline=17]{word2cycle.py}
+
+        I was unfortunately not able to write this in Scheme LISP. I was 
+        defeated, but I managed to solve the other way
+    }
+
+    \item {
+        [2] Write a function that goes the other way: it takes in input of a permutation in cycle notation (e.g. [[254],[36]]) and outputs the corresponding permutation as a word (e.g. [1,5,6,2,4,3].)
+
+        \lstinputlisting{cycle2word.scm}
+    }
+
+    \item {
+        [2] Write a function that takes two permutations as words and composes them, working right-to-left as usual.
+    
+
+        \lstinputlisting[firstline=19, lastline=30]{word2cycle.py}
+    }
+
+    \item {
+        [2] Write a function that takes two permutations in cycle notation and composes them, working right-to-left as usual.
+
+        \lstinputlisting[firstline=32, lastline=51]{word2cycle.py}
+    }
+\end{enumerate}
 
 \end{document}
