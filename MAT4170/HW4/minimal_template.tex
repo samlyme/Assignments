@@ -355,6 +355,51 @@ it again, it was very fun to play around with. The backstory for the development
 of it is also really cool.
 \pagebreak
 
+\section*{Choice Exercise 4 [5]}
+\begin{enumerate}
+    \item {
+        [5] We sometimes describe groups by their presentation, \(\langle S \mid R \rangle\), where \(S\) is a set of generators, and \(R\) is a set of relations. Recall, we define the dihedral group of the \(n\)-gon as \[         D_n = \langle \underbrace{r, f}_S \mid \underbrace{r^n = f^2 = (rf)^2 = e}_R \rangle.       \] What this means is that every element of \(s \in D_n\) can be written as a word \[         s = g_1^{e_1}g_2^{e_2}\dots g_m^{e_m},       \] where \(g_i \in S = \{r, f\}\), \(e_i \in \mathbb{Z}\), and where two words are equal if we can modify one to the other using the relations in \(R\).
+
+        \begin{enumerate}
+            \item {
+                Draw a Cayley diagram of the group with presentation \[             G = \langle r_1, r_2 \mid r_1^2 = r_2^2 = (r_1 r_2)^3 = e \rangle.           \] (Hint: \(|G| \leq 10\).)
+                 
+                 \includegraphics[width=0.7\linewidth]{cayley.jpg}
+            }
+            \item {
+                Use the generators and relations to prove that \(r^{-3}frf^3 = r \in D_5\).
+        
+                In \(D_5\), \(r^5 = e\), \(r^{k}f = fr^{n-k}\), \(f^2 = e\), and \(r^k = r^{5 - k}\)
+
+                Thus, 
+                \begin{align}
+                    r^{-3}frf^3 &= r^{2}frf, \\
+                                &= r^2ffr^4 \\
+                                &= r^6 = r.
+                \end{align}
+            }
+
+            \item {
+                Prove that for all positive integers \(k\), \((r^kf)^2 = e \in D_n\).
+        
+                \begin{proof}
+                    We begin by expanding the express to \(r^kfr^kf\). Then, 
+                    we rewrite as \(f r^{n-k} r^k f\). Notice that \(r^{n-k} r^k = r^n = e\).
+                    Thus, we simplify down to \(ff = e\).
+                \end{proof}
+            }
+
+            \item {
+                Write a group presentation of the cyclic group \(C_n\).
+
+                The group presentation of \(C_n\) is
+                \[C_n = \langle r \mid r^n = e \rangle .\]
+            }
+        \end{enumerate}
+    }
+\end{enumerate}
+\pagebreak
+
 \section*{Choice Exercise 6 [10]}
 \begin{enumerate}
     \item {
