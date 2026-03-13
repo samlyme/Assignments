@@ -45,10 +45,11 @@ declaration    → varDecl
                | funDecl
                | classDecl
                | statement ;
-classDecl      → "class" IDENTIFIER "{" function* "}" ;
-classFunDecl  -> "class" function ;
+classDecl      → "class" IDENTIFIER "{" (function | classFunDecl | getter)* "}" ;
 funDecl       -> "fun" function ;
 function      -> IDENTIFIER "(" parameters? ")" block ;
+classFunDecl  -> "class" function ;
+getter        -> IDENTIFIER block ;
 parameters     → IDENTIFIER ( "," IDENTIFIER )* ;
 varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
 statement      → exprStmt
