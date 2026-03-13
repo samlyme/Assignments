@@ -46,6 +46,7 @@ declaration    → varDecl
                | classDecl
                | statement ;
 classDecl      → "class" IDENTIFIER "{" function* "}" ;
+classFunDecl  -> "class" function ;
 funDecl       -> "fun" function ;
 function      -> IDENTIFIER "(" parameters? ")" block ;
 parameters     → IDENTIFIER ( "," IDENTIFIER )* ;
@@ -106,13 +107,18 @@ class Parser {
         consume(LEFT_BRACE, "Expect '{' before class body.");
 
         List<Stmt.Function> methods = new ArrayList<>();
+        List<Stmt.Function> staticMethods = new ArrayList<>();
         while (!check(RIGHT_BRACE) && !isAtEnd()) {
-            methods.add(function("method"));
+            if (match(CLASS))   {
+//                System.out.println("Found static method");
+                staticMethods.add(function("static"));
+            }
+            else                methods.add(function("method"));
         }
 
         consume(RIGHT_BRACE, "Expect '}' after class body.");
 
-        return new Stmt.Class(name, methods);
+        return new Stmt.Class(name, methods, staticMethods);
     }
 
     private Stmt statement() {

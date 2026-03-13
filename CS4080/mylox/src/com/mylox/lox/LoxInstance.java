@@ -7,10 +7,11 @@ class LoxInstance {
     private LoxClass klass;
     private final Map<String, Object> fields = new HashMap<>();
 
-
     LoxInstance(LoxClass klass) {
         this.klass = klass;
     }
+
+    protected LoxInstance() {}
 
     public Object get(Token name) {
         if (fields.containsKey(name.lexeme)) {

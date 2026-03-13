@@ -1,9 +1,7 @@
-class Circle {
-  init(radius) {
-    this.radius = radius;
+class Math {
+  class square(n) {
+    return n * n;
   }
 }
 
-var a = Circle(2);
-
-print a.radius;
+print Math.square(3); // Prints "9".

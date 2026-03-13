@@ -52,6 +52,15 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
             }
             resolveFunction(method, declaration);
         }
+
+        for (Stmt.Function staticMethod : stmt.staticMethods) {
+            FunctionType declaration = FunctionType.METHOD;
+            // Cursed edge case.
+//            if (staticMethod.name.lexeme.equals("init")) {
+//                declaration = FunctionType.INITIALIZER;
+//            }
+            resolveFunction(staticMethod, declaration);
+        }
         endScope();
 
         currentClass = enclosingClass;
