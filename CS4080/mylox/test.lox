@@ -1,8 +1,9 @@
-class Foo {
-  init() {
-    print this;
+class Circle {
+  init(radius) {
+    this.radius = radius;
   }
 }
 
-var foo = Foo();
-print foo.init();
+var a = Circle(2);
+
+print a.radius;
