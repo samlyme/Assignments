@@ -1,5 +1,7 @@
-class Bagel {}
+class Bacon {
+    eat() {
+        print " Crunch ";
+    }
+}
 
-var bagel = Bagel();
-
-print(bagel);
+Bacon().eat();

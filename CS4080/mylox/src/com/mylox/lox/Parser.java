@@ -25,7 +25,7 @@ actually has the lowest precedence here, so we match against that next.
 Notice that if
 
 expression     → assignment ;
-assignment     → IDENTIFIER "=" assignment
+assignment     → ( call ".")? IDENTIFIER "=" assignment
                | equality ;
 logic_or       → logic_and ( "or" logic_and )* ;
 logic_and      → equality ( "and" equality )* ;
@@ -267,6 +267,9 @@ class Parser {
             if (expr instanceof Expr.Variable) {
                 Token name = ((Expr.Variable)expr).name;
                 return new Expr.Assign(name, value);
+            } else if (expr instanceof Expr.Get) {
+                Expr.Get get = (Expr.Get) expr;
+                return new Expr.Set(get, get.name, value);
             }
 
             //noinspection ThrowableNotThrown
