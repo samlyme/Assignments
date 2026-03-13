@@ -20,6 +20,10 @@ class LoxFunction implements LoxCallable{
         return new LoxFunction(declaration, environment, isInitializer);
     }
 
+    public boolean isGetter() {
+        return declaration.isGetter;
+    }
+
     @Override
     public Object call(Interpreter interpreter,
                        List<Object> arguments) {

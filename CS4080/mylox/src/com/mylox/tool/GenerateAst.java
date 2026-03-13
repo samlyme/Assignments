@@ -36,8 +36,7 @@ public class GenerateAst {
                 "Class      : Token name, List<Stmt.Function> methods, List<Stmt.Function> staticMethods",
                 "Expression : Expr expression",
                 "Function   : Token name, List<Token> params," +
-                            " List<Stmt> body",
-                "Getter     : Token name, List<Stmt> body",
+                            " List<Stmt> body, boolean isGetter",
                 "Return     : Token keyword, Expr value",
                 "If         : Expr condition, Stmt thenBranch," + " Stmt elseBranch",
                 "Print      : Expr expression",
