@@ -2,6 +2,29 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{mathtools, amsfonts, amsthm, xcolor, listings}
 
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\I}{\mathbb{I}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\ang}[1]{\left\langle #1 \right\rangle}
+\newcommand{\inv}{^{-1}}
+
+\newcommand{\normsub}{\lhd}
+
+\newcommand{\reflection}[5]{
+    \begin{itemize}
+    \item Points attempted: #1
+    \item Self-assessed score: #2.
+    \item Time spent: #3 minutes.
+    \item Difficulty: #4/10.
+    \item Questions/Feedback: #5.
+    \end{itemize}
+}
+
+
 \title{HW 05}
 \author{Sam Ly}
 
@@ -185,6 +208,206 @@ prompt. I am currently only in a group of 2, and that is with Justin.
         }
     }
 \end{enumerate}
+\pagebreak
+
+\section*{Choice Exercise 4}
+
+\begin{enumerate}
+    \item [1.] {
+        We define a normal subgroup of \((G,*)\) as one where \(g * n * g^{-1} \in N\) for all \(n \in N\) and \(g \in G\). Do any subset of the following questions.
+  
+        \begin{enumerate}
+            \item {
+                Explain why the following are true for every subgroup \(H \leq G\):
+      
+                \begin{enumerate}
+                    \item {
+                        For all \(g \in G\) and \(h \in H\), \(g * h * g^{-1} \in G\)
+
+                        Notice that becuase \(H \le G\), \(h \in G\). Because 
+                        \(G\) is a group, it must be closed under \(*\), so 
+                        \(g * h * g\inv \in G\).
+                    }
+                    \item {
+                        For all \(g \in H\) and \(h \in H\), \(g * h * g^{-1} \in H\)
+
+                        \(H\) itself is a group. Therefore it is closed under \(*\).
+                        So, \(g * h * g\inv \in H\).
+                    }
+                \end{enumerate}
+            }
+
+            \item {
+                Prove that if \(G\) is abelian then all subgroups \(H \leq G\) are normal.
+    
+                \begin{proof}
+                    We begin by noticing that because \(G\) is abelian, all subgroups 
+                    \(H\) must also be abelian. Now, we construct the cosets 
+                    \(gH, Hg\) for all \(g \in G\). Notice that because \(G\) is 
+                    abelian, \(g * h = h * g\) for all \(h \in H\) and \(g \in G\).
+                    Therefore, \(gH = Hg\).
+                \end{proof}
+            }
+
+            \item {
+                Prove that both the trivial subgroup \(\{e\} \leq G\) and the group \(G\) itself are normal subgroups of \(G\)
+
+                \begin{proof}
+                    First, we shall prove that the trivial subgroup \(\set{e} \normsub G\).
+                    By definition of the identity element \(e\), \(g * e = e * g\) 
+                    for all elements \(g \in G\). Therefore, the cosets \(g\set{e} = \set{e}g\),
+                    so \(\set e \normsub G\).
+
+                    Next, to see \(G \normsub G\), notice that for all \(g \in G\), 
+                    the coset \(gG\) is just the set of \(G\). Similarly, \(Gg = G\).
+                    Therfore, \(gG = Gg\) and \(G \normsub G\).
+                \end{proof}
+            }
+
+            \item {
+                Let \(G = D_6\), and recall that all elements of \(D_n\) can be written of the form \(r^k f^m\). Use the fact that \(r^kf = fr^{-k}\) to show that \(\langle r^2 \rangle\) is a normal subgroup of \(D_6\).
+    
+                \begin{proof}
+                    Let \(H = \ang{r^2} = \set{e, r^2, r^4}\).
+
+                    Now, to show that \(H \normsub G\), we must show that 
+                    for all \(g \in G\), \(gH = Hg\). If \(g\) is of the form \(r^n\),
+                    \(gH = Hg\) by commutativity of \(r\). 
+                    
+                    Now, we check the case where \(g\) is of the form \(r^n f^m\).
+                    Now, the cosets can be described as
+                    
+                    \begin{align}
+                        Hg &= \set{r^j r^n f^m} = \set{r^{n+j} f^m}\\
+                        gH &= \set{r^n f^m r^j} = \set{r^{n-j} f^m}
+                    \end{align}
+                    where \(n \in [0,5], m \in [0,1], j \in \set{0,2,4}\).
+
+                    Therefore, for any \(h = r^j \in H\) and \(g \in G\), there 
+                    exists a unique \(h' = r^{-j} \in H\) where \(gH = Hg\).
+                    Thus, \(H \normsub G\).
+                \end{proof}
+            }
+
+            \item {
+                [2] Let \(G = D_n\). Show that if \(d\) is a divisor of \(n\) then \(\langle r^d \rangle\) is a normal subgroup of \(D_n\). Hint: this is a generalization of the above part, so do that part first!
+    
+                \begin{proof}
+                    In the above proof, we showed that \(h = r^j\) can be mapped 
+                    to \(h' = r^{-j}\) in order to show that \(\ang{r^2}\) is a 
+                    normal subgroup of \(D_6\). The reason this works is because 
+                    6 is a multiple of 2, so \(6 - 2 = 4\) is also a multiple of 
+                    2, so \((r^j)^{-1}\) must be constructable from \(r^2\). This 
+                    idea generalizes to any \(n\) and \(d\). If \(n\) is a multiple 
+                    of \(d\), then its corresponding element in the right coset 
+                    must be constructable via \(r^d\).
+                \end{proof}
+            }
+
+            \item {
+                Recall that \(\{\pi \in S_4 \mid \pi(4) = 4\}\) is a subgroup of \(S_4\). Prove that it is not a normal subgroup of \(S_4\).
+    
+                \begin{proof}
+                    We begin by noticing that \(\{\pi \in S_4 \mid \pi(4) = 4\}\)
+                    is isomorphic to \(S_3\). If we can prove that \(S_3\) is not 
+                    a normal subgroup of \(S_4\), we also prove the proposition.
+
+                    We disprove \(H \normsub G\)  
+                    through a counterexample. We can pick \(g = (14) \in S_4\) and 
+                    \(h = (12) \in S_3\). If \(S_3\) were a normal subgroup of
+                    \(S_4\), then for any \(g \in S_4\) and \(h \in S_3\), 
+                    there exists a \(h' \in S_3\) where \(g \circ h = h \circ g\).
+                    One counter example where \(h'\) is impossible to find means 
+                    that \(S_3\) is not a normal subgroup of \(S_4\).
+
+                    We pick \(g = (14) \in S_4\) and \(h = (12) \in S_3\).
+                    We set up the equation \((12) \circ (14) = (14) \circ h'\) to 
+                    solve for \(h'\). Here, it makes sense to switch to word 
+                    notation.
+
+                    \begin{align}
+                        (12) \circ (14) &= (14) \circ h' \\
+                        2431 &= (14) \circ h' \\
+                        h' &= (14) \circ 2431 \\
+                        h' &= 1432.
+                    \end{align}
+
+                    Notice that \(h' \not \in S_3\), therefore \(S_3\) is not a 
+                    normal subgroup of \(S_4\).
+                \end{proof}
+            }
+
+            \item {
+                [2] Prove that if \((G,*)\) is a group and \(H\) is a subgroup.
+                Prove that if \({[H : G] = 2}\) then \(H\) is a normal subgroup of \(G\).
+
+                \begin{proof}
+                    Notice that because \({[H : G] = 2}\), there must be 2 distinct 
+                    cosets. 
+                    
+                    First, we look at the left cosets of H.
+                    Now, one of them must be \(eH = H\) itself, and the other 
+                    must be all of the other elements. In other words, \(gH\) for some 
+                    \(g \in G, g \not \in H\). Notice that this must be the set 
+                    difference \(G \setminus H\). 
+
+                    Now, looking at the right cosets, one of them must be \(He = H\).
+                    Similarly, the other coset must be the \(G \ H\). This other 
+                    coset must be of the form \(Hg\) where \(g \in G, g \not \in H\).
+
+                    Because the left cosets partition \(G\) in the same way that 
+                    the right cosets partition \(G\), they must be equal. Therefore, 
+                    \(gH = Hg\) for all \(g \in G\), so \(H \normsub G\).
+                \end{proof}
+            }
+        \end{enumerate}
+    }
+
+    \item [4.] {
+        [6] Let \(G = \mathbb{Z} \times \mathbb{Z}\), which we will denote \(G = \mathbb{Z}^2\). Consider the subgroup \(H = \langle(1,2)\rangle\).
+  
+        \begin{enumerate}
+            \item {
+                Plot at least four elements of \(H\) as points in the \(xy\)-plane, where \((1,2)\).
+    
+                \includegraphics[height=0.5\linewidth]{plot12.jpg}
+            }
+            \item {
+                Choose a coset \((x_1, y_1) + H\), and plot at least four elements of this coset.
+    
+                \includegraphics[height=0.5\linewidth]{plot4-4-b.jpg}
+            }
+            \item {
+                Qualitatively describe the geometry of these cosets when plotted.
+    
+                The two cosets are parallel.
+            }
+            \item {
+                Prove that \(H \lhd G\).
+
+                \begin{proof}
+                    First, notice that for \(g = (a,b) \in G\), \(gH = (a + h_1, b + h_2)\)
+                    for \((h_1, h_2) \in H\). By commutativity of integer 
+                    addition, \(Hg = (h_1 + a, h_2 + b) = (a + h_1, b + h_2) = gH\).
+                    Therefore, \(H \normsub G\).
+                \end{proof}
+            }
+            \item {
+                Prove that \(G/H \cong \mathbb{Z}\) by describing an explicit 
+                isomorphism \(\varphi\).
+
+                \begin{proof}
+                    We can think of each element of \(G/H\) as the line with 
+                    slope 2. Each line has a unique x-intercept, so we can define 
+                    \(\varphi((x, y)) = (2x - y)/2\) to be the isomorphism from 
+                    \(G/H\) to \(\Z\).
+                \end{proof}
+            }
+        \end{enumerate}
+    }
+\end{enumerate}
+
+\pagebreak
 
 
 \end{document}
