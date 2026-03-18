@@ -6,4 +6,6 @@ class Circle {
 
 var a = Circle(2);
 
+a.asdf();
+
 print a.radius;

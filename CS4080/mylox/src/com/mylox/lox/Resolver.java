@@ -1,14 +1,14 @@
 package com.mylox.lox;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 
 class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     private final Interpreter interpreter;
     private final Stack<Map<String, Boolean>> scopes = new Stack<>();
     private FunctionType currentFunction = FunctionType.NONE;
+
+    private final Map<String, Set<String>> classMethods = new HashMap<>();
+    private final Map<String, String> varClass = new HashMap<>();
 
     private enum FunctionType {
         NONE,
@@ -45,8 +45,14 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         beginScope();
         scopes.peek().put("this", true);
 
+        Set<String> methodNames = new HashSet<>();
+        classMethods.put(stmt.name.lexeme, methodNames);
+
         for (Stmt.Function method : stmt.methods) {
             FunctionType declaration = FunctionType.METHOD;
+            methodNames.add(method.name.lexeme);
+            System.out.println("Add to class " + stmt.name.lexeme + " method: " + method.name.lexeme);
+
             if (method.name.lexeme.equals("init")) {
                 declaration = FunctionType.INITIALIZER;
             }
@@ -63,6 +69,23 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         declare(stmt.name);
         if (stmt.initializer != null) {
             resolve(stmt.initializer);
+        }
+
+        System.out.println("Declare var");
+        if (stmt.initializer instanceof Expr.Call) {
+            System.out.println("Initializer is of type Expr.Call");
+            Expr callee = ((Expr.Call) stmt.initializer).callee;
+            System.out.println("Initializer callee" + callee);
+            if (callee instanceof  Expr.Variable) {
+                System.out.println("Initializer callee is of type Variable");
+                String lexeme = ((Expr.Variable) callee).name.lexeme;
+                if (classMethods.containsKey(lexeme)) {
+                    System.out.println("Initializer callee is a constructor");
+                    // we have found a constructor
+                    varClass.put(stmt.name.lexeme, lexeme);
+                    System.out.println(stmt.name.lexeme + " is known to be of class " + varClass.get(stmt.name.lexeme));
+                }
+            }
         }
         define(stmt.name);
         return null;
@@ -155,6 +178,19 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     @Override
     public Void visitGetExpr(Expr.Get expr) {
         resolve(expr.object);
+        if (expr.object instanceof Expr.Variable) {
+            System.out.println("Object of get expression is a variable.");
+            String name = ((Expr.Variable) expr.object).name.lexeme;
+            System.out.println("Name of object of get expression is " + name);
+            String className = varClass.getOrDefault(name, null);
+
+            if (className != null) {
+                Set<String> methods = classMethods.get(className);
+                if (!methods.contains(expr.name.lexeme)) {
+                    Lox.error(expr.name, "Not a method of class " + className + ".");
+                }
+            }
+        }
         return null;
     }
 
