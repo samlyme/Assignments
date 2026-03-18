@@ -8,4 +8,110 @@
 \begin{document}
 \maketitle
 
+\section*{Chapter 13}
+
+https://github.com/samlyme/Assignments/tree/cs4080/ch13/challenge
+
+\begin{enumerate}
+    \item {
+        Lox supports only single inheritance—a class may have a single superclass and that’s the only way to reuse methods across classes. Other languages have explored a variety of ways to more freely reuse and share capabilities across classes: mixins, traits, multiple inheritance, virtual inheritance, extension methods, etc.
+
+If you were to add some feature along these lines to Lox, which would you pick and why? If you’re feeling courageous (and you should be at this point), go ahead and add it.
+
+        I originally set out to implement a trait system, but they don't really 
+        ``work'' in dynamically typed languages. Instead, I implemented a way 
+        for programmers to extend the funcitonality of a \emph{class} after 
+        it has been declared. This is similar to traits, but a bit more loosey
+        goosey, without the strict typing system.
+        
+        All future and \emph{current} instances of the class 
+        will receive the new methods. Because everything is bound dynamically 
+        anyway, this actually wasn't too difficult to implement.
+
+        Example of the syntax: (the `C' class is defined earlier)
+        \begin{verbatim}
+var sam = C("sam");
+var bob = C("bob");
+
+// error
+// sam.added();
+
+// Cursed syntax for introspection
+class C + {
+    added() {
+        print this.name + "this method was added after C was defined";
+    }
+}
+
+sam.added();
+bob.added();
+// from: sam
+// this method was added after C was defined
+// from: bob
+// this method was added after C was defined
+        \end{verbatim}
+
+        The main difficulties of implementing this is in the Resolver. Because 
+        there is no way to statically check if the baseClass of this statement is 
+        a subclass or not. I ended up comprimising, letting the super always have 
+        access to super, and defering the error to runtime.
+        \begin{verbatim}
+    @Override
+    public Void visitClassPlusStmt(Stmt.ClassPlus stmt) {
+        ClassType enclosingClass = currentClass;
+
+        currentClass = ClassType.SUBCLASS; // although not "correct", good enough.
+        // No good way to statically determine if this class is a subclass, so we just
+        // let the user use SUPER.
+
+        resolve(stmt.baseClass);
+        beginScope();
+        scopes.peek().put("this", true);
+
+        for (Stmt.Function method : stmt.methods) {
+            FunctionType declaration = FunctionType.METHOD;
+            if (method.name.lexeme.equals("init")) {
+                declaration = FunctionType.INITIALIZER;
+            }
+            resolveFunction(method, declaration);
+        }
+        endScope();
+
+        currentClass = enclosingClass;
+
+        return null;
+    }
+        \end{verbatim}
+    }
+
+    \item {
+        Take out Lox’s current overriding and super behavior and replace it with BETA’s semantics. In short:
+
+When calling a method on a class, prefer the method highest on the class’s inheritance chain.
+
+Inside the body of a method, a call to inner looks for a method with the same name in the nearest subclass along the inheritance chain between the class containing the inner and the class of this. If there is no matching method, the inner call does nothing.
+
+        I did this by replacing the `findMethod' method inside of the LoxClass
+        class with `findMethodRoot' that recursively returns the superclass's 
+        method, with the closure modified to have an `inner' variable bound.
+
+        Most other code was just plumbing to make sure the variables end up where 
+        they're supposed to.
+
+        \begin{verbatim}
+    LoxFunction findMethodRoot(String name) {
+        if (superclass == null) {
+            if (methods.containsKey(name)) return methods.get(name);
+            return null;
+        }
+
+        if (methods.containsKey(name)) {
+            return superclass.findMethodRoot(name).bindInner(methods.get(name));
+        }
+        return superclass.findMethodRoot(name);
+    }
+        \end{verbatim}
+    }
+\end{enumerate}
+
 \end{document}
