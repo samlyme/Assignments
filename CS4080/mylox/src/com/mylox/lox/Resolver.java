@@ -21,6 +21,8 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
     private ClassType currentClass = ClassType.NONE; // not just a boolean bc inheritance.
 
+    private String currentClassName = null;
+
 
     Resolver(Interpreter interpreter) {
         this.interpreter = interpreter;
@@ -37,10 +39,13 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     @Override
     public Void visitClassStmt(Stmt.Class stmt) {
         ClassType enclosingClass = currentClass;
+        String    enclosingClassName = currentClassName;
         currentClass = ClassType.CLASS;
 
         declare(stmt.name);
         define(stmt.name);
+
+        currentClassName = stmt.name.lexeme;
 
         beginScope();
         scopes.peek().put("this", true);
@@ -61,6 +66,7 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         endScope();
 
         currentClass = enclosingClass;
+        currentClassName = enclosingClassName;
         return null;
     }
 
@@ -104,6 +110,24 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         FunctionType enclosingFunction = currentFunction;
         currentFunction = type;
 
+        if (currentFunction == FunctionType.INITIALIZER && currentClassName != null) {
+            System.out.println("looking for this. = <whatever> in constructor.");
+            for (Stmt stmt : function.body) {
+                // cursed string parsing
+                if (stmt instanceof Stmt.Expression) {
+                    if (((Stmt.Expression) stmt).expression instanceof Expr.Set) {
+                        Expr object = ((Expr.Set) ((Stmt.Expression) stmt).expression).object;
+                        Token name = ((Expr.Set) ((Stmt.Expression) stmt).expression).name;
+                        if (object instanceof  Expr.This) {
+                            classMethods.get(currentClassName).add(name.lexeme);
+                        }
+//                        System.out.println("object: " + object + " name: " + name);
+
+                    }
+                }
+            }
+        }
+
         beginScope();
         for (Token param : function.params) {
             declare(param);
@@ -111,6 +135,7 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         }
         resolve(function.body);
         endScope();
+
         currentFunction = enclosingFunction;
     }
 
