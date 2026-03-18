@@ -112,6 +112,121 @@ Inside the body of a method, a call to inner looks for a method with the same na
     }
         \end{verbatim}
     }
+
+    \item {
+        In the chapter where I introduced Lox, I challenged you to come up with a couple of features you think the language is missing. Now that you know how to build an interpreter, implement one of those features.
+
+        I made a mistake by wanting to have type checking since it is an 
+        extremely difficult feature to implement. Nevertheless, I have given it 
+        my best shot, despite the absolute cursed code that was required.
+
+        This feature required such extensive changes, that I have separated from 
+        the other challenge branches. You can find the code here:
+
+        https://github.com/samlyme/Assignments/tree/cs4080/ch13/challenge-3
+
+        The type checking is extremely limited. It only tracks the class of variables 
+        who were intialized with a constructor of a class. All other types are 
+        ignored. Also, the type checking doesn't fully function, since reassigning 
+        a variable breaks the invariant held in the Resolver class. There is no 
+        way to know what the right hand side of an set expression evaluates to,
+        and this type of static analysis will likely require a total refactor 
+        of the Resolver class, or an entirely new TypeChecker class. 
+
+        To track what methods a class has access to, we add some 
+        code to the visitClassStmt code:
+        \begin{verbatim}
+        scopes.peek().put("this", true);
+
+        Set<String> methodNames = new HashSet<>();
+        classProperties.put(stmt.name.lexeme, methodNames);
+
+        for (Stmt.Function method : stmt.methods) {
+            FunctionType declaration = FunctionType.METHOD;
+            methodNames.add(method.name.lexeme);
+            System.out.println("Add to class " + stmt.name.lexeme + " property: " + method.name.lexeme);
+
+            if (method.name.lexeme.equals("init")) {
+                declaration = FunctionType.INITIALIZER;
+            }
+            resolveFunction(method, declaration);
+        }
+        \end{verbatim}
+
+        Then, we go into the initializer of the class to track the available fields:
+        \begin{verbatim}
+    private void resolveFunction(Stmt.Function function, FunctionType type) {
+        FunctionType enclosingFunction = currentFunction;
+        currentFunction = type;
+
+        if (currentFunction == FunctionType.INITIALIZER && currentClassName != null) {
+            System.out.println("looking for this. = <whatever> in constructor.");
+            for (Stmt stmt : function.body) {
+                // cursed string parsing
+                if (stmt instanceof Stmt.Expression) {
+                    if (((Stmt.Expression) stmt).expression instanceof Expr.Set) {
+                        Expr object = ((Expr.Set) ((Stmt.Expression) stmt).expression).object;
+                        Token name = ((Expr.Set) ((Stmt.Expression) stmt).expression).name;
+                        if (object instanceof  Expr.This) {
+                            classProperties.get(currentClassName).add(name.lexeme);
+                        }
+//                        System.out.println("object: " + object + " name: " + name);
+
+                    }
+                }
+            }
+        }
+
+        beginScope();
+        for (Token param : function.params) {
+            declare(param);
+            define(param);
+        }
+        resolve(function.body);
+        endScope();
+
+        currentFunction = enclosingFunction;
+    }
+
+        \end{verbatim}
+        
+        The only way
+        I was able to implement the basic type checking feature was because I 
+        explicilty checked for constructor calls. 
+        \begin{verbatim}
+    @Override
+    public Void visitVarStmt(Stmt.Var stmt) {
+        declare(stmt.name);
+        if (stmt.initializer != null) {
+            resolve(stmt.initializer);
+        }
+
+        System.out.println("Declare var");
+        if (stmt.initializer instanceof Expr.Call) {
+            System.out.println("Initializer is of type Expr.Call");
+            Expr callee = ((Expr.Call) stmt.initializer).callee;
+            System.out.println("Initializer callee" + callee);
+            if (callee instanceof  Expr.Variable) {
+                System.out.println("Initializer callee is of type Variable");
+                String lexeme = ((Expr.Variable) callee).name.lexeme;
+                if (classProperties.containsKey(lexeme)) {
+                    System.out.println("Initializer callee is a constructor");
+                    // we have found a constructor
+                    varClass.put(stmt.name.lexeme, lexeme);
+                    System.out.println(stmt.name.lexeme + " is known to be of class " + varClass.get(stmt.name.lexeme));
+                }
+            }
+        }
+        define(stmt.name);
+        return null;
+    }
+        \end{verbatim}
+
+        PS. This was genuinely one of the most difficult problems to implement in 
+        Java. The lack of pattern matching made it very verbose to check for 
+        specific expressions whose type we know at compile time, hence the massive 
+        number of `instanceof' calls and casting.
+    }
 \end{enumerate}
 
 \end{document}
