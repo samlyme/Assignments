@@ -2,6 +2,7 @@
 #define clox_chunk_h
 
 #include "common.h"
+#include "value.h"
 
 // A "chunk" is a sequence of bytecode.
 
@@ -13,16 +14,18 @@ typedef enum {
 
 // Since we don’t know how big the array needs to be before we start compiling 
 // a chunk, it must be dynamic. (Just trust it.j)
+// The reason `code` isn't of type OpCode* is because it can also include data. 
 typedef struct {
     int count;
     int capacity;
     uint8_t* code; // dynamic array (cache friendly) of opcodes.
-    // The reason `code` isn't of type OpCode* is because it can also include 
-    // data. 
+    ValueArray constants;
 } Chunk;
 
 void initChunk(Chunk* chunk);
 void writeChunk(Chunk* chunk, uint8_t byte);
 void freeChunk(Chunk* chunk);
+
+int addConstant(Chunk* chunk, Value value);
 
 #endif
