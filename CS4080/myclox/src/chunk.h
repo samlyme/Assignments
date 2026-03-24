@@ -17,6 +17,8 @@ typedef struct {
     int count;
     int capacity;
     uint8_t* code; // dynamic array (cache friendly) of opcodes.
+    // The reason `code` isn't of type OpCode* is because it can also include 
+    // data. 
 } Chunk;
 
 void initChunk(Chunk* chunk);
