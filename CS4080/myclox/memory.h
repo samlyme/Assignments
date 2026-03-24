@@ -10,6 +10,10 @@
     (type*)reallocate(pointer, sizeof(type) * (oldCount), \
         sizeof(type) * (newCount))
 
+// Is this macro really necessary?
+#define FREE_ARRAY(type, pointer, oldCount) \
+    reallocate(pointer, sizeof(type) * (oldCount), 0)
+
 void* reallocate(void* pointer, size_t oldSize, size_t newSize);
 
 
