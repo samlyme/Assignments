@@ -2,8 +2,8 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{mathtools, amsfonts, amsthm, xcolor, listings}
 
-\title{Title}
-\author{Your name here}
+\title{HW07}
+\author{Sam Ly}
 
 \begin{document}
 \maketitle
@@ -226,6 +226,122 @@ Inside the body of a method, a call to inner looks for a method with the same na
         Java. The lack of pattern matching made it very verbose to check for 
         specific expressions whose type we know at compile time, hence the massive 
         number of `instanceof' calls and casting.
+    }
+\end{enumerate}
+
+\section*{Chapter 14}
+https://github.com/samlyme/Assignments/tree/cs4080/ch14/challenge
+
+\begin{enumerate}
+    \item {
+        Our encoding of line information is hilariously wasteful of memory. Given that a series of instructions often correspond to the same source line, a natural solution is something akin to run-length encoding of the line numbers.
+
+        Devise an encoding that compresses the line information for a series of instructions on the same line. Change writeChunk() to write this compressed form, and implement a getLine() function that, given the index of an instruction, determines the line where the instruction occurs.
+
+        We do this by making the `lines' field of the Chunk struct be its own
+        dynamic array, independent of the `code' dynamic array. This way, when 
+        we want to add a new line, we can either increment a count, or add a new 
+        entry to lines, without having the sync the size with the `code'.
+
+        \begin{verbatim}
+void writeChunk(Chunk* chunk, uint8_t byte, int line) {
+    if (chunk->capacity <= chunk->count) {
+        int oldCapacity = chunk->capacity;
+
+        chunk->capacity = GROW_CAPACITY(oldCapacity);
+
+        chunk->code = GROW_ARRAY(uint8_t, chunk->code, oldCapacity, chunk->capacity);
+        // chunk->lines = GROW_ARRAY(int, chunk->lines, oldCapacity, chunk->capacity);
+    }
+    chunk->code[chunk->count] = byte;
+    chunk->count++;
+
+    if (chunk->lineCapacity <= chunk->lineCount) {
+        int oldCapacity = chunk->lineCapacity;
+
+        chunk->lineCapacity = GROW_CAPACITY(oldCapacity);
+        chunk->lines = GROW_ARRAY(int, chunk->lines, oldCapacity, chunk->lineCapacity);
+        // printf("grow lines\n");
+    }
+
+    // assume that lines is homotopic increasing.
+    if (chunk->lineCount == 0) {
+        chunk->lines[0] = 1;
+        chunk->lines[1] = line;
+        chunk->lineCount = 2;
+        // printf("init lines\n");
+    } else if (line == chunk->lines[chunk->lineCount - 1])  {
+        chunk->lines[chunk->lineCount - 2]++;
+        // printf("incr lines\n");
+    } else {
+        chunk->lines[chunk->lineCount] = 1;
+        chunk->lines[chunk->lineCount + 1] = line;
+        chunk->lineCount += 2;
+        printf("new  lines\n");
+    }
+}
+        \end{verbatim}
+
+        Now, we just do a linear search for `getLine'.
+        \begin{verbatim}
+int getLine(Chunk* chunk, int offset) {
+    int codeIdx = 0;
+    int lineIdx = 0;
+    while (codeIdx < offset) {
+        codeIdx++;
+        if (chunk->lines[lineIdx] == 0) {
+            lineIdx += 2;
+        } else {
+            chunk->lines[lineIdx]--;
+        }
+    }
+
+    return chunk->lines[lineIdx + 1];
+}
+        \end{verbatim}
+    }
+
+    \item {
+        Defining two instructions seems to be the best of both worlds. What sacrifices, if any, does it force on us?
+
+        The implementation is relatively simple. We just check if the current 
+        number of constants is less than 256. If this is the case, a normal 
+        \verb|OP_CONSTANT| is written, otherwise, we issue \verb|OP_CONSTANT_LONG|.
+
+        \begin{verbatim}
+void writeConstant(Chunk* chunk, Value value, int line) {
+    int constantIdx = addConstant(chunk, value);
+
+    if (constantIdx < 256) {
+        writeChunk(chunk, OP_CONSTANT, line);
+        writeChunk(chunk, constantIdx, line);
+    } else {
+        writeChunk(chunk, OP_CONSTANT_LONG, line);
+        uint8_t a = constantIdx >> 16;
+        uint8_t b = constantIdx >> 8;
+        uint8_t c = constantIdx;
+        writeChunk(chunk, a, line);
+        writeChunk(chunk, b, line);
+        writeChunk(chunk, c, line);
+    }
+}
+        \end{verbatim}
+
+        The most obvious sacrifice is that it uses an extra 
+        `instruction slot'. We only have 256 possible 
+        instructions because we encode them as a byte.
+        This also adds a layer of complexity.
+    }
+
+    \item {
+        Our reallocate() function relies on the C standard library for dynamic memory allocation and freeing. malloc() and free() aren’t magic. Find a couple of open source implementations of them and explain how they work. How do they keep track of which bytes are allocated and which are free? What is required to allocate a block of memory? Free it? How do they make that efficient? What do they do about fragmentation?
+
+        At a very high level, malloc and free use doubly linked 
+        lists to track memory. When you request memory,
+        malloc traverses the list and finds a block with 
+        enough memory, which it returns to you. Calling 
+        free takes your pointer and connects it to the previous 
+        block of free memory.
     }
 \end{enumerate}
 
