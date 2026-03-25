@@ -13,7 +13,8 @@ int main(int argc, const char* argv[]) {
     }
 
     // should be OP_CONSTANT_LONG
-        writeConstant(&chunk, 6.7, 2);
+    writeConstant(&chunk, 6.7, 2);
+    writeConstant(&chunk, 6.9, 2);
 
     writeChunk(&chunk, OP_RETURN, 123);
 
