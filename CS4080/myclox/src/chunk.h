@@ -20,8 +20,12 @@ typedef struct {
     int count;
     int capacity;
     uint8_t* code; // dynamic array (cache friendly) of opcodes.
-    int* lines; // maps back to the line in the source code.
-                // each byte in code has a corresponding int in lines. yikes!
+
+    // RLE for line numbers. even index = count, odd index = value.
+    int lineCount;
+    int lineCapacity;
+    int* lines;
+        
     ValueArray constants;
 } Chunk;
 

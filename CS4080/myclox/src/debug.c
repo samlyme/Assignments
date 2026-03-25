@@ -27,12 +27,30 @@ static int constantInstruction(const char* name, Chunk* chunk, int offset) {
     return offset + 2;
 }
 
+int getLine(Chunk* chunk, int offset) {
+    int codeIdx = 0;
+    int lineIdx = 0;
+    while (codeIdx < offset) {
+        codeIdx++;
+        if (chunk->lines[lineIdx] == 0) {
+            lineIdx += 2;
+        } else {
+            chunk->lines[lineIdx]--;
+        }
+    }
+
+    return chunk->lines[lineIdx + 1];
+}
+
 int disassembleInstruction(Chunk* chunk, int offset) {
     printf("%04d ", offset);
-    if (offset > 0 && chunk->lines[offset] == chunk->lines[offset - 1]) {
+    int prevLine = getLine(chunk, offset -1);
+    int line = getLine(chunk, offset); // cursed O(n^2) perf.
+
+    if (offset > 0 && line == prevLine) {
         printf("   | ");
     } else {
-        printf("%4d ", chunk->lines[offset]);
+        printf("%4d ", line);
     }
 
     uint8_t instruction = chunk->code[offset];
