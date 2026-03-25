@@ -300,6 +300,38 @@ int getLine(Chunk* chunk, int offset) {
 }
         \end{verbatim}
     }
+
+    \item {
+        Defining two instructions seems to be the best of both worlds. What sacrifices, if any, does it force on us?
+
+        The implementation is relatively simple. We just check if the current 
+        number of constants is less than 256. If this is the case, a normal 
+        \verb|OP_CONSTANT| is written, otherwise, we issue \verb|OP_CONSTANT_LONG|.
+
+        \begin{verbatim}
+void writeConstant(Chunk* chunk, Value value, int line) {
+    int constantIdx = addConstant(chunk, value);
+
+    if (constantIdx < 256) {
+        writeChunk(chunk, OP_CONSTANT, line);
+        writeChunk(chunk, constantIdx, line);
+    } else {
+        writeChunk(chunk, OP_CONSTANT_LONG, line);
+        uint8_t a = constantIdx >> 16;
+        uint8_t b = constantIdx >> 8;
+        uint8_t c = constantIdx;
+        writeChunk(chunk, a, line);
+        writeChunk(chunk, b, line);
+        writeChunk(chunk, c, line);
+    }
+}
+        \end{verbatim}
+
+        The most obvious sacrifice is that it uses an extra 
+        `instruction slot'. We only have 256 possible 
+        instructions because we encode them as a byte.
+        This also adds a layer of complexity.
+    }
 \end{enumerate}
 
 \end{document}
