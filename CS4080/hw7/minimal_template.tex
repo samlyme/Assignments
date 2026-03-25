@@ -332,6 +332,17 @@ void writeConstant(Chunk* chunk, Value value, int line) {
         instructions because we encode them as a byte.
         This also adds a layer of complexity.
     }
+
+    \item {
+        Our reallocate() function relies on the C standard library for dynamic memory allocation and freeing. malloc() and free() aren’t magic. Find a couple of open source implementations of them and explain how they work. How do they keep track of which bytes are allocated and which are free? What is required to allocate a block of memory? Free it? How do they make that efficient? What do they do about fragmentation?
+
+        At a very high level, malloc and free use doubly linked 
+        lists to track memory. When you request memory,
+        malloc traverses the list and finds a block with 
+        enough memory, which it returns to you. Calling 
+        free takes your pointer and connects it to the previous 
+        block of free memory.
+    }
 \end{enumerate}
 
 \end{document}
