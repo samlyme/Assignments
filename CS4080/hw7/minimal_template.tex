@@ -464,5 +464,39 @@ https://github.com/samlyme/Assignments/tree/cs4080/ch15/challenge
         us to push a zero onto the stack for all negative values, which can be 
         expensive.
     }
+
+    \item {
+        Our VM’s stack has a fixed size, and we don’t check if pushing a value overflows it. This means the wrong series of instructions could cause our interpreter to crash or go into undefined behavior. Avoid that by dynamically growing the stack as needed.
+
+        What are the costs and benefits of doing so?
+
+        The first benefit is that our process only uses as much memory as it needs.
+        At the OS level, dynamic allocation means that the process can grow/shrink.
+        However, this will be much slower, as we are now at the mercy of the 
+        memory allocator. Also, there is just a general overhead when a dynamic 
+        array for the stack, since we need to track the capacity, and that introduces 
+        an `if' statement, which can add up.
+    }
+
+    \item {
+        Are there other instructions where you can do a similar optimization?
+
+        Yes, we can do the same optimization for all binary operations, since we 
+        don't actually need to pop `a' off the stack.
+
+        \begin{verbatim}
+    #define BINARY_OP(op) \
+        do { \
+            double b = pop(); \
+            *(vm.stackTop -1) = *(vm.stackTop -1) op b; \
+        } while (false)
+
+            // ... 
+            case OP_NEGATE: {
+                *(vm.stackTop - 1) = -*(vm.stackTop - 1);
+                break; 
+            }
+        \end{verbatim}
+    }
 \end{enumerate}
 \end{document}

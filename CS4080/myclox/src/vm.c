@@ -30,7 +30,10 @@ static InterpretResult run() {
     #define READ_BYTE() (*vm.ip++)
     #define READ_CONSTANT() (vm.chunk->constants.values[READ_BYTE()])
     #define BINARY_OP(op) \
-        do { double b = pop(); double a = pop(); push(a op b); } while (false)
+        do { \
+            double b = pop(); \
+            *(vm.stackTop -1) = *(vm.stackTop -1) op b; \
+        } while (false)
 
     for (;;) {
         #ifdef DEBUG_TRACE_EXECUTION
@@ -55,8 +58,7 @@ static InterpretResult run() {
                 return INTERPRET_OK;
             } // out of order compared to book, but I like it this way.
             case OP_NEGATE: {
-                Value v = *(vm.stackTop - 1);
-                *(vm.stackTop - 1) = -v;
+                *(vm.stackTop - 1) = -*(vm.stackTop - 1);
                 break; 
             }
             case OP_ADD:        BINARY_OP(+); break;
