@@ -11,6 +11,9 @@
 typedef enum {
     OP_RETURN,
     OP_CONSTANT,
+    
+    // Arithmetic
+    OP_NEGATE,
 } OpCode;
 
 // Since we don’t know how big the array needs to be before we start compiling 

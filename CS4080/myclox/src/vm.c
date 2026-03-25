@@ -51,6 +51,10 @@ static InterpretResult run() {
                 printValue(pop());
                 printf("\n");
                 return INTERPRET_OK;
+            } // out of order compared to book, but I like it this way.
+            case OP_NEGATE: {
+                push(-pop());
+                break;
             }
         }
     }
