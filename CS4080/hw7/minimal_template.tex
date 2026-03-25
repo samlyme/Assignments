@@ -345,4 +345,158 @@ void writeConstant(Chunk* chunk, Value value, int line) {
     }
 \end{enumerate}
 
+\section*{Chapter 15}
+https://github.com/samlyme/Assignments/tree/cs4080/ch15/challenge
+
+\begin{enumerate}
+    \item {
+        What bytecode instruction sequences would you generate for the following expressions:
+
+        \begin{verbatim}
+    // 1 * 2 + 3
+    writeChunk(&chunk, OP_CONSTANT, 1);
+    writeChunk(&chunk, addConstant(&chunk, 1), 1);
+
+    writeChunk(&chunk, OP_CONSTANT, 1);
+    writeChunk(&chunk, addConstant(&chunk, 2), 1);
+
+    writeChunk(&chunk, OP_MULTIPLY, 1);
+
+    writeChunk(&chunk, OP_CONSTANT, 1);
+    writeChunk(&chunk, addConstant(&chunk, 3), 1);
+
+    writeChunk(&chunk, OP_ADD, 1);
+
+
+    // 1 + 2 * 3
+    writeChunk(&chunk, OP_CONSTANT, 2);
+    writeChunk(&chunk, addConstant(&chunk, 1), 2);
+
+    writeChunk(&chunk, OP_CONSTANT, 2);
+    writeChunk(&chunk, addConstant(&chunk, 2), 2);
+
+    writeChunk(&chunk, OP_CONSTANT, 2);
+    writeChunk(&chunk, addConstant(&chunk, 3), 2);
+
+    writeChunk(&chunk, OP_MULTIPLY, 2);
+
+    writeChunk(&chunk, OP_ADD, 2);
+
+    // 3 - 2 - 1
+    writeChunk(&chunk, OP_CONSTANT, 3);
+    writeChunk(&chunk, addConstant(&chunk, 3), 3);
+
+    writeChunk(&chunk, OP_CONSTANT, 3);
+    writeChunk(&chunk, addConstant(&chunk, 2), 3);
+
+    writeChunk(&chunk, OP_SUBTRACT, 3);
+
+    writeChunk(&chunk, OP_CONSTANT, 3);
+    writeChunk(&chunk, addConstant(&chunk, 1), 3);
+
+    writeChunk(&chunk, OP_SUBTRACT, 3);
+
+    // 1 + 2 * 3 - 4 / -5
+    writeChunk(&chunk, OP_CONSTANT, 4);
+    writeChunk(&chunk, addConstant(&chunk, 1), 4);
+
+    writeChunk(&chunk, OP_CONSTANT, 4);
+    writeChunk(&chunk, addConstant(&chunk, 2), 4);
+
+    writeChunk(&chunk, OP_CONSTANT, 4);
+    writeChunk(&chunk, addConstant(&chunk, 3), 4);
+
+    writeChunk(&chunk, OP_MULTIPLY, 4);
+    writeChunk(&chunk, OP_ADD, 4);
+
+    writeChunk(&chunk, OP_CONSTANT, 4);
+    writeChunk(&chunk, addConstant(&chunk, 4), 4);
+
+    writeChunk(&chunk, OP_CONSTANT, 4);
+    writeChunk(&chunk, addConstant(&chunk, 5), 4);
+    writeChunk(&chunk, OP_NEGATE, 4);
+
+    writeChunk(&chunk, OP_DIVIDE, 4);
+    writeChunk(&chunk, OP_SUBTRACT, 4);
+        \end{verbatim}
+    }
+
+    \item {
+        Given the above, do you think it makes sense to have both instructions? Why or why not? Are there any other redundant instructions you would consider including?
+
+        \begin{verbatim}
+    // 4 - 3 * -2
+    // without OP_NEGATE
+    writeChunk(&chunk, OP_CONSTANT, 5);
+    writeChunk(&chunk, addConstant(&chunk, 4), 5);
+
+    writeChunk(&chunk, OP_CONSTANT, 5);
+    writeChunk(&chunk, addConstant(&chunk, 3), 5);
+
+    writeChunk(&chunk, OP_CONSTANT, 5);
+    writeChunk(&chunk, addConstant(&chunk, 0), 5);
+    writeChunk(&chunk, OP_CONSTANT, 5);
+    writeChunk(&chunk, addConstant(&chunk, 2), 5);
+    writeChunk(&chunk, OP_SUBTRACT, 5);
+
+    writeChunk(&chunk, OP_MULTIPLY, 5);
+    writeChunk(&chunk, OP_SUBTRACT, 5);
+
+    // without OP_SUBTRACT
+    writeChunk(&chunk, OP_CONSTANT, 5);
+    writeChunk(&chunk, addConstant(&chunk, 4), 5);
+
+    writeChunk(&chunk, OP_CONSTANT, 5);
+    writeChunk(&chunk, addConstant(&chunk, 3), 5);
+    writeChunk(&chunk, OP_NEGATE, 5);
+
+    writeChunk(&chunk, OP_CONSTANT, 5);
+    writeChunk(&chunk, addConstant(&chunk, 2), 5);
+    writeChunk(&chunk, OP_NEGATE, 5);
+
+    writeChunk(&chunk, OP_MULTIPLY, 5);
+    writeChunk(&chunk, OP_ADD, 5);
+        \end{verbatim}
+
+        I think that it actually makes sense to remove the \verb|OP_SUBTRACT|. 
+        We just need to add a single \verb|OP_NEGATE| after values we intend to 
+        subtract, then use the \verb|OP_ADD|. Removing \verb|OP_NEGATE| requires 
+        us to push a zero onto the stack for all negative values, which can be 
+        expensive.
+    }
+
+    \item {
+        Our VM’s stack has a fixed size, and we don’t check if pushing a value overflows it. This means the wrong series of instructions could cause our interpreter to crash or go into undefined behavior. Avoid that by dynamically growing the stack as needed.
+
+        What are the costs and benefits of doing so?
+
+        The first benefit is that our process only uses as much memory as it needs.
+        At the OS level, dynamic allocation means that the process can grow/shrink.
+        However, this will be much slower, as we are now at the mercy of the 
+        memory allocator. Also, there is just a general overhead when a dynamic 
+        array for the stack, since we need to track the capacity, and that introduces 
+        an `if' statement, which can add up.
+    }
+
+    \item {
+        Are there other instructions where you can do a similar optimization?
+
+        Yes, we can do the same optimization for all binary operations, since we 
+        don't actually need to pop `a' off the stack.
+
+        \begin{verbatim}
+    #define BINARY_OP(op) \
+        do { \
+            double b = pop(); \
+            *(vm.stackTop -1) = *(vm.stackTop -1) op b; \
+        } while (false)
+
+            // ... 
+            case OP_NEGATE: {
+                *(vm.stackTop - 1) = -*(vm.stackTop - 1);
+                break; 
+            }
+        \end{verbatim}
+    }
+\end{enumerate}
 \end{document}
