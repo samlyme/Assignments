@@ -10,6 +10,7 @@
 // This enum is just a representation for that.
 typedef enum {
     OP_RETURN,
+    OP_CONSTANT,
 } OpCode;
 
 // Since we don’t know how big the array needs to be before we start compiling 
