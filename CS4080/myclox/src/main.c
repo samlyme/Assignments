@@ -72,10 +72,42 @@ int main(int argc, const char* argv[]) {
     writeChunk(&chunk, OP_CONSTANT, 4);
     writeChunk(&chunk, addConstant(&chunk, 5), 4);
     writeChunk(&chunk, OP_NEGATE, 4);
-    
 
     writeChunk(&chunk, OP_DIVIDE, 4);
     writeChunk(&chunk, OP_SUBTRACT, 4);
+
+    // 4 - 3 * -2
+    // without OP_NEGATE
+    writeChunk(&chunk, OP_CONSTANT, 5);
+    writeChunk(&chunk, addConstant(&chunk, 4), 5);
+
+    writeChunk(&chunk, OP_CONSTANT, 5);
+    writeChunk(&chunk, addConstant(&chunk, 3), 5);
+
+    writeChunk(&chunk, OP_CONSTANT, 5);
+    writeChunk(&chunk, addConstant(&chunk, 0), 5);
+    writeChunk(&chunk, OP_CONSTANT, 5);
+    writeChunk(&chunk, addConstant(&chunk, 2), 5);
+    writeChunk(&chunk, OP_SUBTRACT, 5);
+
+    writeChunk(&chunk, OP_MULTIPLY, 5);
+    writeChunk(&chunk, OP_SUBTRACT, 5);
+
+    // without OP_SUBTRACT
+    writeChunk(&chunk, OP_CONSTANT, 5);
+    writeChunk(&chunk, addConstant(&chunk, 4), 5);
+
+    writeChunk(&chunk, OP_CONSTANT, 5);
+    writeChunk(&chunk, addConstant(&chunk, 3), 5);
+    writeChunk(&chunk, OP_NEGATE, 5);
+
+    writeChunk(&chunk, OP_CONSTANT, 5);
+    writeChunk(&chunk, addConstant(&chunk, 2), 5);
+    writeChunk(&chunk, OP_NEGATE, 5);
+
+    writeChunk(&chunk, OP_MULTIPLY, 5);
+    writeChunk(&chunk, OP_ADD, 5);
+
 
 
 
