@@ -20,11 +20,13 @@ typedef struct {
     int count;
     int capacity;
     uint8_t* code; // dynamic array (cache friendly) of opcodes.
+    int* lines; // maps back to the line in the source code.
+                // each byte in code has a corresponding int in lines. yikes!
     ValueArray constants;
 } Chunk;
 
 void initChunk(Chunk* chunk);
-void writeChunk(Chunk* chunk, uint8_t byte);
+void writeChunk(Chunk* chunk, uint8_t byte, int line);
 void freeChunk(Chunk* chunk);
 
 int addConstant(Chunk* chunk, Value value);
