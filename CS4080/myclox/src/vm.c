@@ -54,7 +54,11 @@ static InterpretResult run() {
                 printf("\n");
                 return INTERPRET_OK;
             } // out of order compared to book, but I like it this way.
-            case OP_NEGATE:     push(-pop()); break; 
+            case OP_NEGATE: {
+                Value v = *(vm.stackTop - 1);
+                *(vm.stackTop - 1) = -v;
+                break; 
+            }
             case OP_ADD:        BINARY_OP(+); break;
             case OP_SUBTRACT:   BINARY_OP(-); break;
             case OP_MULTIPLY:   BINARY_OP(*); break;

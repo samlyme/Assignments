@@ -109,8 +109,6 @@ int main(int argc, const char* argv[]) {
     writeChunk(&chunk, OP_ADD, 5);
 
 
-
-
     writeChunk(&chunk, OP_RETURN, 123);
     printf("Chunk count: %d\n", chunk.count);
     interpret(&chunk);
