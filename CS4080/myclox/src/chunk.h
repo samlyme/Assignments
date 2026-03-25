@@ -11,6 +11,7 @@
 typedef enum {
     OP_RETURN,
     OP_CONSTANT,
+    OP_CONSTANT_LONG,
 } OpCode;
 
 // Since we don’t know how big the array needs to be before we start compiling 
@@ -32,6 +33,8 @@ typedef struct {
 void initChunk(Chunk* chunk);
 void writeChunk(Chunk* chunk, uint8_t byte, int line);
 void freeChunk(Chunk* chunk);
+
+void writeConstant(Chunk* chunk, Value value, int line);
 
 int addConstant(Chunk* chunk, Value value);
 

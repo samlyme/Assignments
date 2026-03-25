@@ -59,6 +59,23 @@ void freeChunk(Chunk* chunk) {
     initChunk(chunk);
 }
 
+void writeConstant(Chunk* chunk, Value value, int line) {
+    int constantIdx = addConstant(chunk, value);
+
+    if (constantIdx < 256) {
+        writeChunk(chunk, OP_CONSTANT, line);
+        writeChunk(chunk, constantIdx, line);
+    } else {
+        writeChunk(chunk, OP_CONSTANT_LONG, line);
+        uint8_t a = constantIdx >> 16;
+        uint8_t b = constantIdx >> 8;
+        uint8_t c = constantIdx;
+        writeChunk(chunk, a, line);
+        writeChunk(chunk, b, line);
+        writeChunk(chunk, c, line);
+    }
+}
+
 int addConstant(Chunk* chunk, Value value) {
     writeValueArray(&chunk->constants, value);
     return chunk->constants.count - 1;
