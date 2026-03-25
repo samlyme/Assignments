@@ -14,6 +14,10 @@ typedef enum {
     
     // Arithmetic
     OP_NEGATE,
+    OP_ADD,
+    OP_SUBTRACT,
+    OP_MULTIPLY,
+    OP_DIVIDE,
 } OpCode;
 
 // Since we don’t know how big the array needs to be before we start compiling 
