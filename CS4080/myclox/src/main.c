@@ -10,31 +10,79 @@ int main(int argc, const char* argv[]) {
     Chunk chunk;
     initChunk(&chunk);
 
-    int constant = addConstant(&chunk, 1.2);
-    writeChunk(&chunk, OP_CONSTANT, 123);
-    writeChunk(&chunk, constant, 123);
+    // 1 * 2 + 3
+    writeChunk(&chunk, OP_CONSTANT, 1);
+    writeChunk(&chunk, addConstant(&chunk, 1), 1);
 
-    constant = addConstant(&chunk, 3.4);
-    writeChunk(&chunk, OP_CONSTANT, 123);
-    writeChunk(&chunk, constant, 123);
+    writeChunk(&chunk, OP_CONSTANT, 1);
+    writeChunk(&chunk, addConstant(&chunk, 2), 1);
 
-    writeChunk(&chunk, OP_ADD, 123);
+    writeChunk(&chunk, OP_MULTIPLY, 1);
 
-    constant = addConstant(&chunk, 5.6);
-    writeChunk(&chunk, OP_CONSTANT, 123);
-    writeChunk(&chunk, constant, 123);
+    writeChunk(&chunk, OP_CONSTANT, 1);
+    writeChunk(&chunk, addConstant(&chunk, 3), 1);
 
-    writeChunk(&chunk, OP_DIVIDE, 123);
-    writeChunk(&chunk, OP_NEGATE, 123);
+    writeChunk(&chunk, OP_ADD, 1);
+
+
+    // 1 + 2 * 3
+    writeChunk(&chunk, OP_CONSTANT, 2);
+    writeChunk(&chunk, addConstant(&chunk, 1), 2);
+
+    writeChunk(&chunk, OP_CONSTANT, 2);
+    writeChunk(&chunk, addConstant(&chunk, 2), 2);
+
+    writeChunk(&chunk, OP_CONSTANT, 2);
+    writeChunk(&chunk, addConstant(&chunk, 3), 2);
+
+    writeChunk(&chunk, OP_MULTIPLY, 2);
+
+    writeChunk(&chunk, OP_ADD, 2);
+
+    // 3 - 2 - 1
+    writeChunk(&chunk, OP_CONSTANT, 3);
+    writeChunk(&chunk, addConstant(&chunk, 3), 3);
+
+    writeChunk(&chunk, OP_CONSTANT, 3);
+    writeChunk(&chunk, addConstant(&chunk, 2), 3);
+
+    writeChunk(&chunk, OP_SUBTRACT, 3);
+
+    writeChunk(&chunk, OP_CONSTANT, 3);
+    writeChunk(&chunk, addConstant(&chunk, 1), 3);
+
+    writeChunk(&chunk, OP_SUBTRACT, 3);
+
+    // 1 + 2 * 3 - 4 / -5
+    writeChunk(&chunk, OP_CONSTANT, 4);
+    writeChunk(&chunk, addConstant(&chunk, 1), 4);
+
+    writeChunk(&chunk, OP_CONSTANT, 4);
+    writeChunk(&chunk, addConstant(&chunk, 2), 4);
+
+    writeChunk(&chunk, OP_CONSTANT, 4);
+    writeChunk(&chunk, addConstant(&chunk, 3), 4);
+
+    writeChunk(&chunk, OP_MULTIPLY, 4);
+    writeChunk(&chunk, OP_ADD, 4);
+
+    writeChunk(&chunk, OP_CONSTANT, 4);
+    writeChunk(&chunk, addConstant(&chunk, 4), 4);
+
+    writeChunk(&chunk, OP_CONSTANT, 4);
+    writeChunk(&chunk, addConstant(&chunk, 5), 4);
+    writeChunk(&chunk, OP_NEGATE, 4);
+    
+
+    writeChunk(&chunk, OP_DIVIDE, 4);
+    writeChunk(&chunk, OP_SUBTRACT, 4);
+
+
 
     writeChunk(&chunk, OP_RETURN, 123);
-
-
     printf("Chunk count: %d\n", chunk.count);
-    // disassembleChunk(&chunk, "test chunk");
     interpret(&chunk);
     freeVM();
-
     freeChunk(&chunk);
     return 0;
 }
