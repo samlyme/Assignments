@@ -1,0 +1,69 @@
+\documentclass{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{mathtools, amsfonts, amsthm, xcolor, listings}
+
+\title{HW08}
+\author{Sam Ly}
+
+\begin{document}
+\maketitle
+
+\section*{Chapter 15}
+\begin{enumerate}
+    \item {
+        \verb|print "${drink} will be ready in ${steep + cool} minutes.";|
+
+        What token types would you define to implement a scanner for string interpolation? What sequence of tokens would you emit for the above string literal?
+
+        Rather than defining a \verb|TOKEN_STRING|, I would define a \verb|TOKEN_QUOTE|
+        and a \verb|TOKEN_STRING_VALUE|. This way, we essentially defer some of the 
+        complex work to the parser. Then, we also need a \verb|TOKEN_STRING_INTERP_START|
+
+        For the tokens emitted, it would be 
+        \begin{verbatim}
+            TOKEN_QUOTE 
+            TOKEN_STRING_INTERP_START 
+            TOKEN_IDENTIFIER 
+            TOKEN_RIGHT_BRACE
+            TOKEN_STRING_VALUE
+            TOKEN_STRING_INTERP_START 
+            TOKEN_IDENTIFIER
+            TOKEN_ADD
+            TOKEN_IDENTIFIER
+            TOKEN_RIGHT_BRACE 
+            TOKEN_STRING_VALUE 
+            TOKEN_QUOTE
+        \end{verbatim}
+    }
+
+    \item {
+        Later versions of C++ are smarter and can handle the above code. Java and C\# never had the problem. How do those languages specify and implement this?
+
+        The two approaches to handling this are:
+        \begin{enumerate}
+            \item Context aware scanning/lexing.
+            \item Parser hack.
+        \end{enumerate}
+
+        Later versions of C++ and C\# use a context aware scanner, so it ``knows''
+        when it is parsing a type, and will emit the correct token. On the 
+        other hand, Java defers this work to the parser. When the parser is 
+        currently parsing a generic, it can dynmically ``split'' the shift operator 
+        into multiple generic closing tags. 
+    }
+
+    \item {
+        Name a few contextual keywords from other languages, and the context where they are meaningful. What are the pros and cons of having contextual keywords? How would you implement them in your language’s front end if you needed to?
+
+        In modern Python, `match' and `case' are only keywords if they are used 
+        within a match statement. Otherwise, they can be used as variable names.
+        Contextual keywords are useful, but in my opinion slightly confusing. 
+        The reason Python made these keywords contextual is because of backwards
+        compatibility. If these keywords were in from the beginning, I believe 
+        they would not be contextual. If I were to implement them, I would choose 
+        to let them be a standard identifier, then have the parser check if that 
+        identifier should be a keyword.
+    }
+\end{enumerate}
+
+\end{document}
