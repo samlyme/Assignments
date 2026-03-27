@@ -152,7 +152,7 @@ static Token number() {
 }
 
 static Token identifier() {
-    while (isAlpha(peek()) && !isAtEnd() || isDigit(peek())) advance();
+    while ((isAlpha(peek()) && !isAtEnd()) || isDigit(peek())) advance();
 
     return makeToken(identifierType());
 }
