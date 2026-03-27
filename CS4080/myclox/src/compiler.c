@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "common.h"
+#include "common.h" // IWYU pragma: keepignore
 #include "compiler.h"
 #include "scanner.h"
 
