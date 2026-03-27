@@ -47,7 +47,7 @@ static Token errorToken(const char* message) {
 Token scanToken() {
     scanner.start = scanner.current;
 
-    if (!isAtEnd()) return makeToken(TOKEN_EOF);
+    if (isAtEnd()) return makeToken(TOKEN_EOF);
 
     return errorToken("Unexpected character.");
 }
