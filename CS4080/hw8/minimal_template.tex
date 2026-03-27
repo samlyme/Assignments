@@ -66,4 +66,75 @@
     }
 \end{enumerate}
 
+\section*{Chapter 17}
+\begin{enumerate}
+    \item {
+        \verb|(-1 + 2) * 3 - -4 |
+
+        Write a trace of how those functions are called. Show the order they are called, which calls which, and the arguments passed to them.
+
+        \begin{verbatim}
+compile()
+├── initScanner("(-1 + 2) * 3 - -4")
+├── advance()                              // Consumes '('
+├── expression()
+│   └── parsePrecedence(PREC_ASSIGNMENT)
+│       ├── advance()                      // Consumes '-'
+│       ├── grouping()                     // Prefix rule for '('
+│       │   ├── expression()
+│       │   │   └── parsePrecedence(PREC_ASSIGNMENT)
+│       │   │       ├── advance()          // Consumes '1'
+│       │   │       ├── unary()            // Prefix rule for '-'
+│       │   │       │   ├── parsePrecedence(PREC_UNARY)
+│       │   │       │   │   ├── advance()  // Consumes '+'
+│       │   │       │   │   └── number()   // Prefix rule for '1'
+│       │   │       │   │       └── emitConstant()
+│       │   │       │   └── emitByte(OP_NEGATE)
+│       │   │       │
+│       │   │       ├── advance()          // Consumes '2'
+│       │   │       └── binary()           // Infix rule for '+'
+│       │   │           ├── parsePrecedence(PREC_FACTOR)
+│       │   │           │   ├── advance()  // Consumes ')'
+│       │   │           │   └── number()   // Prefix rule for '2'
+│       │   │           │       └── emitConstant()
+│       │   │           └── emitByte(OP_ADD)
+│       │   │
+│       │   └── consume(TOKEN_RIGHT_PAREN)
+│       │       └── advance()              // Consumes '*'
+│       │
+│       ├── advance()                      // Consumes '3'
+│       ├── binary()                       // Infix rule for '*'
+│       │   ├── parsePrecedence(PREC_UNARY)
+│       │   │   ├── advance()              // Consumes '-'
+│       │   │   └── number()               // Prefix rule for '3'
+│       │   │       └── emitConstant()
+│       │   └── emitByte(OP_MULTIPLY)
+│       │
+│       ├── advance()                      // Consumes '-'
+│       └── binary()                       // Infix rule for '-' (subtraction)
+│           ├── parsePrecedence(PREC_FACTOR)
+│           │   ├── advance()              // Consumes '4'
+│           │   └── unary()                // Prefix rule for '-' (negation)
+│           │       ├── parsePrecedence(PREC_UNARY)
+│           │       │   ├── advance()      // Consumes EOF
+│           │       │   └── number()       // Prefix rule for '4'
+│           │       │       └── emitConstant()
+│           │       └── emitByte(OP_NEGATE)
+│           └── emitByte(OP_SUBTRACT)
+│
+├── consume(TOKEN_EOF)
+│   └── advance()
+└── endCompiler()
+    └── emitReturn()
+        └── emitByte(OP_RETURN)
+        \end{verbatim}
+    }
+
+    \item {
+        In the full Lox language, what other tokens can be used in both prefix and infix positions? What about in C or in another language of your choice?
+
+        We can also use the ( as both an prefix operator for grouping, or an infix 
+        operator for initiating function calls.
+    }
+\end{enumerate}
 \end{document}
