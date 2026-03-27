@@ -6,6 +6,7 @@
 #include "common.h" // IWYU pragma: keepignore
 #include "compiler.h"
 #include "scanner.h"
+#include "debug.h"
 
 typedef struct {
     Token current;
@@ -109,6 +110,12 @@ static void emitReturn() {
 
 static void endCompiler() {
     emitReturn();
+
+    #ifdef DEBUG_PRINT_CODE
+    if (!parser.hadError) {
+        disassembleChunk(currentChunk(), "code");
+    }
+    #endif
 }
 
 static void expression();
