@@ -18,6 +18,11 @@ void initScanner(const char* source) {
     scanner.line = 1;
 }
 
+static bool isDigit(char c) {
+    // idk why we don't use std implementation
+    return c >= '0' && c <= '9';
+}
+
 static bool isAtEnd() {
     return *scanner.current == '\0';
 }
@@ -87,6 +92,14 @@ static void skipWhiteSpace() {
     }
 }
 
+static Token number() {
+    while (isDigit(peek()) && !isAtEnd()) advance();
+    if (peek() == '.' && isDigit(peekNext())) {
+        while (isDigit(peek()) && !isAtEnd()) advance();
+    }
+    return makeToken(TOKEN_NUMBER);
+}
+
 static Token string() {
     while (peek() != '"' && !isAtEnd()) {
         if (peek() == '\n') scanner.line++;
@@ -108,7 +121,8 @@ Token scanToken() {
     if (isAtEnd()) return makeToken(TOKEN_EOF);
 
     char c = advance();
-
+    
+    if (isDigit(c)) return number(); // can't do a bigass switch case lmfao
     switch (c) {
         case '(': return makeToken(TOKEN_LEFT_PAREN);
         case ')': return makeToken(TOKEN_RIGHT_PAREN);
