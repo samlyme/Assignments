@@ -22,6 +22,23 @@ static bool isAtEnd() {
     return *scanner.current == '\0';
 }
 
+static char peek() {
+    return *scanner.current;
+}
+
+static char advance() {
+    scanner.current++;
+    return scanner.current[-1]; // uhhhhhh
+}
+
+static bool match(char expected) {
+    if (isAtEnd()) return false;
+    if (expected != *scanner.current) return false;
+    advance();
+    return true;
+}
+
+
 static Token makeToken(TokenType type) {
     Token token;
 
@@ -44,19 +61,27 @@ static Token errorToken(const char* message) {
     return token;
 }
 
-static char advance() {
-    scanner.current++;
-    return scanner.current[-1]; // uhhhhhh
-}
+static void skipWhiteSpace() {
+    for (;;) {
+        char c = peek();
 
-static bool match(char expected) {
-    if (isAtEnd()) return false;
-    if (expected != *scanner.current) return false;
-    advance();
-    return true;
+        switch (c) {
+            case '\n':
+                scanner.line++;
+            case ' ':
+            case '\t':
+            case '\r':
+                advance();
+                break;
+            default:
+                return; 
+        }
+    }
 }
 
 Token scanToken() {
+    skipWhiteSpace();
+
     scanner.start = scanner.current;
 
     if (isAtEnd()) return makeToken(TOKEN_EOF);
