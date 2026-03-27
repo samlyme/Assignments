@@ -2,7 +2,7 @@
 CC = gcc
 
 # Define compiler flags
-CFLAGS = -Wall -g
+CFLAGS = -Wall -Wextra -Werror=implicit-function-declaration
 
 # Define directories
 SRC_DIR = src
