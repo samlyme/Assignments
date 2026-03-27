@@ -134,7 +134,31 @@ compile()
         In the full Lox language, what other tokens can be used in both prefix and infix positions? What about in C or in another language of your choice?
 
         We can also use the ( as both an prefix operator for grouping, or an infix 
-        operator for initiating function calls.
+        operator for initiating function calls. In C, the * operator is infix for 
+        multiplication and prefix for dereferencing a pointer.
+    }
+
+    \item {
+        Add support for that operator to the compiler. You don’t have to generate any bytecode, just show how you would hook it up to the parser and handle the operands.
+
+        I need to add the `?' and `:' to the TokenType enum, then when the `?' is 
+        encountered by the compiler, we call into a `ternary' function that consumes 
+        an expression, then a `:' token, then another expression.
+        \begin{verbatim}
+
+static void ternary() {
+    TokenType operatorType = parser.previous.type; // should be ?
+
+    expression();
+
+    consume(TOKEN_COLON, "Expect ':' for ternary.");
+
+    expression();
+
+
+}
+
+        \end{verbatim}
     }
 \end{enumerate}
 \end{document}

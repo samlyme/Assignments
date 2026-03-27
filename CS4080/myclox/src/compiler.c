@@ -173,7 +173,20 @@ static void unary() {
     }
 }
 
+static void ternary() {
+    TokenType operatorType = parser.previous.type; // should be ?
+
+    expression();
+
+    consume(TOKEN_COLON, "Expect ':' for ternary.");
+
+    expression();
+
+
+}
+
 ParseRule rules[] = {
+  [TOKEN_QUESTION]      = {ternary,  NULL,   PREC_NONE},
   [TOKEN_LEFT_PAREN]    = {grouping, NULL,   PREC_NONE},
   [TOKEN_RIGHT_PAREN]   = {NULL,     NULL,   PREC_NONE},
   [TOKEN_LEFT_BRACE]    = {NULL,     NULL,   PREC_NONE}, 
