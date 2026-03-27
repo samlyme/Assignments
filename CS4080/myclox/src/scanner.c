@@ -26,6 +26,11 @@ static char peek() {
     return *scanner.current;
 }
 
+static char peekNext() {
+    if (isAtEnd()) return '\0';
+    return scanner.current[1];
+}
+
 static char advance() {
     scanner.current++;
     return scanner.current[-1]; // uhhhhhh
@@ -66,17 +71,33 @@ static void skipWhiteSpace() {
         char c = peek();
 
         switch (c) {
-            case '\n':
-                scanner.line++;
+            case '\n': scanner.line++;
             case ' ':
             case '\t':
             case '\r':
                 advance();
                 break;
+            case '/':
+                if (peekNext() == '/') {
+                    while (peek() != '\n' && !isAtEnd()) advance();
+                }
             default:
                 return; 
         }
     }
+}
+
+static Token string() {
+    while (peek() != '"' && !isAtEnd()) {
+        if (peek() == '\n') scanner.line++;
+        advance();
+    }
+
+    if (isAtEnd()) return errorToken("Unterminated string.");
+
+    advance(); // consume closing quote;
+    return makeToken(TOKEN_STRING);
+
 }
 
 Token scanToken() {
@@ -100,14 +121,11 @@ Token scanToken() {
         case '+': return makeToken(TOKEN_PLUS);
         case '/': return makeToken(TOKEN_SLASH);
         case '*': return makeToken(TOKEN_STAR);
-        case '!': return makeToken(
-            match('=') ? TOKEN_BANG_EQUAL : TOKEN_BANG);
-        case '=': return makeToken(
-            match('=') ? TOKEN_EQUAL_EQUAL : TOKEN_EQUAL);
-        case '<': return makeToken(
-            match('=') ? TOKEN_LESS_EQUAL : TOKEN_LESS);
-        case '>': return makeToken(
-            match('=') ? TOKEN_GREATER_EQUAL : TOKEN_GREATER);
+        case '!': return makeToken( match('=') ? TOKEN_BANG_EQUAL : TOKEN_BANG);
+        case '=': return makeToken( match('=') ? TOKEN_EQUAL_EQUAL : TOKEN_EQUAL);
+        case '<': return makeToken( match('=') ? TOKEN_LESS_EQUAL : TOKEN_LESS);
+        case '>': return makeToken( match('=') ? TOKEN_GREATER_EQUAL : TOKEN_GREATER);
+        case '"': return string();
     }
 
 
