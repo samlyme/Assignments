@@ -1,0 +1,93 @@
+\documentclass{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{mathtools, amsfonts, amsthm, xcolor, listings}
+
+\title{HW07}
+\author{Sam Ly}
+
+\begin{document}
+\maketitle
+
+\section*{Exercise 2}
+\begin{itemize}
+  \item Points attempted: 5
+  \item Self-assessed score: 5/5.
+  \item Time spent: 60 minutes.
+  \item Difficulty: 6/10.
+  \item Questions/Feedback: Clarity, correctness.
+\end{itemize}
+\begin{enumerate}
+    \item {
+        [2] Read Tai-Danae Bradley's blog post What's a Quotient Group, Really? Part 1. (Professor Bradley wrote this blog when she was in graduate school, and her blog was a part of the motivation for doing a blog post as the term paper in this class.)
+
+        Done.
+    }
+    \item {
+        HW7, Exercise 2: i added the defintion of an abelian group.
+    }
+
+    \item {
+        Do at least \emph{three} of the following for your blog:
+
+        \begin{enumerate}
+            \item[a] {
+                Write an outline of what your blog post is going to be about.
+
+                Although the full prompt that I will be folllowing is ``The 
+                Fundamental Group of a Topological Space'', I want to maybe open 
+                up the scope just a tad, and include more details about algebraic 
+                topology itself. Thus, I want to include a section on specifically 
+                the foundations of algebraic topology. Then, as a we build solid 
+                foundation, the blog should transition into a more focused discussion 
+                about how groups show up in algebraic topology, specifically as 
+                the fundamental group of a topological space.
+
+                Lastly, I want to also get into some applications. As I am 
+                currently deeply interested in machine learning, and the 
+                mathematical foundations of it, I want to explore some applications 
+                of topology in machine learning. There is also a concept in 
+                deep learning known as the \textbf{manifold hypothesis} which 
+                states that `most' high dimensional data can actually be summarized 
+                as a manifold with a lower `intrinsic dimensionality.'
+            }
+            \item[b] {
+                Write two paragraphs explaining a core concept or idea.
+
+                The bedrock of topology is a concept known as \textbf{homotopy}.
+                Although topology is often introduced in terms of donuts and mugs, 
+                I believe that a slightly more `formal' defintion is worth investing 
+                into before we continue.
+                Without too much detail[TK], suppose we have two topological spaces 
+                \(X\) and \(Y\). Now, consider two maps from \(f, f' \colon X \to Y\).
+                We consider \(f\) and \(f'\) \textbf{homotopic} if we can ``continuously
+                deform'' one into the other. This may be hard to visualize, but 
+                imagine that we have two topological spaces, one that is the 
+                perimeter of a circle, and another that is the perimeter of a 
+                square, (we will see later that these two are inherently the 
+                same space, but for now, we can treat them as different spaces).
+                Notice that all mappings from a circle to a square can be
+                be deformed into each other, if they have a specific quality:
+                that they go around the object the same amount of times. 
+
+                \includegraphics[width=.7\linewidth]{circle-to-square.png}
+
+                Imagine a mapping where we go around the circle once, but around 
+                the square twice. [TK] No matter how we stretch this mapping, 
+                we can never get something that maps from the circle to the 
+                square that go around the same number of times. The formal 
+                name for this concept is a \textbf{winding number}. Thus, 
+                all mappings in this setting are homotopic if they share a 
+                winding number. Further more, we can group the mappings that 
+                are homotopic [TK, need to explain why homotopy is an equivalence
+                relation] into something known as \textbf{homotopy classes}.
+            }
+            \item[c] {
+                Include an illustration, or plan how you will make your illustration.
+
+                A made a rough illustration of the example above.
+            }
+        \end{enumerate}
+    }
+\end{enumerate}
+
+\end{document}
