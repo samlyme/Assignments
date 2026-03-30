@@ -253,6 +253,107 @@ In the following exercises you will be looking at conjugacy classes of the symme
     }
 \end{enumerate}
   
-    
+\section*{Choice Exercise 5}
+\begin{itemize}
+  \item Points attempted: 13
+  \item Self-assessed score: 11/13.
+  \item Time spent: 100 minutes.
+  \item Difficulty: 4/10.
+  \item Questions/Feedback: Clarity, correctness.
+\end{itemize}
+\begin{enumerate}
+    \item {
+        [3] Attempt the following true/false questions and give brief explanations for your reasoning.
+      
+        \begin{enumerate}
+            \item {
+                If \(\varphi \colon D_8 \to D_4\)  is a homomorphism, then \[           D_8/\ker(\varphi) \cong D_4.         \]
+
+                True. \(\varphi\) is structure preserving, so the quotient group 
+                between \(D_6\) and the kernel of \(\varphi\) must be of the 
+                same structure as \(D_4\).
+            }
+
+            \item {
+                If \(G\) is an infinite group with \(H \leq G\), then the index of \(H\) in \(G\) is finite: \([G:H] < \infty\).
+        
+                False. The group \(H = C_n\) for \(n \in \N\) is a subgroup of the ``continuous''
+                cyclic group \(G = \R / \I\), however the index \([ G \colon H]\)
+                is uncountably infinite.
+            }
+
+            \item {
+                Let \(G \times H\) be a direct product of groups, and let \[             N = \{(g, e_H) \mid g \in G\} \cong G.           \] Then \(N \triangleleft G \times H\) and the quotient group \((G \times H)/N\) is isomorphic to \(H\).
+        
+                True. \(N\) is a normal subgroup because the `left' component 
+                is just the entire group \(G\). A group is always a normal 
+                subgroup of itself. Then the `right' component is the trivial group,
+                which is a normal subgroup of any group, so it is a normal 
+                subgroup of \(H\). Therfore, \(N \normsub G \times H\). The quotient
+                group can then be ``distributed'' to result in a group where the 
+                `left' component is the trivial group, and the `right' component 
+                is just \(H\). This group is isomorphic to \(H\).
+            }
+
+            \item {
+                If  \(G\) is a group, and \(N\) is a normal subgroup, then there exists a subgroup \(H\) in \(G\) such that \(G/N \cong H\).
+        
+                True. We can pick a `representative' from each of the cosets of
+                \(N\) in \(G \) to form \(H\).
+            }
+
+            \item {
+                If \(\varphi\colon G \to H\) is an homomorphism with kernel \(K = \ker(\varphi)\), then the map \(\psi\colon G/K \to \operatorname{Im}(\varphi)\) that sends \(\psi(aK) = \varphi(a)\) is also a homomorphism.
+        
+                True. \(\psi\) honestly just feels equivalent to \(\varphi\).
+            }
+
+            \item {
+                If \(g \in G\) has order \(k\) and \(h \in H\) has order \(k\), then there exists an isomorphism \(\varphi\colon \langle g \rangle \to \langle h \rangle\).
+        
+                True. Both \(\ang g\) and \(\ang h\) are isomorphic to \(C_k\).
+            }
+
+            \item {
+                If the only normal subgroups of \(G\) are \(\{e\} \triangleleft G\) and \(G \triangleleft G\), then \(G\) is the trivial group (i.e. \(|G| = 1\).)
+        
+                False. It feels like there \emph{could} exist some counter example 
+                of a group that has no non-trivial normal subgroups.
+            }
+
+            \item {
+                If  \(G\) is an abelian group and \(H \leq G\), then \(H \triangleleft G\) and \(G/H\) is abelian.
+        
+                True. If the elements of \(G\) commute, then the elements of \(H\) 
+                must also commute. Similarly, by definition of normal sub groups, 
+                the cosets are just elements fromt the group \(G\). Therefore,
+                they are also commutative/abelian.
+            }
+
+            \item {
+                If \(G\) and \(H\) are isomorphic, then any homomorphism from \(G\) to \(H\) is an isomorphism.
+        
+                False. We can always construct the `trivial homomorphism' that sends 
+                all elements of \(G\) to \(e_H\).
+            }
+
+            \item {
+                If \(G\) is a finite group with \(|G| \geq 3\) and \(H\) is an infinite group, then any homomorphism \(\varphi\colon G \to H\) fails to be one-to-one.
+                
+                False. This is from set theory.
+            }
+        \end{enumerate}
+    }
+
+    \item {
+        Expand the section below to see the answers. If you got the answer or explanation wrong, write the correct answer here and say something about why you got it wrong originally.
+      
+        I got two wrong: (a) and (d).
+        For (a), I just failed to consider the case of the trivial group.
+        However, for (d), my line of reasoning was fundamentally flawed. I am still 
+        not too sure of my reasoning, so I will have to go back through the warmup
+        mentioned in the solution.
+    }
+\end{enumerate}
 
 \end{document}
