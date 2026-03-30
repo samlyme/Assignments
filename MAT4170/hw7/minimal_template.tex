@@ -356,4 +356,58 @@ In the following exercises you will be looking at conjugacy classes of the symme
     }
 \end{enumerate}
 
+\section*{Choice Exercise 7}
+\begin{itemize}
+  \item Points attempted: 5
+  \item Self-assessed score: 5/5.
+  \item Time spent: 30 minutes.
+  \item Difficulty: 6/10.
+  \item Questions/Feedback: Clarity, correctness.
+\end{itemize}
+\begin{enumerate}
+    \item[2.] {
+        [5] In this part, you'll study some subgroups and quotient groups of this group, which might not be as hard as you expect!
+    
+        \begin{enumerate}
+            \item {
+                Write some elements of the cyclic subgroup \(H = \langle ab \rangle \leq F_2\).
+      
+                We have elements like \(e\), \(ab\), \((ab)\inv = b\inv a\inv\),
+                \(abab\), and \(abab \dots ab\).
+            }
+
+            \item {
+                Is \(H \triangleleft F_2\)? Why or why not?
+      
+                \(H\) can not be a normal subgroup of \(F_2\) because for \(b \in F_2\),
+                \(bH \not= Hb\). We can see this because \(H\) can not include 
+                an element that starts with \(b\), however all elements of \(bH\)
+                start with \(b\).
+            }
+
+            \item {
+                Consider the map \(\varphi \colon F_2 \to D_3\) by \(\varphi(a) = r\) and \(\varphi(b) = f\). Is this map a homomorphism? An isomorphism?
+      
+                First, this map can't be an isomorphism because \(|F_2| \not= |D_3|\).
+                At most, this map can be a homomorphism. We also see that 
+                \(\varphi\) is actually a homomorphism because for any \(x, y \in F_2\),
+                \(\varphi(xy) = \varphi(x) \varphi(y)\).
+            }
+
+            \item {
+                What is the image of \(\varphi\)?
+      
+                The image of \(\varphi\) is the entire \(D_3\).
+            }
+
+            \item {
+                Without explicitly describing \(\ker(\varphi)\), what does the 
+                first isomorphism theorem have to say about the quotient group \(F_2/\ker(\varphi)\)?
+
+                The first isomorphism theorem says that there exists an 
+                isomorphism between \(\psi \colon F_2/\ker(\varphi) \to D_3\).
+            }
+        \end{enumerate}
+    }
+\end{enumerate}
 \end{document}
