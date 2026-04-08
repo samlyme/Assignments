@@ -1,0 +1,56 @@
+\documentclass{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{mathtools, amsfonts, amsthm, xcolor, listings}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\I}{\mathbb{I}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\ang}[1]{\left\langle #1 \right\rangle}
+\newcommand{\inv}{^{-1}}
+
+\newcommand{\normsub}{\lhd}
+
+\newcommand{\reflection}[5]{
+    \begin{itemize}
+    \item Points attempted: #1
+    \item Self-assessed score: #2/#1.
+    \item Time spent: #3 minutes.
+    \item Difficulty: #4/10.
+    \item Questions/Feedback: #5.
+    \end{itemize}
+}
+
+
+\title{HW09}
+\author{Sam Ly}
+
+\begin{document}
+\maketitle
+
+\section*{Chapter 18}
+https://github.com/samlyme/Assignments/tree/cs4080/ch18/main
+
+\begin{enumerate}
+    \item {
+        We could reduce our binary operators even further than we did here. Which other instructions can you eliminate, and how would the compiler cope with their absence?
+
+        The two operations that could potentially be removed are the OP NIL, TRUE, and FALSE,
+        and the either OP GREATER or OP LESS.
+
+        We can remove all the data creation ops simply because we already have the 
+        OP CONSTANT. Then, for OP GREATOR, the compiler can just reorder the elements 
+        and use an OP LESS and vice versa.
+    }
+    \item {
+        Conversely, we can improve the speed of our bytecode VM by adding more specific instructions that correspond to higher-level operations. What instructions would you define to speed up the kind of user code we added support for in this chapter?
+
+        We can add more boolean operations like NOT EQUAL and GREATER THAN OR EQUAL.
+
+    }
+\end{enumerate}
+
+\end{document}
