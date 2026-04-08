@@ -11,6 +11,11 @@
 typedef enum {
     OP_RETURN,
     OP_CONSTANT,
+
+    // Special ops for creating these data
+    OP_NIL,
+    OP_TRUE,
+    OP_FALSE,
     
     // Arithmetic
     OP_NEGATE,
@@ -18,6 +23,12 @@ typedef enum {
     OP_SUBTRACT,
     OP_MULTIPLY,
     OP_DIVIDE,
+
+    // Logic
+    OP_NOT,
+    OP_EQUAL,
+    OP_GREATER,
+    OP_LESS,
 } OpCode;
 
 // Since we don’t know how big the array needs to be before we start compiling 
