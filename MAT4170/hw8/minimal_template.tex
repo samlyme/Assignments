@@ -1,0 +1,132 @@
+\documentclass{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{mathtools, amsfonts, amsthm, xcolor, listings}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\I}{\mathbb{I}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\ang}[1]{\left\langle #1 \right\rangle}
+\newcommand{\inv}{^{-1}}
+
+\newcommand{\normsub}{\lhd}
+
+\newcommand{\reflection}[5]{
+    \begin{itemize}
+    \item Points attempted: #1
+    \item Self-assessed score: #2/#1.
+    \item Time spent: #3 minutes.
+    \item Difficulty: #4/10.
+    \item Questions/Feedback: #5.
+    \end{itemize}
+}
+
+
+\title{HW08}
+\author{Sam Ly}
+
+\begin{document}
+\maketitle
+
+\section*{Exercise 1}
+Collaborators: Sam
+
+\noindent
+Tools and resources used
+\pagebreak
+
+\section*{Exercise 2}
+\reflection{1}{1}{2}{1}{None.}
+HW8 Exercise 2: One thing that I would like to see on HW 9 would be some more work on burnside's theorem. Although I "know" the theorem, I do not have a full intuition for it yet.
+\pagebreak
+
+\section*{Choice Exercise 5}
+We defined a (left) group action of the group \((G,*)\) on the set \(X\) as a function \(\cdot\colon G \times X \to X\) such that for all \(x \in X\) and \(g_1, g_2 \in G\)
+\begin{itemize}
+    \item \(e \cdot x = x\), and
+    \item \(g_1 \cdot (g_2 \cdot x) = (g_1 * g_2) \cdot x\).
+\end{itemize}
+
+\begin{enumerate}
+    \item {
+        [4] For each of the following subparts, give an example of a group \((G,*)\), a set \(X\), and a function \(\cdot\colon G \times X \to X\) such that
+        \begin{enumerate}
+            \item {
+                The function is a group action (i.e. it satisfies both of the above properties.)
+
+                We can have the group SO(3) acting on the set of 3D vectors \(\R^3\),
+                where the function is a matrix-vector multiplication. The 
+                identity matrix \(I \in \text{SO}(3)\) satisfies the first 
+                condition, and the associativity of matrix-vector products 
+                satisify the second condition.
+            }
+            \item {
+                The function satisfies the first property, but not the second.
+
+                We can have the group \(C_2\) and the set \(\Z\), with the function 
+                being addition, such that the identity in \(C_2\) corresponds to 
+                \(0\) and \(r\) corresponds to \(1\). Now, the first condition
+                is always met, however the second condition breaks.
+            }
+            \item {
+                The function satisfies the second property, but not the first.
+
+                Now, we can have the group \(C_2\) and the set \(\Z / 2\Z\), with 
+                the function 
+                \[
+                    c \cdot x = \begin{cases}
+                        1 + x   & c = e \\
+                        x       & c = r
+                    \end{cases},
+                \]
+                for \(c \in C_2\) and \(x \in \Z/ 2\Z\).
+            }
+            \item {
+                We can The function satisfies neither property.
+                
+                We can have any non-trivial group \(G\) an any set \(X\) such that 
+                \(|X| > 1\), where the function always maps to some \(x \in X\).
+                This function breaks both conditions.
+            }
+        \end{enumerate}
+    }
+    \item {
+        [3] Prove that if \( G \) is a group that acts on a set \( X \), then 
+        the set 
+        \[H = \{g \in G \mid g \cdot x = x \text{ for all } x \in X\}\] is a 
+        normal subgroup of \( G \).
+
+        \begin{proof}
+            To begin, we note that for \(H\) to be a normal subgroup of \(G\), 
+            \(H\) itself must be a group. So, we must show that \(H\) satisfies 
+            the group axioms. First, associativity is inherited. Also notice that,
+            by definition, \(e \in H\).
+
+            Then, \(H\) is closed because for some \(h, h' \in H\), 
+            \(h \cdot x = x\) and \(h' \cdot x = x\), so \(h \cdot (h' \cdot x) = x\).
+            This means that \((h * h') \cdot x = x\), so \(h * h' \in H\). Thus,
+            \(H\) is closed.
+
+            Now, we must prove that for all \(h \in H\), \(h\inv \in H\). First, 
+            we know that \(e \in H\), because \(e \cdot x = x\). Notice that 
+            \(h\inv * h = e\), so \((h\inv * h) \cdot x = x\). By definition of 
+            a group action, \((h\inv * h) \cdot x = h\inv \cdot h \cdot x = h\inv \cdot x = x\).
+            Thus, \(h\inv \in H\).
+
+            Now, to show that \(H \normsub G\), we must show that for any \(h, g\), 
+            \(g * h * g\inv \in H\). Let use directly apply this expresion onto 
+            some \(x \in X\) to get \(g \cdot h \cdot g\inv \cdot x\). Notice that 
+            \(g\inv \cdot x \in X\), and \(h \cdot x' = x'\) for any \(x' \in X\).
+            So, we can effectively remove \(h\) from the expression to get 
+            \(g \cdot g\inv \cdot x = (g * g\inv) \cdot x = x\). Thus, \(g* h * g\inv \in H\), 
+            so \(H \normsub G\).
+        \end{proof}
+    }
+\end{enumerate}
+  
+  
+
+\end{document}
