@@ -125,6 +125,25 @@ We defined a (left) group action of the group \((G,*)\) on the set \(X\) as a fu
             so \(H \normsub G\).
         \end{proof}
     }
+
+    \item {
+        [3] Let \( G = \mathbb{Z} \), \( X = (H, *) \), and \( h \in H \) be an element of \( H \). 
+        Prove that the map \(n \cdot h = h^n * h * h^{-n}\) is a group action.
+
+        \begin{proof}
+            First, we prove that \(e \cdot x = x\). Let \(e \in G = 0\). Now, 
+            \(e \cdot h = h^0 *h *h^0 = h\). This satisfies the first condition.
+
+            To prove the second condition, let \(n, n' \in G\), so 
+            \begin{align}
+                n \cdot (n' \cdot h) &= n \cdot (h^{n'} * h * h^{-n'}) \\
+                                    &= h^n * h^{n'} * h * h^{-n'} * h^{-n} \\
+                                    &= h^{n+n'} * h * h^{-(n+n')} \\
+                                    &= (n + n') \cdot h.
+            \end{align}
+            Therefore, the map \(n \cdot h = h^n * h * h^{-n}\) is a group action.
+        \end{proof}
+    }
 \end{enumerate}
   
   
