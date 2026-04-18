@@ -330,7 +330,7 @@ static void expression() {
 static void varDeclaration() {
     uint8_t global = parseVariable("Expect variable name.");
 
-    if (match(TOKEN_SEMICOLON)) {
+    if (match(TOKEN_EQUAL)) {
         expression();
     } else {
         emitByte(OP_NIL);
