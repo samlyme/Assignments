@@ -12,6 +12,7 @@ typedef enum {
     OP_RETURN,
     OP_CONSTANT,
     OP_PRINT,
+    OP_POP,
 
     // Special ops for creating these data
     OP_NIL,
