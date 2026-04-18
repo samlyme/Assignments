@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include "debug.h"
+#include "chunk.h"
 #include "value.h"
 
 void disassembleChunk(Chunk* chunk, const char* name) {
@@ -45,6 +46,9 @@ int disassembleInstruction(Chunk* chunk, int offset) {
             return simpleInstruction("OP_PRINT", offset);
         case OP_POP:
             return simpleInstruction("OP_POP", offset);
+            
+        case OP_DEFINE_GLOBAL:
+            return constantInstruction("OP_DEFINE_GLOBAL", chunk, offset);
 
         case OP_NEGATE:
             return simpleInstruction("OP_NEGATE", offset);
