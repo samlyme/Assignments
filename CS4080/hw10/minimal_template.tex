@@ -167,5 +167,72 @@ void benchmarkTable(const char *filePath) {
     }
 \end{enumerate}
 
+\section*{Chapter 21}
+\begin{enumerate}
+    \item {
+        The compiler adds a global variable’s name to the constant table as a string every time an identifier is encountered. It creates a new constant each time, even if that variable name is already in a previous slot in the constant table. That’s wasteful in cases where the same variable is referenced multiple times by the same function. That, in turn, increases the odds of filling up the constant table and running out of slots since we allow only 256 constants in a single chunk.
+
+        Optimize this. How does your optimization affect the performance of the compiler compared to the runtime? Is this the right trade-off?
+
+        A simple optimization is to iterate through the constants table to see if 
+        an identifier has already been added there. If it has, we don't need to 
+        add a new entry to the constants table. This is alright, but the issue 
+        is that this introduces a \(O(n)\) operation to every single variable
+        usage, which scales poorly. Although we are technically in "constant time"
+        because we know there can only be up to 256 values, this is still a significant 
+        issue. Luckily, due to caching and branch prediction, the performance is likely 
+        not to terrible. However, the upside does outweigh the down, because this 
+        fixes a very real issue in our runtime: printing too many values will 
+        result in an OOM like error, as we will fill up the constant table, so 
+        this tradeoff is worth it.
+
+        \begin{verbatim}
+static uint8_t makeConstant(Value value) {
+    Chunk* chunk = currentChunk();
+
+    int constantIdx = -1;
+
+    for (int i  = 0; i < chunk->constants.count; i++) {
+        printf("look for constant: i: %d\n", i);
+        if (valuesEqual(chunk->constants.values[i], value)) {
+            constantIdx = i;
+            printf("~~~~~~~ seen variable before!!\n");
+            break;
+        }
+    }
+    if (constantIdx == -1) constantIdx = addConstant(chunk, value);
+
+    if (constantIdx > UINT8_MAX) {
+        error("Too many constants in one chunk.");
+        return 0;
+    }
+
+    return (uint8_t)constantIdx;
+}
+        \end{verbatim}
+    }
+
+    \item {
+        Looking up a global variable by name in a hash table each time it is used is pretty slow, even with a good hash table. Can you come up with a more efficient way to store and access global variables without changing the semantics?
+
+        One way to improve this is to do the hashing and whatnot at the compile 
+        stage, and translate all identifiers into raw constant table indices.
+        That way, the VM won't need to read a string as the variable name and 
+        do the hash table lookup.
+    }
+
+    \item {
+        We could report mistakes like this as compile errors, at least when running from a script. Do you think we should? Justify your answer. What do other scripting languages you know do?
+
+        I would not make this a compile error (which does make the prior optimization)
+        harder), because we have already established that the global namespace
+        is dynamic, and evolves as the program runs. Although in this case we 
+        \emph{can} tell that this will result in an error statically, this may 
+        not be the case in all situations, and it would be best to leave this 
+        as a runtime error. Most other scripting languages like Python or JS 
+        also do this.
+    }
+\end{enumerate}
+
 
 \end{document}
