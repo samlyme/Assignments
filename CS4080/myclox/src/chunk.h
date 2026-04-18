@@ -13,7 +13,9 @@ typedef enum {
     OP_CONSTANT,
     OP_PRINT,
     OP_POP,
+    
     OP_DEFINE_GLOBAL,
+    OP_GET_GLOBAL,
 
     // Special ops for creating these data
     OP_NIL,
