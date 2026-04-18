@@ -104,10 +104,16 @@ static InterpretResult run() {
                 break;
             }
             case OP_RETURN: {
+                // exit interpreter. what about functions? (later)
+                return INTERPRET_OK;
+            } 
+            case OP_PRINT: {
                 printValue(pop());
                 printf("\n");
-                return INTERPRET_OK;
-            } // out of order compared to book, but I like it this way.
+                break;
+            }
+            
+            // out of order compared to book, but I like it this way.
             case OP_NEGATE:     
                 if (!IS_NUMBER(peek(0))) {
                     runtimeError("Operand must be a number.");
