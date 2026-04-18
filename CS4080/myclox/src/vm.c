@@ -143,7 +143,21 @@ static InterpretResult run() {
                 push(value);
                 break;
             }
-            
+            case OP_SET_GLOBAL: {
+                ObjString* name = READ_STRING();
+                if (tableSet(&vm.globals, name, peek(0))) {
+                    /* 
+                        Lox doesn't support implicit declaration, but the 
+                        tableSet doesn't care, so we need to clean up the 
+                        "zombie value".
+                    */
+                    tableDelete(&vm.globals, name); 
+                    runtimeError("Undefined variable '%s'.", name->chars);
+                    return INTERPRET_RUNTIME_ERROR;
+                }
+                break;
+            }
+
             // out of order compared to book, but I like it this way.
             case OP_NEGATE:     
                 if (!IS_NUMBER(peek(0))) {
