@@ -57,7 +57,7 @@ mind bending concepts we have to visit.
 
 Before we get into any formal definitions, I would like to invite 
 you to consider an example.
-Suppose we have the set $S$ of real numbers $0 < s < 1$ (the exclusive range is very important). Can we define a continuous mapping $f$ that takes $S$ and to the range $(0, \infty)$?
+Suppose we have the set $S$ of real numbers $0 < s < 1$ (the exclusive range is very important). Can we define a continuous, bijective mapping $f$ that takes $S$ and to the range $(0, \infty)$?
 
 > $S$ is actually an example of an open set. I will explain why in the next section.
 
@@ -67,7 +67,7 @@ Now, what if we let our input be the set $Q$ with values in the  *inclusive* ran
 
 Surprisingly, no! If we take the same function $f(x) = -\text{log}(x)$, this works for the "left" side of the desired input range since $f(1) = 0$. However, $f$ is undefined for $x = 0$. Somehow, *expanding* the input range *shrinks* the output range!
 
-If you don't believe me, try it yourself! There is no continuous, well-defined function that satisfies these requirements. You can construct a discontinuous function, but constructing a continuous function is impossible. 
+If you don't believe me, try it yourself! There is no continuous bijective function that satisfies these requirements. You can construct a discontinuous function, but constructing a continuous function is impossible. 
 
 Now, this is where I start to get excited, because in topology, we often speak about this thing called "continuous deformations", where we arbitrary stretch a shape without tearing or gluing. For example, the thing where we morph a donut into a coffee mug and vice versa. Intuitively, we can kind of see how we can stretch the open set $(0, 1)$ into the open set $(0, \infty)$, but we can't do the same for $[0, 1]$. This our first taste of stretching things around!
 
