@@ -1,0 +1,90 @@
+\markdownRendererDocumentBegin
+\markdownRendererSectionBegin
+\markdownRendererHeadingOne{Topology up to the Fundamental Group, and why we care}\markdownRendererInterblockSeparator
+{}(work in progress title)\markdownRendererParagraphSeparator
+{}Many of us have probably heard something along the lines of\markdownRendererSoftLineBreak
+{}"topologist view donuts and coffee mugs as the same thing", but I\markdownRendererSoftLineBreak
+{}feel like that is a very poor representation of what the field of\markdownRendererSoftLineBreak
+{}topology has to offer.\markdownRendererSoftLineBreak
+{}Topology is one of the most intriguing and beautiful branches of\markdownRendererSoftLineBreak
+{}math, that has some truly deep foundational insights on\markdownRendererSoftLineBreak
+{}computer science, engineering, and the very \markdownRendererEmphasis{structure} of\markdownRendererSoftLineBreak
+{}mathematics itself, and this view of topology is really a\markdownRendererSoftLineBreak
+{}disservice. In this article, I intend to provide you, the reader,\markdownRendererSoftLineBreak
+{}with a more complete view of topology, and why we even care.\markdownRendererInterblockSeparator
+{}\markdownRendererSectionBegin
+\markdownRendererHeadingTwo{The building blocks of topology}\markdownRendererInterblockSeparator
+{}Now, the "real" foundations of topology lie in something known as\markdownRendererSoftLineBreak
+{}\markdownRendererLink{metric spaces}{https://ncatlab.org/nlab/show/metric+space}{https://ncatlab.org/nlab/show/metric+space}{}. However, I feel as though we can still form a\markdownRendererSoftLineBreak
+{}complete enough view of topology and its uses if we accept some\markdownRendererSoftLineBreak
+{}abstractions. A true deep dive into metric spaces touches on\markdownRendererSoftLineBreak
+{}topics like continuity, and even Real Analysis, which is a bit\markdownRendererSoftLineBreak
+{}out of scope for us. Despite this, we still need a some grasp\markdownRendererSoftLineBreak
+{}on what a metric space is.\markdownRendererInterblockSeparator
+{}\markdownRendererSectionBegin
+\markdownRendererHeadingThree{Metric Spaces}\markdownRendererInterblockSeparator
+{}Simply put, a metric space is a set of points, such that we have\markdownRendererSoftLineBreak
+{}some notion of distances (there are some special requirements!)\markdownRendererSoftLineBreak
+{}between them, ie. a \markdownRendererStrongEmphasis{metric}. Formally, we have a set of points \markdownRendererDollarSign{}X\markdownRendererDollarSign{}\markdownRendererSoftLineBreak
+{}and a \markdownRendererDollarSign{}d(x\markdownRendererUnderscore{}1, x\markdownRendererUnderscore{}2)\markdownRendererDollarSign{} is a metric. Together, \markdownRendererDollarSign{}(X, d)\markdownRendererDollarSign{} form a \markdownRendererStrongEmphasis{metric space}.\markdownRendererParagraphSeparator
+{}For \markdownRendererDollarSign{}(X, d)\markdownRendererDollarSign{} to to be a metric space, \markdownRendererDollarSign{}d\markdownRendererDollarSign{} must satisfies some\markdownRendererSoftLineBreak
+{}constraints. Namely:\markdownRendererInterblockSeparator
+{}\markdownRendererOlBeginTight
+\markdownRendererOlItemWithNumber{1}\markdownRendererDollarSign{}d\markdownRendererDollarSign{} must take in two points of \markdownRendererDollarSign{}x\markdownRendererUnderscore{}1, x\markdownRendererUnderscore{}2 \markdownRendererBackslash{}in X\markdownRendererDollarSign{}, and give us a real number \markdownRendererDollarSign{}r > 0\markdownRendererDollarSign{}. Formally, \markdownRendererDollarSign{}d \markdownRendererBackslash{}colon X \markdownRendererBackslash{}times X \markdownRendererBackslash{}to [0, \markdownRendererBackslash{}infty)\markdownRendererDollarSign{}.\markdownRendererOlItemEnd 
+\markdownRendererOlItemWithNumber{2}\markdownRendererDollarSign{}d\markdownRendererDollarSign{} must be symmetric, so \markdownRendererDollarSign{}d(x\markdownRendererUnderscore{}1, x\markdownRendererUnderscore{}2) = d(x\markdownRendererUnderscore{}2, x\markdownRendererUnderscore{}1)\markdownRendererDollarSign{}.\markdownRendererOlItemEnd 
+\markdownRendererOlItemWithNumber{3}\markdownRendererDollarSign{}d(x\markdownRendererUnderscore{}1,x\markdownRendererUnderscore{}2) = 0\markdownRendererDollarSign{}  if and only if \markdownRendererDollarSign{}x\markdownRendererUnderscore{}1 = x\markdownRendererUnderscore{}2\markdownRendererDollarSign{}.\markdownRendererOlItemEnd 
+\markdownRendererOlItemWithNumber{4}\markdownRendererDollarSign{}d\markdownRendererDollarSign{} satisfies the \markdownRendererStrongEmphasis{triangle inequality}. So for, \markdownRendererDollarSign{}x, y, z \markdownRendererBackslash{}in X\markdownRendererDollarSign{}, \markdownRendererDollarSign{}d(x,z) \markdownRendererBackslash{}le d(x,y) + d(y,z)\markdownRendererDollarSign{}.\markdownRendererOlItemEnd 
+\markdownRendererOlEndTight \markdownRendererInterblockSeparator
+{}Notice that we actually haven't said anything about the set \markdownRendererDollarSign{}X\markdownRendererDollarSign{},\markdownRendererSoftLineBreak
+{}and that is because we actually don't need to, if we are strictly\markdownRendererSoftLineBreak
+{}talking about metric spaces. For example, for those in computer\markdownRendererSoftLineBreak
+{}science, we may recognize these requirements as the exact same\markdownRendererSoftLineBreak
+{}requirements needed for a heuristic function for path finding\markdownRendererSoftLineBreak
+{}algorithms like A*!\markdownRendererParagraphSeparator
+{}However, for topology specifically, we do need the set \markdownRendererDollarSign{}X\markdownRendererDollarSign{} to be\markdownRendererSoftLineBreak
+{}\markdownRendererStrongEmphasis{continuous}. There is a very formal and mathematically rigorous\markdownRendererSoftLineBreak
+{}definition for \markdownRendererLink{continuity}{https://ncatlab.org/nlab/show/topology\markdownRendererHash{}Continuity}{https://ncatlab.org/nlab/show/topology#Continuity}{},\markdownRendererSoftLineBreak
+{}but we only need a sort of intuition for what it means. I am\markdownRendererSoftLineBreak
+{}sure your imagination won't lead you astray here.\markdownRendererInterblockSeparator
+{}
+\markdownRendererSectionEnd \markdownRendererSectionBegin
+\markdownRendererHeadingThree{Open Sets}\markdownRendererInterblockSeparator
+{}One idea that is crucial to the understanding of topology is the\markdownRendererSoftLineBreak
+{}notion of the \markdownRendererStrongEmphasis{open set}. Be prepared, as this is one of the most\markdownRendererSoftLineBreak
+{}mind bending concepts we have to visit.\markdownRendererParagraphSeparator
+{}Before we get into any formal definitions, I would like to invite\markdownRendererSoftLineBreak
+{}you to consider an example.\markdownRendererSoftLineBreak
+{}Suppose we have the set \markdownRendererDollarSign{}S\markdownRendererDollarSign{} of real numbers \markdownRendererDollarSign{}0 < s < 1\markdownRendererDollarSign{} (the exclusive range is very important). Can we define a continuous, bijective mapping \markdownRendererDollarSign{}f\markdownRendererDollarSign{} that takes \markdownRendererDollarSign{}S\markdownRendererDollarSign{} and to the range \markdownRendererDollarSign{}(0, \markdownRendererBackslash{}infty)\markdownRendererDollarSign{}?\markdownRendererInterblockSeparator
+{}\markdownRendererBlockQuoteBegin
+\markdownRendererDollarSign{}S\markdownRendererDollarSign{} is actually an example of an open set. I will explain why in the next section.\markdownRendererBlockQuoteEnd \markdownRendererInterblockSeparator
+{}Yes! We can say \markdownRendererDollarSign{}f(x) = -\markdownRendererBackslash{}text\markdownRendererLeftBrace{}log\markdownRendererRightBrace{}(x)\markdownRendererDollarSign{}.\markdownRendererParagraphSeparator
+{}Now, what if we let our input be the set \markdownRendererDollarSign{}Q\markdownRendererDollarSign{} with values in the  \markdownRendererEmphasis{inclusive} range \markdownRendererDollarSign{}[0,1]\markdownRendererDollarSign{}, can we define a similar mapping to the to \markdownRendererDollarSign{}[0,\markdownRendererBackslash{}infty)\markdownRendererDollarSign{}?\markdownRendererParagraphSeparator
+{}Surprisingly, no! If we take the same function \markdownRendererDollarSign{}f(x) = -\markdownRendererBackslash{}text\markdownRendererLeftBrace{}log\markdownRendererRightBrace{}(x)\markdownRendererDollarSign{}, this works for the "left" side of the desired input range since \markdownRendererDollarSign{}f(1) = 0\markdownRendererDollarSign{}. However, \markdownRendererDollarSign{}f\markdownRendererDollarSign{} is undefined for \markdownRendererDollarSign{}x = 0\markdownRendererDollarSign{}. Somehow, \markdownRendererEmphasis{expanding} the input range \markdownRendererEmphasis{shrinks} the output range!\markdownRendererParagraphSeparator
+{}If you don't believe me, try it yourself! There is no continuous bijective function that satisfies these requirements. You can construct a discontinuous function, but constructing a continuous function is impossible.\markdownRendererParagraphSeparator
+{}Now, this is where I start to get excited, because in topology, we often speak about this thing called "continuous deformations", where we arbitrary stretch a shape without tearing or gluing. For example, the thing where we morph a donut into a coffee mug and vice versa. Intuitively, we can kind of see how we can stretch the open set \markdownRendererDollarSign{}(0, 1)\markdownRendererDollarSign{} into the open set \markdownRendererDollarSign{}(0, \markdownRendererBackslash{}infty)\markdownRendererDollarSign{}, but we can't do the same for \markdownRendererDollarSign{}[0, 1]\markdownRendererDollarSign{}. This our first taste of stretching things around!\markdownRendererParagraphSeparator
+{}Ok, I hope that you can begin to see why open sets are important to our discussion about donuts and coffee mugs, but if not, I hope that you at least thought it was interesting how adding numbers to our range can actually clamp the range of the output.\markdownRendererInterblockSeparator
+{}
+\markdownRendererSectionEnd \markdownRendererSectionBegin
+\markdownRendererHeadingThree{Open sets, formally}\markdownRendererInterblockSeparator
+{}Open sets can only be defined on continuous metric spaces. Yes, that means that the range \markdownRendererDollarSign{}S = (0,1)\markdownRendererDollarSign{} is a continuous metric space.\markdownRendererInterblockSeparator
+{}\markdownRendererBlockQuoteBegin
+I invite you to define as many metric functions \markdownRendererDollarSign{}d\markdownRendererDollarSign{} as you can.\markdownRendererSoftLineBreak
+{}Here are some examples to get your mind going:\markdownRendererInterblockSeparator
+{}\markdownRendererOlBeginTight
+\markdownRendererOlItemWithNumber{1}\markdownRendererDollarSign{}d(x,y) = \markdownRendererPipe{}x-y\markdownRendererPipe{}\markdownRendererDollarSign{}\markdownRendererOlItemEnd 
+\markdownRendererOlItemWithNumber{2}\markdownRendererDollarSign{}d(x,y) = (x-y)\markdownRendererCircumflex{}2\markdownRendererDollarSign{}\markdownRendererOlItemEnd 
+\markdownRendererOlEndTight \markdownRendererBlockQuoteEnd \markdownRendererInterblockSeparator
+{}Now, let us pick a point \markdownRendererDollarSign{}x \markdownRendererBackslash{}in S\markdownRendererDollarSign{}. We a \markdownRendererStrongEmphasis{neighborhood} \markdownRendererDollarSign{}N \markdownRendererBackslash{}subset S\markdownRendererDollarSign{} around \markdownRendererDollarSign{}x\markdownRendererDollarSign{} is defined as some set of points around \markdownRendererDollarSign{}x\markdownRendererDollarSign{}. Within our neighborhood \markdownRendererDollarSign{}N\markdownRendererDollarSign{}, there exists an \markdownRendererStrongEmphasis{open ball} \markdownRendererDollarSign{}B\markdownRendererDollarSign{} with radius \markdownRendererDollarSign{}\markdownRendererBackslash{}varepsilon\markdownRendererDollarSign{}. In other words, \markdownRendererDollarSign{}B = \markdownRendererLeftBrace{}y \markdownRendererBackslash{}mid d(x,y) < \markdownRendererBackslash{}varepsilon\markdownRendererRightBrace{}\markdownRendererDollarSign{}.\markdownRendererSoftLineBreak
+{}![[attachments/Pasted image 20260419194638.png]]\markdownRendererParagraphSeparator
+{}All of that is a fancy way of saying that if we have a point \markdownRendererDollarSign{}x\markdownRendererDollarSign{}, we can wiggle it around a bit by \markdownRendererDollarSign{}\markdownRendererBackslash{}varepsilon\markdownRendererDollarSign{} and we are still in \markdownRendererDollarSign{}S\markdownRendererDollarSign{}.\markdownRendererParagraphSeparator
+{}Now, for a set to be \markdownRendererStrongEmphasis{open}, every point \markdownRendererDollarSign{}x \markdownRendererBackslash{}in S\markdownRendererDollarSign{} must have some neighborhood around it. For example, let us take a look at our example from earlier, \markdownRendererDollarSign{}S = (0,1)\markdownRendererDollarSign{}.\markdownRendererParagraphSeparator
+{}Obvious, a value like \markdownRendererDollarSign{}0.5\markdownRendererDollarSign{} will have a neighborhood around it, and a pretty big neighborhood at that. However, what about values like \markdownRendererDollarSign{}0.001\markdownRendererDollarSign{}? Sure they do! Just wiggle it around by \markdownRendererDollarSign{}0.0001\markdownRendererDollarSign{}! As a matter of fact, no matter what value we pick, we can \markdownRendererEmphasis{always} create a neighborhood around it, so \markdownRendererDollarSign{}S\markdownRendererDollarSign{} is open. Try it yourself!\markdownRendererSoftLineBreak
+{}![[attachments/Pasted image 20260419195813.png]]\markdownRendererParagraphSeparator
+{}This openness (the ability to wiggle things around) is the precise reason why our mapping \markdownRendererDollarSign{}f\markdownRendererDollarSign{} could be constructed from \markdownRendererDollarSign{}(0,1)\markdownRendererDollarSign{} to \markdownRendererDollarSign{}(0, \markdownRendererBackslash{}infty)\markdownRendererDollarSign{}, but not from \markdownRendererDollarSign{}[0,1]\markdownRendererDollarSign{}. (TODO, need some more intuition behind this)\markdownRendererInterblockSeparator
+{}
+\markdownRendererSectionEnd \markdownRendererSectionBegin
+\markdownRendererHeadingThree{Topological spaces}\markdownRendererInterblockSeparator
+{}Alright, We have done a \markdownRendererEmphasis{lot} of "tool-making". But now, all of the mathematical machinery is in place for us to begin tackling topological spaces! In other words, we are ready to start talking about proverbial donuts and coffee mugs.
+\markdownRendererSectionEnd 
+\markdownRendererSectionEnd 
+\markdownRendererSectionEnd \markdownRendererDocumentEnd

@@ -1,0 +1,179 @@
+\documentclass{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{mathtools, amsfonts, amsthm, xcolor, listings}
+\usepackage{hyperref}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\I}{\mathbb{I}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\ang}[1]{\left\langle #1 \right\rangle}
+\newcommand{\inv}{^{-1}}
+
+\newcommand{\normsub}{\lhd}
+\newcommand{\normsube}{\unlhd}
+
+\newcommand{\reflection}[5]{
+    \begin{itemize}
+    \item Points attempted: #1
+    \item Self-assessed score: #2/#1.
+    \item Time spent: #3 minutes.
+    \item Difficulty: #4/10.
+    \item Questions/Feedback: #5.
+    \end{itemize}
+}
+
+
+\title{Title}
+\author{Your name here}
+
+\begin{document}
+\maketitle
+
+\section*{Exercise 2}
+\reflection{2}{2}{5}{1}{None.}
+Go through the previous homework assignments (including this one) spending at least a minute browsing through each one. Make a note of one or two problems that stood out for you this term, which you would recommend to future students taking this class, and write a note about why. These might be problems where something "clicked" for you, where it helped you to make a connection to new ideas, where you generated a diagram that was meaningful, etc.
+  
+Some problems that stuck out to me were problems that related back to Linear Algebra.
+For example, HW3 Ex3.7 and HW4 Ex2.2.d. These problems stuck out to me because 
+it helped me relate abstract algebra and group theory to another area of math 
+that I was a little more familiar with at the time. This allowed me to gain a 
+strong ``foothold'' on the topic, and helped the topics click for me.
+\pagebreak
+
+\section*{Exercise 3}
+\reflection{6}{6}{65}{7}{Correctness, Structure}
+
+Note: I ended up scrapping a large chunk of my previous draft, because as I was 
+writing the blog itself, some ideas clicked and I realized there was a much 
+cleaner way to describe the topic. 
+\pagebreak
+
+\section*{Choice Exercise 4}
+\reflection{4}{4}{25}{6}{None.}
+
+\href{https://math.stackexchange.com/questions/267521/is-there-a-characterization-of-groups-with-the-property-forall-n-unlhd-g-ex}{
+    Is there a characterization of groups with the property \(\forall N \normsube G, \exists H \le G \text{ s.t } H \cong G/N\)?
+}
+
+This post really stuck out to me because upon reading the title, I was convinced
+that all groups satisfies this property, yet the mere existence of such a post
+implies that there exists some groups that don't satisfy this property. I was 
+properly baffled! 
+
+As I read through the answers, I wasn't quite able to follow the arguments provided,
+but I was definitely intrigued to learn more. Eventually, the post had completely 
+lost me, but this is definitely an interesting direction, especially since the 
+answer itself admits that there are some ``open questions''.
+\pagebreak
+
+\section*{Choice Exercise 8}
+\reflection{10}{10}{70}{7/10}{Correctness.}
+We call a group action faithful if for all nonidentity elements \( g \in G \setminus \{e\} \), there exists \( x \in X \) such that \( g \cdot x \neq x \). Informally, every non-identity element does something.
+\begin{enumerate}
+    \item {
+        [3] Let \(X = \{1, 2, 3, 4, 5\}\) and let \(G = C_6\). Give an example of a faithful group action of \(G\) onto \(X\). (Hint: is there a one-to-one homomorphism \(\phi\colon C_6 \to S_5\)?)
+
+        Let \(\pi = (123) \in S_5\). We can define a faithful group action of
+        \(G = C_6\), by define a homomorphism \(\phi \colon C_6 \to S_5\). Let
+        us first enumerate the elements of \(C_6\) as integers from 0 to 5 inclusive.
+        We define
+        \[
+        \phi = \begin{cases}
+            \pi^{x/2} &x \text{ is even} \\
+            (12) \pi^{(x-1)/2} &x \text{ is odd}
+        \end{cases}.
+        \]
+
+        This is a ono-to-one homomorphism.
+    }
+
+    \item {
+        [2] Let \( (G, *) \) be a group that acts on a set \( X \) and let \[         N = \{ g \in G \mid g \cdot x = x \text{ for all } x \in X \}.       \] In class, we showed that \( N \) is a normal subgroup. Repeat the argument here.
+
+        \begin{proof}
+            We begin by establishing that \(N\) is a group. First, associativity
+            is inherited from \(G\).  Also, by definition of a group action, 
+            \(e_G \in N\), since \(e_G \cdot x = x\).
+            
+            Suppose we have \(n, m \in N\). By definition,
+            \(n \cdot x = x\) and \(m \cdot x = x\) for all \(x \in X\). So, 
+            by defintion of group actions, \(n \cdot (m \cdot x) = (n * m) \cdot x = x\).
+            Because \((n * m) \cdot x = x\), \(n*m \in N\), so \(N\) is closed under \(*\).
+
+            Now, because we know that \(e_G \in N\), we can pick some \(n \in N\), 
+            and show that \(n\inv \in N\) because 
+            \begin{align}
+                e_G \cdot x &= x \\
+                (n\inv * n) \cdot x &= \\
+                n\inv \cdot (n \cdot x) &= \\
+                n\inv \cdot x &= x.
+            \end{align}
+
+            Thus, \(N < G\).
+
+            To prove that \(N \normsub G\), we must show that for all \(g \in G\), 
+            and \(n \in N\), \(g * n *g\inv \in N\). We show this by
+            \begin{align}
+                &(g*n*g\inv) \cdot x  \\
+                &= (g*n) \cdot g\inv \cdot x \\
+                &= g \cdot (n \cdot (g\inv \cdot x)).
+            \end{align}
+
+            Now, because \(n \cdot x = x\) for all \(x \in X\), we can simplify to 
+            \begin{align}
+                &= g \cdot g\inv \cdot x)\\
+                &= e_G \cdot x = x.
+            \end{align}
+
+            Thus, \(g * n * g\inv \in N\), so \(N \normsub G\).
+        \end{proof}
+    }
+
+    \item {
+        [3] We care about normal subgroups because we can quotient by them. Show that \( G/ N \) acts on \( X \) (denoted \( \bullet \)) by
+      \[         gN \bullet x = g \cdot x,       \] and that this map is well-defined: if \(g_1N = g_2N\) then \(g_1 \cdot x = g_2 \cdot x\).
+    
+        First, notice that \(n \cdot x = x\). Thus, for every \(h \in gN\), 
+        \(h = g * n\) for some \(n \in N\). Therefore, \(gN \bullet x = (g * n) \cdot x\) 
+        for some \(n \in N\). Thus, \(gN \bullet x = g \cdot x\).
+
+        Naturally, we can then write \(g_1N = g_1 * n_1\) and \(g_2N = g_2 * n_2\) 
+        for some \(n_1, n_2 \in N\). So, by substituting, we obtain
+        \begin{align}
+            g_1N &= g_2N \\
+            g_1 * n_1 &= g_2 * n_2. 
+        \end{align}
+
+        Now, we apply the group action \(g_1N \bullet x\) and \(g_2N \bullet x\).
+        \begin{align}
+            g_1N \bullet x &= g_2N \bullet x\\
+            (g_1 * n_1) \cdot x &= (g_2*n_2) \cdot x\\
+            g_1 \cdot x &= g_2 \cdot x.
+        \end{align}
+    }
+
+    \item {
+        [2] Prove that the action of \( G/ N \) is faithful.
+
+        \begin{proof}
+            We begin by restating the faithfulness condition: a group 
+            action of \(H\) is faithful if for all \(h \in H\), \(x \in X\), 
+            \(h \cdot x = x\) implies \(h = e\).
+
+            From above, we define the group action of \(G/N\) on \(X\) as
+            \(gN \bullet x = g \cdot x\).
+
+            By definition, the identity element of \(G/N\) is the coset \(N\).
+            Now, suppose we have some \(gN \in G/N\), such that \(gN \bullet x = x\).
+            Thus, \(g \cdot x = x\), so \(g \in N\), and \(gN = N\). Therefore, 
+            for all \(gN \in G/N\), if \(gN \bullet x = x\), then \(gN\) is the 
+            identity element, so this group action must be faithful.
+        \end{proof}
+    }
+\end{enumerate}
+
+\end{document}
