@@ -19,8 +19,11 @@ typedef struct {
   ValueArray constants;
 } Chunk;
 
+// The Chunk API is what we will be working with 90% of the time, so it is
+// worth abstracting the value array inside of it.
 void initChunk(Chunk* chunk);
 void freeChunk(Chunk* chunk);
 void writeChunk(Chunk* chunk, uint8_t byte);
+int addConstant(Chunk* chunk, Value value);
 
 #endif
