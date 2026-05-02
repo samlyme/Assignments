@@ -1,0 +1,358 @@
+\documentclass{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{mathtools, amsfonts, amsthm, xcolor, listings}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\I}{\mathbb{I}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\ang}[1]{\left\langle #1 \right\rangle}
+\newcommand{\inv}{^{-1}}
+
+\newcommand{\normsub}{\lhd}
+
+\newcommand{\reflection}[5]{
+    \begin{itemize}
+    \item Points attempted: #1
+    \item Self-assessed score: #2/#1.
+    \item Time spent: #3 minutes.
+    \item Difficulty: #4/10.
+    \item Questions/Feedback: #5.
+    \end{itemize}
+}
+
+
+\title{HW 12}
+\author{Sam Ly}
+
+\begin{document}
+\maketitle
+
+https://github.com/samlyme/Assignments/tree/cs4080/ch24/main/CS4080
+
+\section*{Chapter 24}
+
+\begin{enumerate}
+    \item {
+        Reading and writing the \texttt{ip} field is one of the most frequent operations
+        inside the bytecode loop. Implement the optimization of caching it in a local
+        C variable. Write a couple of benchmarks and say whether the extra complexity
+        is worth it.
+
+        The main change is to keep the current instruction pointer in a local variable
+        inside \texttt{run()}:
+
+        \begin{verbatim}
+static InterpretResult run() {
+  CallFrame* frame = &vm.frames[vm.frameCount - 1];
+  register uint8_t* ip = frame->ip;
+
+#define READ_BYTE() (*ip++)
+#define READ_SHORT() \
+    (ip += 2, (uint16_t)((ip[-2] << 8) | ip[-1]))
+        \end{verbatim}
+
+        Any opcode that changes control flow now changes the local \texttt{ip}, not
+        \texttt{frame->ip}. For example, \texttt{OP\_JUMP} adds to \texttt{ip} and
+        \texttt{OP\_LOOP} subtracts from it. The important bookkeeping is around
+        calls, returns, and errors. Before calling another function, the VM stores the
+        local value back into the current frame, then reloads \texttt{ip} from the new
+        top frame after the call:
+
+        \begin{verbatim}
+case OP_CALL: {
+  int argCount = READ_BYTE();
+  frame->ip = ip;
+  if (!callValue(peek(argCount), argCount)) {
+    return INTERPRET_RUNTIME_ERROR;
+  }
+  frame = &vm.frames[vm.frameCount - 1];
+  ip = frame->ip;
+  break;
+}
+        \end{verbatim}
+
+        The same reload is needed after \texttt{OP\_RETURN}. Runtime error paths also
+        need \texttt{frame->ip = ip;} immediately before calling \texttt{runtimeError()},
+        otherwise the line number reported for the error can be wrong.
+
+        I would benchmark one call-heavy program like recursive Fibonacci and one
+        loop-heavy program that mostly executes arithmetic and jumps. This optimization
+        should help both, but it especially helps the call-heavy case because
+        \texttt{ip} is touched constantly while dispatching bytecode. A single digit
+        speedup is enough to be worth it here because the added complexity is localized
+        to the VM dispatch loop and does not affect the language semantics.
+    }
+
+    \item {
+        Native function calls are fast because they do not validate the number of
+        arguments. Add arity checking.
+
+        I would make native functions carry their expected arity the same way
+        \texttt{ObjFunction} already does. Instead of storing only the function pointer
+        in the native object, store both the C function and an integer arity:
+
+        \begin{verbatim}
+typedef struct {
+  Obj obj;
+  NativeFn function;
+  int arity;
+} ObjNative;
+        \end{verbatim}
+
+        Then \texttt{defineNative()} takes an arity argument, and \texttt{callValue()}
+        checks it before invoking the native:
+
+        \begin{verbatim}
+case OBJ_NATIVE: {
+  ObjNative* native = AS_NATIVE(callee);
+  if (argCount != native->arity) {
+    runtimeError("Expected %d arguments but got %d.",
+                 native->arity, argCount);
+    return false;
+  }
+
+  Value result = native->function(argCount, vm.stackTop - argCount);
+  vm.stackTop -= argCount + 1;
+  push(result);
+  return true;
+}
+        \end{verbatim}
+
+        This adds one integer comparison to every native call. That is a reasonable
+        cost because it prevents native code from reading missing arguments out of
+        uninitialized stack slots.
+    }
+
+    \item {
+        Extend the native function system so a native function can signal a runtime
+        error. How does this affect native call performance?
+
+        The cleanest design is to separate the success signal from the returned Lox
+        value. I would change \texttt{NativeFn} to return a boolean and have the native
+        write either its result or an error message into the stack slot before the
+        first argument:
+
+        \begin{verbatim}
+typedef bool (*NativeFn)(int argCount, Value* args);
+
+static bool clockNative(int argCount, Value* args) {
+  args[-1] = NUMBER_VAL((double)clock() / CLOCKS_PER_SEC);
+  return true;
+}
+
+static bool sqrtNative(int argCount, Value* args) {
+  if (!IS_NUMBER(args[0])) {
+    args[-1] = OBJ_VAL(copyString("sqrt() expects a number.", 24));
+    return false;
+  }
+
+  args[-1] = NUMBER_VAL(sqrt(AS_NUMBER(args[0])));
+  return true;
+}
+        \end{verbatim}
+
+        The VM then keeps the return value in the callee's old stack slot on success,
+        or prints the message from that slot on failure:
+
+        \begin{verbatim}
+if (native->function(argCount, vm.stackTop - argCount)) {
+  vm.stackTop -= argCount;
+  return true;
+}
+
+runtimeError(AS_CSTRING(vm.stackTop[-argCount - 1]));
+return false;
+        \end{verbatim}
+
+        This adds a branch to every native call, so a native-call microbenchmark would
+        get slower. I still think it is the right tradeoff because a real standard
+        library needs to reject bad dynamic values safely instead of letting C code
+        crash or read invalid memory.
+    }
+
+    \item {
+        Add more useful native functions. What did you add, and how do they affect the
+        feel of the language?
+
+        I would add a small math and utility base:
+
+        \begin{itemize}
+            \item \texttt{sqrt(n)} for square roots.
+            \item \texttt{floor(n)} for rounding down.
+            \item \texttt{pow(a, b)} for exponentiation.
+            \item \texttt{str(value)} for converting simple values to strings.
+            \item \texttt{type(value)} for debugging dynamic values.
+        \end{itemize}
+
+        Example Lox program:
+
+        \begin{verbatim}
+fun distance(x1, y1, x2, y2) {
+  var dx = x2 - x1;
+  var dy = y2 - y1;
+  return sqrt(pow(dx, 2) + pow(dy, 2));
+}
+
+print distance(0, 0, 3, 4);
+print "answer is " + str(42);
+print type(clock());
+        \end{verbatim}
+
+        These do not make the language more expressive in theory, but they make it much
+        more practical. Without them, even basic numerical programs require awkward
+        hand-written helpers. The main design pressure is that each native function
+        needs clear arity and runtime type errors so the boundary between dynamic Lox
+        and static C stays safe.
+    }
+\end{enumerate}
+
+\section*{Chapter 25}
+https://github.com/samlyme/Assignments/tree/cs4080/ch25/main/CS4080
+\begin{enumerate}
+    \item {
+        Change clox so it only wraps functions in \texttt{ObjClosure}s when the function
+        actually needs upvalues. Compare the complexity and performance with always
+        wrapping functions.
+
+        The compiler can choose between \texttt{OP\_CLOSURE} and \texttt{OP\_CONSTANT}
+        after \texttt{endCompiler()} returns the completed \texttt{ObjFunction}:
+
+        \begin{verbatim}
+ObjFunction* function = endCompiler();
+uint8_t constant = makeConstant(OBJ_VAL(function));
+
+if (function->upvalueCount > 0) {
+  emitBytes(OP_CLOSURE, constant);
+  for (int i = 0; i < function->upvalueCount; i++) {
+    emitByte(compiler.upvalues[i].isLocal ? 1 : 0);
+    emitByte(compiler.upvalues[i].index);
+  }
+} else {
+  emitBytes(OP_CONSTANT, constant);
+}
+        \end{verbatim}
+
+        The VM then has to accept either \texttt{ObjFunction} or \texttt{ObjClosure} in a
+        call frame. That means the frame can no longer store only a closure pointer.
+        It either stores a generic \texttt{Obj*}, or it stores both the callable object
+        and the underlying \texttt{ObjFunction}. The latter keeps bytecode access simple:
+
+        \begin{verbatim}
+typedef struct {
+  Obj* callable;
+  ObjFunction* function;
+  uint8_t* ip;
+  Value* slots;
+} CallFrame;
+        \end{verbatim}
+
+        The performance tradeoff is mixed. Programs with many plain functions avoid
+        allocating unnecessary closure objects, so they can become faster and allocate
+        less. Programs that heavily use closures do not gain much, and the VM grows
+        more complicated because call sites and stack traces have to handle two
+        callable representations. I would weight ordinary non-closure function calls
+        more heavily than a synthetic closure-allocation benchmark, but I still would
+        want real program benchmarks before committing to the optimization. My default
+        choice would be to keep always wrapping functions unless the allocation cost
+        shows up clearly in profiling.
+    }
+
+    \item {
+        How should Lox behave when closures capture a loop variable? Change the
+        implementation to create a new variable for each loop iteration.
+
+        I think each iteration should get a fresh variable. This matches what
+        programmers usually mean when they create closures inside a loop: each closure
+        should remember the value from the iteration that created it.
+
+        The compiler can implement this by introducing a hidden inner scope around the
+        loop body when the \texttt{for} loop declares a variable:
+
+        \begin{enumerate}
+            \item Remember the original loop variable's name and stack slot.
+            \item Before compiling the body, begin a new scope and create a local with
+            the same name initialized from the outer loop variable.
+            \item Compile the body so closures resolve to the inner per-iteration
+            variable.
+            \item After the body, copy the inner variable back to the outer loop
+            variable so assignments in the body still affect the loop condition and
+            increment.
+            \item End the inner scope, closing the captured variable if a closure
+            refers to it.
+        \end{enumerate}
+
+        Conceptually, this makes code like this:
+
+        \begin{verbatim}
+for (var i = 1; i <= 2; i = i + 1) {
+  fun closure() {
+    print i;
+  }
+  save(closure);
+}
+        \end{verbatim}
+
+        behave more like each loop body starts with a fresh shadowing variable:
+
+        \begin{verbatim}
+{
+  var i = outerI;
+  fun closure() {
+    print i;
+  }
+  save(closure);
+  outerI = i;
+}
+        \end{verbatim}
+
+        With this behavior, two closures created by two different iterations print
+        \texttt{1} and \texttt{2}, not the same final value.
+    }
+
+    \item {
+        Using closures, write a Lox program that models two-dimensional vector
+        objects. It should have a constructor, coordinate accessors, and an addition
+        method.
+
+        A simple way to model objects with closures is to return a dispatcher function.
+        The dispatcher's closed-over variables are the object's fields, and messages
+        select which method to return.
+
+        \begin{verbatim}
+fun vector(x, y) {
+  fun object(message) {
+    fun add(other) {
+      return vector(x + other("x"), y + other("y"));
+    }
+
+    if (message == "x") return x;
+    if (message == "y") return y;
+    if (message == "add") return add;
+
+    print "unknown message";
+    return nil;
+  }
+
+  return object;
+}
+
+var a = vector(1, 2);
+var b = vector(3, 4);
+var c = a("add")(b);
+
+print c("x");
+print c("y");
+        \end{verbatim}
+
+        The constructor \texttt{vector(x, y)} returns a closure that captures
+        \texttt{x} and \texttt{y}. Calling the closure with \texttt{"x"} or \texttt{"y"}
+        reads a coordinate. Calling it with \texttt{"add"} returns another closure
+        that takes the other vector and constructs the sum.
+    }
+\end{enumerate}
+
+\end{document}
