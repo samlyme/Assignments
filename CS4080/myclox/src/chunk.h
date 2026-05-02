@@ -2,6 +2,7 @@
 #define clox_chunk_h
 
 #include "common.h"
+#include "value.h"
 #include <stdint.h>
 
 typedef enum {
@@ -13,6 +14,9 @@ typedef struct {
   int count;
   int capacity;
   uint8_t* code;
+
+  // constant pool is associated per chunk
+  ValueArray constants;
 } Chunk;
 
 void initChunk(Chunk* chunk);
