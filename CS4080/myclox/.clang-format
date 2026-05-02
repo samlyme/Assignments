@@ -2,3 +2,4 @@ BasedOnStyle: LLVM
 PointerAlignment: Left
 AllowShortIfStatementsOnASingleLine: WithoutElse
 AllowShortFunctionsOnASingleLine: None
+SortIncludes: false

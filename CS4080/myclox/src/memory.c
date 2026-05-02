@@ -1,5 +1,6 @@
-#include "memory.h"
 #include <stdlib.h>
+
+#include "memory.h"
 
 // the GC code will go here later >:)
 void* reallocate(void* pointer, size_t oldSize, size_t newSize) {
