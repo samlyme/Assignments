@@ -1,6 +1,9 @@
 BasedOnStyle: LLVM
 PointerAlignment: Left
-AllowShortIfStatementsOnASingleLine: WithoutElse
-AllowShortFunctionsOnASingleLine: None
+
 SortIncludes: false
 IndentCaseLabels: true
+
+AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortFunctionsOnASingleLine: None
+AllowShortCaseLabelsOnASingleLine: true
