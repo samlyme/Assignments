@@ -18,6 +18,10 @@ void initScanner(const char* source) {
   scanner.line = 1;
 }
 
+static bool isDigit(char c) {
+  return c >= '0' && c <= '9';
+}
+
 static bool isAtEnd() {
   return *scanner.current == '\0';
 }
@@ -106,6 +110,17 @@ Token string() {
   return makeToken(TOKEN_STRING);
 }
 
+Token number() {
+  while (isDigit(peek())) advance();
+
+  if (peek() == '.' && isDigit(peekNext())) {
+    advance();
+    while (isDigit(peek())) advance();
+  }
+
+  return makeToken(TOKEN_NUMBER);
+}
+
 Token scanToken() {
   skipWhitespace();
   scanner.start = scanner.current;
@@ -135,9 +150,11 @@ Token scanToken() {
     case '>':
       return makeToken(match('=') ? TOKEN_GREATER_EQUAL : TOKEN_GREATER);
 
-    // literals
+    // String literal.
     case '"': return string();
   }
+
+  if (isDigit(c)) number();
 
   return errorToken("Unexpected cahracter.");
 }
