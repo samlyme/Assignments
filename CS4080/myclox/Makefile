@@ -33,9 +33,10 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | $(BUILD_DIR)
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
 
-# Rule to clean up the build directory
+run: $(TARGET)
+	./$(TARGET)
+
 clean:
 	rm -rf $(BUILD_DIR)
 
-# Mark rules that do not represent physical files as phony
-.PHONY: all clean
+.PHONY: all clean run

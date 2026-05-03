@@ -6,8 +6,12 @@
 #include <stdint.h>
 
 typedef enum {
+  OP_CONSTANT,
   OP_RETURN,
 } OpCode;
+// We need to know when to "produce" values from the constant pool.
+// Remember, the VM is a stack machine, so it needs to have all the data
+// it needs on the stack. There will be some more magic later.
 
 typedef struct {
   // some magic to make this feel like a dynamic array "object".
