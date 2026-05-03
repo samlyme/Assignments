@@ -21,6 +21,9 @@ void initScanner(const char* source) {
 static bool isDigit(char c) {
   return c >= '0' && c <= '9';
 }
+static bool isAlpha(char c) {
+  return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
+}
 
 static bool isAtEnd() {
   return *scanner.current == '\0';
@@ -121,6 +124,39 @@ Token number() {
   return makeToken(TOKEN_NUMBER);
 }
 
+static TokenType checkKeyword(int start, int length, const char* rest,
+                              TokenType type) {
+  if (scanner.current - scanner.start == start + length &&
+      memcmp(scanner.start + start, rest, length) == 0) {
+    return type;
+  }
+
+  return TOKEN_IDENTIFIER;
+}
+
+TokenType identifierType() {
+  switch (scanner.start[0]) {
+    case 'a': return checkKeyword(1, 2, "nd", TOKEN_AND);
+    case 'c': return checkKeyword(1, 4, "lass", TOKEN_CLASS);
+    case 'e': return checkKeyword(1, 3, "lse", TOKEN_ELSE);
+    case 'i': return checkKeyword(1, 1, "f", TOKEN_IF);
+    case 'n': return checkKeyword(1, 2, "il", TOKEN_NIL);
+    case 'o': return checkKeyword(1, 1, "r", TOKEN_OR);
+    case 'p': return checkKeyword(1, 4, "rint", TOKEN_PRINT);
+    case 'r': return checkKeyword(1, 5, "eturn", TOKEN_RETURN);
+    case 's': return checkKeyword(1, 4, "uper", TOKEN_SUPER);
+    case 'v': return checkKeyword(1, 2, "ar", TOKEN_VAR);
+    case 'w': return checkKeyword(1, 4, "hile", TOKEN_WHILE);
+  }
+
+  return TOKEN_IDENTIFIER;
+}
+
+Token identifier() {
+  while (isAlpha(peek()) || isDigit(peek())) advance();
+  return makeToken(identifierType());
+}
+
 Token scanToken() {
   skipWhitespace();
   scanner.start = scanner.current;
@@ -154,6 +190,7 @@ Token scanToken() {
     case '"': return string();
   }
 
+  if (isAlpha(c)) identifier();
   if (isDigit(c)) number();
 
   return errorToken("Unexpected cahracter.");
