@@ -1,5 +1,6 @@
 #include <stdarg.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "common.h" // IWYU pragma: keep
 
@@ -8,6 +9,8 @@
 #include "compiler.h"
 #include "chunk.h"
 #include "debug.h"
+#include "memory.h"
+#include "object.h"
 #include "value.h"
 
 VM vm;
@@ -35,6 +38,20 @@ void initVM() {
 
 void freeVM() {
   return;
+}
+
+static void concatenate() {
+  ObjString* b = AS_STRING(pop());
+  ObjString* a = AS_STRING(pop());
+
+  int length = a->length + b->length;
+  char* chars = ALLOCATE(char, length + 1);
+  memcpy(chars, a->chars, a->length);
+  memcpy(chars + a->length, b->chars, b->length);
+  chars[length] = '\0';
+
+  ObjString* result = takeString(chars, length);
+  push(OBJ_VAL(result));
 }
 
 void push(Value value) {
@@ -94,7 +111,17 @@ static InterpretResult run() {
       }
       case OP_GREATER: BINARY_OP(BOOL_VAL, >); break;
       case OP_LESS: BINARY_OP(BOOL_VAL, <); break;
-      case OP_ADD: BINARY_OP(NUMBER_VAL, +); break;
+      case OP_ADD: {
+        if (IS_NUMBER(peek(0)) && IS_NUMBER(peek(1))) {
+          BINARY_OP(NUMBER_VAL, +);
+        } else if (IS_STRING(peek(0)) && IS_STRING(peek(1))) {
+          concatenate();
+        } else {
+          runtimeError("Operands must be two numbers of two strings.");
+          return INTERPRET_RUNTIME_ERROR;
+        }
+        break;
+      }
       case OP_SUBTRACT: BINARY_OP(NUMBER_VAL, -); break;
       case OP_MULTIPLY: BINARY_OP(NUMBER_VAL, *); break;
       case OP_DIVIDE: BINARY_OP(NUMBER_VAL, /); break;
