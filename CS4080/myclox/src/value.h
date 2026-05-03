@@ -36,6 +36,9 @@ typedef struct {
 } ValueArray; // atm, this is essentially the same as chunk
 
 bool valuesEqual(Value a, Value b);
+// NOTE: The book does NOT have this here, but I just felt like it made sense.
+bool isFalsey(Value value);
+
 void initValueArray(ValueArray* array);
 void freeValueArray(ValueArray* array);
 void writeValueArray(ValueArray* array, Value value);

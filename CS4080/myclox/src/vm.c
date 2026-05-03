@@ -51,11 +51,6 @@ Value peek(int i) {
   return *(vm.stackTop - i - 1);
 }
 
-// IMO, this should be in value.c
-static bool isFalsey(Value value) {
-  return IS_NIL(value) || (IS_BOOL(value) && !AS_BOOL(value));
-}
-
 static InterpretResult run() {
 #define READ_BYTE() (*vm.ip++)
 #define READ_CONSTANT() (vm.chunk->constants.values[READ_BYTE()])

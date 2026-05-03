@@ -12,6 +12,10 @@ bool valuesEqual(Value a, Value b) {
   }
 }
 
+bool isFalsey(Value value) {
+  return IS_NIL(value) || (IS_BOOL(value) && !AS_BOOL(value));
+}
+
 void initValueArray(ValueArray* array) {
   array->count = 0;
   array->capacity = 0;
