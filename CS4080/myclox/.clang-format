@@ -7,3 +7,4 @@ IndentCaseLabels: true
 AllowShortIfStatementsOnASingleLine: WithoutElse
 AllowShortFunctionsOnASingleLine: None
 AllowShortCaseLabelsOnASingleLine: true
+AllowShortEnumsOnASingleLine: true
