@@ -95,7 +95,6 @@ static InterpretResult run() {
       case OP_SUBTRACT: BINARY_OP(NUMBER_VAL, -); break;
       case OP_MULTIPLY: BINARY_OP(NUMBER_VAL, *); break;
       case OP_DIVIDE: BINARY_OP(NUMBER_VAL, /); break;
-
       case OP_NOT: push(BOOL_VAL(isFalsey(pop()))); break;
       case OP_NEGATE:
         if (!IS_NUMBER(peek(0))) {
@@ -104,7 +103,6 @@ static InterpretResult run() {
         }
         push(NUMBER_VAL(-AS_NUMBER(pop())));
         break;
-
       case OP_RETURN: {
         // the last value on the stack is the returned value.
         printValue(pop());
