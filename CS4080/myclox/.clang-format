@@ -4,7 +4,8 @@ PointerAlignment: Left
 SortIncludes: false
 IndentCaseLabels: true
 
-AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortIfStatementsOnASingleLine: true
+AllowShortLoopsOnASingleLine: true
 AllowShortFunctionsOnASingleLine: None
 AllowShortCaseLabelsOnASingleLine: true
 AllowShortEnumsOnASingleLine: true

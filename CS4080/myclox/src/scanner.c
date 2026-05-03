@@ -35,6 +35,15 @@ static bool match(char c) {
   return true;
 }
 
+static char peek() {
+  return *scanner.current;
+}
+
+static char peekNext() {
+  if (isAtEnd()) return '\0';
+  return *(scanner.current + 1);
+}
+
 Token makeToken(TokenType type) {
   Token token;
 
@@ -57,7 +66,36 @@ Token errorToken(const char* message) {
   return token;
 }
 
+static void skipWhitespace() {
+  // this function can't consume anything it isnt SURE of, so we use peek(), and
+  // peekNext().
+  char c;
+  for (;;) {
+    c = peek();
+    switch (c) {
+      case ' ':
+      case '\r':
+      case '\t': advance(); break;
+      case '\n':
+        scanner.line++;
+        advance();
+        break;
+      case '/': {
+        // super evil control flow.
+        if (peekNext() == '/') {
+          while (peek() != '\n' && !isAtEnd()) advance();
+        } else {
+          return;
+        }
+        break;
+      }
+      default: return;
+    }
+  } // potentially the most evil switch case i have ever seen. I love it.
+}
+
 Token scanToken() {
+  skipWhitespace();
   scanner.start = scanner.current;
 
   if (isAtEnd()) return makeToken(TOKEN_EOF);
