@@ -23,6 +23,16 @@ void freeVM() {
   return;
 }
 
+void push(Value value) {
+  *vm.stackTop = value;
+  vm.stackTop++;
+}
+
+Value pop() {
+  vm.stackTop--;
+  return *vm.stackTop;
+}
+
 static InterpretResult run() {
 #define READ_BYTE() (*vm.ip++)
 #define READ_CONSTANT() (vm.chunk->constants.values[READ_BYTE()])
@@ -72,16 +82,18 @@ static InterpretResult run() {
 }
 
 InterpretResult interpret(const char* source) {
-  compile(source);
-  return INTERPRET_OK;
-}
+  Chunk chunk;
+  initChunk(&chunk);
 
-void push(Value value) {
-  *vm.stackTop = value;
-  vm.stackTop++;
-}
+  if (!compile(source, &chunk)) {
+    freeChunk(&chunk);
+    return INTERPRET_COMPILE_ERROR;
+  }
 
-Value pop() {
-  vm.stackTop--;
-  return *vm.stackTop;
+  vm.chunk = &chunk;
+  vm.ip = vm.chunk->code;
+  InterpretResult result = run();
+
+  freeChunk(&chunk);
+  return result;
 }
