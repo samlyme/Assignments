@@ -4,6 +4,7 @@
 
 #include "chunk.h"
 #include "common.h" // IWYU pragma: keep
+#include "value.h"
 #include "compiler.h"
 
 #ifdef DEBUG_PRINT_CODE
@@ -179,7 +180,7 @@ static void binary() {
 
 static void number() {
   double value = strtod(parser.previous.start, NULL);
-  emitConstant(value);
+  emitConstant(NUMBER_VAL(value));
 }
 
 // clang-format off
