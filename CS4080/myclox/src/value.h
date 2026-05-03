@@ -35,12 +35,12 @@ typedef struct {
   Value* values;
 } ValueArray; // atm, this is essentially the same as chunk
 
+bool valuesEqual(Value a, Value b);
 void initValueArray(ValueArray* array);
 void freeValueArray(ValueArray* array);
 void writeValueArray(ValueArray* array, Value value);
 
 void printValue(Value value);
-
 /*
 There are various places to store "data". In fact, code is data! But, in our
 model, we sort of treat "data" and "instructions" as different things. We have
