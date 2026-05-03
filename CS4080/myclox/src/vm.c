@@ -43,6 +43,10 @@ static InterpretResult run() {
         push(constant);
         break;
       }
+      case OP_NEGATE: {
+        push(-pop());
+        break;
+      }
       case OP_RETURN: {
         // the last value on the stack is the returned value.
         printValue(pop());
