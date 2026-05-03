@@ -24,6 +24,7 @@ static Chunk* currentChunk() {
   return compilingChunk;
 }
 
+// Error handling
 static void errorAt(Token* token, const char* message) {
   if (parser.panicMode) return;
   parser.panicMode = true;
@@ -50,6 +51,7 @@ static void errorAtCurrent(const char* message) {
   errorAt(&parser.current, message);
 }
 
+// Pull from scanner
 static void advance() {
   parser.previous = parser.current;
 
@@ -72,6 +74,7 @@ static void consume(TokenType type, const char* message) {
   errorAtCurrent(message);
 }
 
+// Ouput
 static void emitByte(uint8_t byte) {
   writeChunk(currentChunk(), byte, parser.previous.line);
 }
@@ -85,8 +88,30 @@ static void emitReturn() {
   emitByte(OP_RETURN);
 }
 
+static uint8_t makeConstant(Value value) {
+  int constant = addConstant(currentChunk(), value);
+  if (constant > UINT8_MAX) {
+    error("Too many constants in one chunk.");
+    return 0;
+  }
+
+  return (uint8_t)constant;
+}
+
+static void emitConstant(Value value) {
+  emitBytes(OP_CONSTANT, makeConstant(value));
+}
+
 static void endCompiler() {
   emitReturn();
+}
+
+// Connect the tokens to the output. The "real" compiler!
+static void number() {
+  double value = strtod(parser.previous.start, NULL);
+  emitConstant(value);
+}
+static void expression() {
 }
 
 bool compile(const char* source, Chunk* chunk) {
