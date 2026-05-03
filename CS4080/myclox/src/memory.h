@@ -12,6 +12,8 @@
 #define FREE_ARRAY(type, pointer, oldCount)                                    \
   reallocate(pointer, sizeof(type) * (oldCount), 0)
 
+#define ALLOCATE(type, count) (type*)reallocate(NULL, 0, sizeof(type) * (count))
+
 // We should route all dynamic memory allocations through this function.
 // This is because it makes the GC easier to implement later.
 void* reallocate(void* pointer, size_t oldSize, size_t newSize);
