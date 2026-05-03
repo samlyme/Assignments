@@ -1,6 +1,8 @@
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "chunk.h"
 #include "common.h" // IWYU pragma: keep
 #include "compiler.h"
 #include "scanner.h"
@@ -16,6 +18,11 @@ typedef struct {
 } Parser;
 
 Parser parser;
+Chunk* compilingChunk;
+
+static Chunk* currentChunk() {
+  return compilingChunk;
+}
 
 static void errorAt(Token* token, const char* message) {
   if (parser.panicMode) return;
@@ -65,14 +72,34 @@ static void consume(TokenType type, const char* message) {
   errorAtCurrent(message);
 }
 
+static void emitByte(uint8_t byte) {
+  writeChunk(currentChunk(), byte, parser.previous.line);
+}
+
+static void emitBytes(uint8_t a, uint8_t b) {
+  emitByte(a);
+  emitByte(b);
+}
+
+static void emitReturn() {
+  emitByte(OP_RETURN);
+}
+
+static void endCompiler() {
+  emitReturn();
+}
+
 bool compile(const char* source, Chunk* chunk) {
   initScanner(source);
+  compilingChunk = chunk;
 
   parser.hadError = false;
   parser.panicMode = false;
 
   advance();
   expression();
+  consume(TOKEN_EOF, "Expect end of express.");
 
-  return parser.hadError;
+  endCompiler();
+  return !parser.hadError;
 }
