@@ -18,16 +18,15 @@ typedef struct {
   int count;
   int capacity;
   uint8_t* code;
-
-  // constant pool is associated per chunk
-  ValueArray constants;
+  int* lines; // associate each byte of code to a line from our src code.
+  ValueArray constants; // constant pool is associated per chunk
 } Chunk;
 
 // The Chunk API is what we will be working with 90% of the time, so it is
 // worth abstracting the value array inside of it.
 void initChunk(Chunk* chunk);
 void freeChunk(Chunk* chunk);
-void writeChunk(Chunk* chunk, uint8_t byte);
+void writeChunk(Chunk* chunk, uint8_t byte, int line);
 int addConstant(Chunk* chunk, Value value);
 
 #endif
