@@ -3,6 +3,7 @@
 // This is where the bytecode gets executed.
 
 #include "chunk.h"
+#include "table.h"
 
 #define STACK_MAX 256
 
@@ -15,6 +16,7 @@ typedef struct {
   Value stack[STACK_MAX];
   Value* stackTop;
 
+  Table strings; // string interning
   Obj* objtects;
 } VM;
 
