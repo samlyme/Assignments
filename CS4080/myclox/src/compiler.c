@@ -103,6 +103,16 @@ static void consume(TokenType type, const char* message) {
   errorAtCurrent(message);
 }
 
+// Again, I feel like the parser should have used "current" and "next".
+static bool check(TokenType type) {
+  return parser.current.type == type;
+}
+
+static bool match(TokenType type) {
+  if (!check(type)) return false;
+  advance();
+  return true;
+}
 // Ouput
 static void emitByte(uint8_t byte) {
   writeChunk(currentChunk(), byte, parser.previous.line);
@@ -143,6 +153,26 @@ static void endCompiler() {
 // MUTAL RECURSION NEEDED, PROTOTYPES HERE.
 static void parsePrecedence(Precedence precedence);
 static ParseRule* getRule(TokenType type);
+static void expression();
+
+static void printStatement();
+
+static void statement() {
+  // this subset only uses print statement.
+  if (match(TOKEN_PRINT)) {
+    printStatement();
+  }
+}
+
+static void printStatement() {
+  expression();
+  consume(TOKEN_SEMICOLON, "Expect ';' after value.");
+  emitByte(OP_PRINT);
+}
+
+static void declaration() {
+  statement();
+}
 
 // Pratt parser incoming!
 static void expression() {
@@ -281,8 +311,10 @@ bool compile(const char* source, Chunk* chunk) {
   parser.panicMode = false;
 
   advance();
-  expression();
-  consume(TOKEN_EOF, "Expect end of express.");
+
+  while (!match(TOKEN_EOF)) {
+    declaration();
+  }
 
   endCompiler();
   return !parser.hadError;
