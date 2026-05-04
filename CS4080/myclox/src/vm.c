@@ -178,6 +178,9 @@ InterpretResult interpret(const char* source) {
 
   vm.chunk = &chunk;
   vm.ip = vm.chunk->code;
+#ifdef DEBUG_TRACE_EXECUTION
+  printf("\n== VM Execution ==");
+#endif
   InterpretResult result = run();
 
   freeChunk(&chunk);
