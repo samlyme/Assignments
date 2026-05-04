@@ -156,11 +156,15 @@ static ParseRule* getRule(TokenType type);
 static void expression();
 
 static void printStatement();
+static void expressionStatement();
 
 static void statement() {
   // this subset only uses print statement.
   if (match(TOKEN_PRINT)) {
     printStatement();
+  } else {
+    // for now, must be an expression statement.
+    expressionStatement();
   }
 }
 
@@ -168,6 +172,12 @@ static void printStatement() {
   expression();
   consume(TOKEN_SEMICOLON, "Expect ';' after value.");
   emitByte(OP_PRINT);
+}
+
+static void expressionStatement() {
+  expression();
+  consume(TOKEN_SEMICOLON, "Expect ';' after expression.");
+  emitByte(OP_POP);
 }
 
 static void declaration() {
