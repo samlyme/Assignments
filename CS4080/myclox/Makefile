@@ -3,6 +3,7 @@ CC = gcc
 
 # Define compiler flags
 CFLAGS = -Wall -Wextra -Werror=implicit-function-declaration
+DEPFLAGS = -MMD -MP
 
 # Define directories
 SRC_DIR = src
@@ -16,6 +17,7 @@ SRCS = $(wildcard $(SRC_DIR)/*.c)
 
 # Generate object file paths inside the build directory using patsubst
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
+DEPS = $(OBJS:.o=.d)
 
 # Default rule
 all: $(TARGET)
@@ -27,7 +29,7 @@ $(TARGET): $(OBJS)
 # Pattern rule to compile .c files into .o files
 # Looks for .c files in SRC_DIR and outputs .o files to BUILD_DIR
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | $(BUILD_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) $(DEPFLAGS) -c $< -o $@
 
 # Rule to create the build directory
 $(BUILD_DIR):
@@ -43,3 +45,5 @@ clean:
 	rm -rf $(BUILD_DIR)
 
 .PHONY: all clean repl run
+
+-include $(DEPS)
