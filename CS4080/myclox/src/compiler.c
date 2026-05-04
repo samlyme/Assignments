@@ -163,6 +163,10 @@ static void emitConstant(Value value) {
   emitBytes(OP_CONSTANT, makeConstant(value));
 }
 
+static void defineVariable(uint8_t global) {
+  emitBytes(OP_DEFINE_GLOBAL, global);
+}
+
 static void endCompiler() {
   emitReturn();
 #ifdef DEBUG_PRINT_CODE
@@ -179,6 +183,8 @@ static void expression();
 
 static void printStatement();
 static void expressionStatement();
+static void varDeclaration();
+static uint8_t parseVariable(const char* errorMessage);
 
 static void statement() {
   // this subset only uses print statement.
@@ -203,10 +209,27 @@ static void expressionStatement() {
 }
 
 static void declaration() {
-  statement();
+  if (match(TOKEN_VAR)) {
+    varDeclaration();
+  } else {
+    statement();
+  }
 
   // if there was a compile error in the statement, we synchronize and move on.
   if (parser.panicMode) synchronize();
+}
+
+static void varDeclaration() {
+  uint8_t global = parseVariable("Expect variable name.");
+
+  if (match(TOKEN_EQUAL)) {
+    expression();
+  } else {
+    emitByte(OP_NIL);
+  }
+  consume(TOKEN_SEMICOLON, "Expect ';' after variable declaration.");
+
+  defineVariable(global);
 }
 
 // Pratt parser incoming!
@@ -332,6 +355,14 @@ static void parsePrecedence(Precedence precedence) {
     ParseFn infixRule = getRule(parser.previous.type)->infix;
     infixRule();
   }
+}
+
+static uint8_t identifierConstant(Token* name) {
+  return makeConstant(OBJ_VAL(copyString(name->start, name->length)));
+}
+static uint8_t parseVariable(const char* errorMessage) {
+  consume(TOKEN_IDENTIFIER, errorMessage);
+  return identifierConstant(&parser.previous);
 }
 
 static ParseRule* getRule(TokenType type) {

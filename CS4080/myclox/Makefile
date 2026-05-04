@@ -33,10 +33,13 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | $(BUILD_DIR)
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
 
-run: $(TARGET)
+repl: $(TARGET)
 	./$(TARGET)
+
+run: $(TARGET)
+	./$(TARGET) test.lox
 
 clean:
 	rm -rf $(BUILD_DIR)
 
-.PHONY: all clean run
+.PHONY: all clean repl run

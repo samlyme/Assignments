@@ -17,6 +17,7 @@ typedef struct {
   Value* stackTop;
 
   Table strings; // string interning
+  Table globals;
   Obj* objtects;
 } VM;
 
