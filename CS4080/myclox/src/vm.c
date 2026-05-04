@@ -34,10 +34,11 @@ static void runtimeError(const char* format, ...) {
 
 void initVM() {
   resetStack();
+  vm.objtects = NULL;
 }
 
 void freeVM() {
-  return;
+  freeObjects();
 }
 
 static void concatenate() {

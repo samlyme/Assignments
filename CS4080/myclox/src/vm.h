@@ -14,6 +14,8 @@ typedef struct {
   // produced during runtime are stored on the VM's stack.
   Value stack[STACK_MAX];
   Value* stackTop;
+
+  Obj* objtects;
 } VM;
 
 typedef enum {
@@ -21,6 +23,8 @@ typedef enum {
   INTERPRET_COMPILE_ERROR,
   INTERPRET_RUNTIME_ERROR
 } InterpretResult;
+
+extern VM vm; // evil evil evil evil evil
 
 // We only have one global VM instance.
 void initVM();

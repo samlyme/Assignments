@@ -4,7 +4,7 @@
 #include "memory.h"
 #include "object.h"
 #include "value.h"
-// #include "vm.h"
+#include "vm.h"
 
 #define ALLOCATE_OBJ(type, objectType)                                         \
   (type*)allocateObject(sizeof(type), objectType)
@@ -12,6 +12,9 @@
 static Obj* allocateObject(size_t size, ObjType type) {
   Obj* object = (Obj*)reallocate(NULL, 0, size);
   object->type = type;
+
+  object->next = vm.objtects;
+  vm.objtects = object;
   return object;
 }
 
