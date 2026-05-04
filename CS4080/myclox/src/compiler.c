@@ -103,6 +103,28 @@ static void consume(TokenType type, const char* message) {
   errorAtCurrent(message);
 }
 
+static void synchronize() {
+  parser.panicMode = false;
+
+  while (parser.current.type != TOKEN_EOF) {
+    if (parser.previous.type == TOKEN_SEMICOLON) return;
+    switch (parser.current.type) {
+      case TOKEN_CLASS:
+      case TOKEN_FUN:
+      case TOKEN_VAR:
+      case TOKEN_FOR:
+      case TOKEN_IF:
+      case TOKEN_WHILE:
+      case TOKEN_PRINT:
+      case TOKEN_RETURN: return;
+
+      default:; // Do nothing.
+    }
+
+    advance();
+  }
+}
+
 // Again, I feel like the parser should have used "current" and "next".
 static bool check(TokenType type) {
   return parser.current.type == type;
@@ -182,6 +204,9 @@ static void expressionStatement() {
 
 static void declaration() {
   statement();
+
+  // if there was a compile error in the statement, we synchronize and move on.
+  if (parser.panicMode) synchronize();
 }
 
 // Pratt parser incoming!
