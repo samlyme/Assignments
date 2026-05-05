@@ -1,4 +1,4 @@
-if (false) {
+if (false or true) {
   print "if clause";
 } else {
   print "else clause";
