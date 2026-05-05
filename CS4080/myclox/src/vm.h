@@ -3,13 +3,21 @@
 // This is where the bytecode gets executed.
 
 #include "chunk.h"
+#include "object.h"
 #include "table.h"
 
-#define STACK_MAX 256
+#define FRAMES_MAX 64
+#define STACK_MAX (FRAMES_MAX * UINT8_COUNT)
 
 typedef struct {
-  Chunk* chunk;
-  uint8_t* ip; // instruction pointer
+  ObjFunction* function;
+  uint8_t* ip;
+  Value* slots;
+} CallFrame;
+
+typedef struct {
+  CallFrame frames[FRAMES_MAX];
+  int frameCount;
 
   // Now, the chunk has constant data it got from compile time, but the values
   // produced during runtime are stored on the VM's stack.
