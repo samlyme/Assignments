@@ -214,6 +214,7 @@ static void patchJump(int offset) {
 }
 
 static void emitReturn() {
+  emitByte(OP_NIL);
   emitByte(OP_RETURN);
 }
 
@@ -330,8 +331,10 @@ static ParseRule* getRule(TokenType type);
 static void block();
 static void declaration();
 static void function(FunctionType type);
+static void call(bool canAssign);
 static void expression();
 static void printStatement();
+static void returnStatement();
 static void expressionStatement();
 static void ifStatement();
 static void whileStatement();
@@ -346,6 +349,8 @@ static void statement() {
     printStatement();
   } else if (match(TOKEN_FOR)) {
     forStatement();
+  } else if (match(TOKEN_RETURN)) {
+    returnStatement();
   } else if (match(TOKEN_WHILE)) {
     whileStatement();
   } else if (match(TOKEN_IF)) {
@@ -372,6 +377,20 @@ static void printStatement() {
   expression();
   consume(TOKEN_SEMICOLON, "Expect ';' after value.");
   emitByte(OP_PRINT);
+}
+
+static void returnStatement() {
+  if (current->type == TYPE_SCRIPT) {
+    error("Can't return from top-level code.");
+  }
+
+  if (match(TOKEN_SEMICOLON)) {
+    emitReturn();
+  } else {
+    expression();
+    consume(TOKEN_SEMICOLON, "Expect ';' after return value.");
+    emitByte(OP_RETURN);
+  }
 }
 
 static void expressionStatement() {
@@ -559,6 +578,26 @@ static void binary(bool canAssign) {
   }
 }
 
+static uint8_t argumentList() {
+  uint8_t argCount = 0;
+  if (!check(TOKEN_RIGHT_PAREN)) {
+    do {
+      expression();
+      if (argCount == 255) {
+        error("Can't have more than 255 arguments.");
+      }
+      argCount++;
+    } while (match(TOKEN_COMMA));
+  }
+  consume(TOKEN_RIGHT_PAREN, "Expect ')' after arguments.");
+  return argCount;
+}
+
+static void call(bool canAssign) {
+  uint8_t argCount = argumentList();
+  emitBytes(OP_CALL, argCount);
+}
+
 static void and_(bool canAssign) {
   int endJump = emitJump(OP_JUMP_IF_FALSE);
 
@@ -625,7 +664,7 @@ static void variable(bool canAssign) {
 
 // clang-format off
 ParseRule rules[] = {
-  [TOKEN_LEFT_PAREN]    = {grouping, NULL,   PREC_NONE},
+  [TOKEN_LEFT_PAREN]    = {grouping, call,   PREC_NONE},
   [TOKEN_RIGHT_PAREN]   = {NULL,     NULL,   PREC_NONE},
   [TOKEN_LEFT_BRACE]    = {NULL,     NULL,   PREC_NONE},
   [TOKEN_RIGHT_BRACE]   = {NULL,     NULL,   PREC_NONE},

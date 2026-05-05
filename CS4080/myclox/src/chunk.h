@@ -29,6 +29,7 @@ typedef enum {
   OP_JUMP,
   OP_JUMP_IF_FALSE,
   OP_LOOP,
+  OP_CALL,
   OP_RETURN,
 } OpCode;
 // We need to know when to "produce" values from the constant pool.
