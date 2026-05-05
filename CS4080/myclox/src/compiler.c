@@ -46,8 +46,26 @@ typedef struct {
   Precedence precedence;
 } ParseRule;
 
+typedef struct {
+  Token name;
+  int depth;
+} Local;
+
+typedef struct {
+  Local locals[UINT8_COUNT];
+  int localCount;
+  int scopeDepth;
+} Compiler;
+
 Parser parser;
+Compiler* current = NULL;
 Chunk* compilingChunk;
+
+static void initCompiler(Compiler* compiler) {
+  compiler->localCount = 0;
+  compiler->scopeDepth = 0;
+  current = compiler;
+}
 
 static Chunk* currentChunk() {
   return compilingChunk;
@@ -180,11 +198,20 @@ static void endCompiler() {
 #endif
 }
 
+static void beginScope() {
+  current->scopeDepth++;
+}
+static void endScope() {
+  current->scopeDepth--;
+}
+
 // MUTAL RECURSION NEEDED, PROTOTYPES HERE.
 static void parsePrecedence(Precedence precedence);
 static ParseRule* getRule(TokenType type);
-static void expression();
 
+static void block();
+static void declaration();
+static void expression();
 static void printStatement();
 static void expressionStatement();
 static void varDeclaration();
@@ -194,10 +221,22 @@ static void statement() {
   // this subset only uses print statement.
   if (match(TOKEN_PRINT)) {
     printStatement();
+  } else if (match(TOKEN_LEFT_BRACE)) {
+    beginScope();
+    block();
+    endScope();
   } else {
     // for now, must be an expression statement.
     expressionStatement();
   }
+}
+
+static void block() {
+  while (!check(TOKEN_RIGHT_BRACE) && !check(TOKEN_EOF)) {
+    declaration();
+  }
+
+  consume(TOKEN_RIGHT_BRACE, "Expect '}' after block.");
 }
 
 static void printStatement() {
@@ -390,6 +429,9 @@ static ParseRule* getRule(TokenType type) {
 
 bool compile(const char* source, Chunk* chunk) {
   initScanner(source);
+  Compiler compiler;
+  initCompiler(&compiler);
+
   compilingChunk = chunk;
 
   parser.hadError = false;
