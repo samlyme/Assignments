@@ -26,6 +26,7 @@ typedef enum {
   OP_NOT,
   OP_NEGATE,
   OP_PRINT,
+  OP_JUMP_IF_FALSE,
   OP_RETURN,
 } OpCode;
 // We need to know when to "produce" values from the constant pool.
