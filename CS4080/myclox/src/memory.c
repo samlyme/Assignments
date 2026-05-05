@@ -1,37 +1,38 @@
 #include <stdlib.h>
 
 #include "memory.h"
-#include "object.h"
 #include "vm.h"
+#include "object.h" // IWYU pragma: keep
 
+// the GC code will go here later >:)
 void* reallocate(void* pointer, size_t oldSize, size_t newSize) {
-    if (newSize == 0) {
-        free(pointer);
-        return NULL;
-    }
+  if (newSize == 0) {
+    free(pointer);
+    return NULL;
+  }
 
-    // if pointer == NULL, realloc behaves like malloc.
-    void* result = realloc(pointer, newSize);
-    if (result == NULL) exit(1);
-    return result;
+  // realloc is actually very useful!
+  void* result = realloc(pointer, newSize);
+  if (result == NULL) exit(1); // dead
+  return result;
 }
 
-void freeObject(Obj* object) {
-    switch (object->type) {
-        case OBJ_STRING: {
-            ObjString* string = (ObjString*)object;
-            FREE_ARRAY(char, string->chars, string->length+1);
-            FREE(ObjString, object);
-            break;
-        }
+static void freeObject(Obj* object) {
+  switch (object->type) {
+    case OBJ_STRING: {
+      ObjString* string = (ObjString*)object;
+      FREE_ARRAY(char, string->chars, string->length + 1);
+      FREE(ObjString, object);
+      break;
     }
+  }
 }
 
 void freeObjects() {
-    Obj* object = vm.objects;
-    while (object != NULL) {
-        Obj* next = object->next;
-        freeObject(object);
-        object = next;
-    }
+  Obj* object = vm.objtects;
+  while (object != NULL) {
+    Obj* next = object->next;
+    freeObject(object);
+    object = next;
+  }
 }

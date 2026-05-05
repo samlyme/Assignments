@@ -1,0 +1,11 @@
+BasedOnStyle: LLVM
+PointerAlignment: Left
+
+SortIncludes: false
+IndentCaseLabels: true
+
+AllowShortIfStatementsOnASingleLine: true
+AllowShortLoopsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: None
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortEnumsOnASingleLine: true

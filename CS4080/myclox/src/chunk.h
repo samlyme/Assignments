@@ -3,50 +3,52 @@
 
 #include "common.h"
 #include "value.h"
+#include <stdint.h>
 
-// A "chunk" is a sequence of bytecode.
-
-// Each instruction has a one-byte OpCode.
-// This enum is just a representation for that.
 typedef enum {
-    OP_RETURN,
-    OP_CONSTANT,
-
-    // Special ops for creating these data
-    OP_NIL,
-    OP_TRUE,
-    OP_FALSE,
-    
-    // Arithmetic
-    OP_NEGATE,
-    OP_ADD,
-    OP_SUBTRACT,
-    OP_MULTIPLY,
-    OP_DIVIDE,
-
-    // Logic
-    OP_NOT,
-    OP_EQUAL,
-    OP_GREATER,
-    OP_LESS,
+  OP_CONSTANT,
+  OP_NIL,
+  OP_TRUE,
+  OP_FALSE,
+  OP_POP,
+  OP_GET_LOCAL,
+  OP_SET_LOCAL,
+  OP_GET_GLOBAL,
+  OP_SET_GLOBAL,
+  OP_DEFINE_GLOBAL,
+  OP_EQUAL,
+  OP_GREATER,
+  OP_LESS,
+  OP_ADD,
+  OP_SUBTRACT,
+  OP_MULTIPLY,
+  OP_DIVIDE,
+  OP_NOT,
+  OP_NEGATE,
+  OP_PRINT,
+  OP_JUMP,
+  OP_JUMP_IF_FALSE,
+  OP_LOOP,
+  OP_RETURN,
 } OpCode;
+// We need to know when to "produce" values from the constant pool.
+// Remember, the VM is a stack machine, so it needs to have all the data
+// it needs on the stack. There will be some more magic later.
 
-// Since we don’t know how big the array needs to be before we start compiling 
-// a chunk, it must be dynamic. (Just trust it.j)
-// The reason `code` isn't of type OpCode* is because it can also include data. 
 typedef struct {
-    int count;
-    int capacity;
-    uint8_t* code; // dynamic array (cache friendly) of opcodes.
-    int* lines; // maps back to the line in the source code.
-                // each byte in code has a corresponding int in lines. yikes!
-    ValueArray constants;
+  // some magic to make this feel like a dynamic array "object".
+  int count;
+  int capacity;
+  uint8_t* code;
+  int* lines; // associate each byte of code to a line from our src code.
+  ValueArray constants; // constant pool is associated per chunk
 } Chunk;
 
+// The Chunk API is what we will be working with 90% of the time, so it is
+// worth abstracting the value array inside of it.
 void initChunk(Chunk* chunk);
-void writeChunk(Chunk* chunk, uint8_t byte, int line);
 void freeChunk(Chunk* chunk);
-
+void writeChunk(Chunk* chunk, uint8_t byte, int line);
 int addConstant(Chunk* chunk, Value value);
 
 #endif
