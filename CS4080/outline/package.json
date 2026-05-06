@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "scripts": {
+    "slides:html": "marp ch30_slides.md -o ch30_slides.html",
+    "slides:pptx": "marp ch30_slides.md --pptx -o ch30_slides.pptx",
+    "slides:pptx:google": "pandoc ch30_slides_google.md --slide-level=1 -o ch30_slides_editable.pptx",
+    "slides:pptx:marp-editable": "marp ch30_slides.md --pptx --pptx-editable -o ch30_slides.marp-editable.pptx"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@marp-team/marp-cli": "^4.3.1"
+  }
+}
