@@ -3,7 +3,6 @@
 
 #include "common.h"
 #include "value.h"
-#include <stdint.h>
 
 typedef enum {
   OP_CONSTANT,
@@ -14,8 +13,13 @@ typedef enum {
   OP_GET_LOCAL,
   OP_SET_LOCAL,
   OP_GET_GLOBAL,
-  OP_SET_GLOBAL,
   OP_DEFINE_GLOBAL,
+  OP_SET_GLOBAL,
+  OP_GET_UPVALUE,
+  OP_SET_UPVALUE,
+  OP_GET_PROPERTY,
+  OP_SET_PROPERTY,
+  OP_GET_SUPER,
   OP_EQUAL,
   OP_GREATER,
   OP_LESS,
@@ -30,23 +34,24 @@ typedef enum {
   OP_JUMP_IF_FALSE,
   OP_LOOP,
   OP_CALL,
+  OP_INVOKE,
+  OP_SUPER_INVOKE,
+  OP_CLOSURE,
+  OP_CLOSE_UPVALUE,
   OP_RETURN,
+  OP_CLASS,
+  OP_INHERIT,
+  OP_METHOD
 } OpCode;
-// We need to know when to "produce" values from the constant pool.
-// Remember, the VM is a stack machine, so it needs to have all the data
-// it needs on the stack. There will be some more magic later.
 
 typedef struct {
-  // some magic to make this feel like a dynamic array "object".
   int count;
   int capacity;
   uint8_t* code;
-  int* lines; // associate each byte of code to a line from our src code.
-  ValueArray constants; // constant pool is associated per chunk
+  int* lines;
+  ValueArray constants;
 } Chunk;
 
-// The Chunk API is what we will be working with 90% of the time, so it is
-// worth abstracting the value array inside of it.
 void initChunk(Chunk* chunk);
 void freeChunk(Chunk* chunk);
 void writeChunk(Chunk* chunk, uint8_t byte, int line);

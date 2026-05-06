@@ -1,7 +1,6 @@
 #ifndef clox_scanner_h
 #define clox_scanner_h
 
-// clang-format off
 typedef enum {
   // Single-character tokens.
   TOKEN_LEFT_PAREN, TOKEN_RIGHT_PAREN,
@@ -23,13 +22,7 @@ typedef enum {
 
   TOKEN_ERROR, TOKEN_EOF
 } TokenType;
-// clang-format on
 
-// There is a subtle design choice here. Notice that the Token objects
-// point to the literal source code via `start`. This means that the
-// "evaluation" of the data represented by the source code is deferred.
-// A Token can have type `TOKEN_NUMBER`, and its lexeme is just the string
-// "123".
 typedef struct {
   TokenType type;
   const char* start;
