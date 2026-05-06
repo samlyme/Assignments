@@ -241,6 +241,8 @@ static InterpretResult run() {
 #define READ_CONSTANT()                                                        \
   (frame->closure->function->chunk.constants.values[READ_BYTE()])
 
+  // double a = AS_NUMBER(pop());
+  // push(valueType(a op b));
 #define READ_STRING() AS_STRING(READ_CONSTANT())
 #define BINARY_OP(valueType, op)                                               \
   do {                                                                         \
@@ -249,8 +251,7 @@ static InterpretResult run() {
       return INTERPRET_RUNTIME_ERROR;                                          \
     }                                                                          \
     double b = AS_NUMBER(pop());                                               \
-    double a = AS_NUMBER(pop());                                               \
-    push(valueType(a op b));                                                   \
+    vm.stackTop[-1] = valueType(AS_NUMBER(vm.stackTop[-1]) op b);              \
   } while (false)
 
   for (;;) {

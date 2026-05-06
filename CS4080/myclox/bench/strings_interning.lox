@@ -1,0 +1,37 @@
+fun run(limit) {
+  var i = 0;
+  var total = 0;
+  var left = "alpha";
+  var right = "beta";
+
+  while (i < limit) {
+    var pair = left + right;
+
+    if (pair == "alphabeta") {
+      total = total + 1;
+      left = "gamma";
+      right = "delta";
+    } else if (pair == "gammadelta") {
+      total = total + 2;
+      left = "alpha";
+      right = "delta";
+    } else if (pair == "alphadelta") {
+      total = total + 3;
+      left = "gamma";
+      right = "beta";
+    } else {
+      total = total + 4;
+      left = "alpha";
+      right = "beta";
+    }
+
+    i = i + 1;
+  }
+
+  return total;
+}
+
+var start = clock();
+var answer = run(100000000);
+print clock() - start;
+print answer;

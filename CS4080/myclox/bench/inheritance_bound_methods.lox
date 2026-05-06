@@ -1,0 +1,48 @@
+class Base {
+  init(seed) {
+    this.seed = seed;
+    this.count = 0;
+  }
+
+  bump(amount) {
+    this.count = this.count + amount;
+    return this.count + this.seed;
+  }
+
+  read() {
+    return this.count;
+  }
+}
+
+class Derived < Base {
+  init(seed) {
+    super.init(seed + 1);
+    this.extra = 2;
+  }
+
+  bump(amount) {
+    return super.bump(amount + this.extra);
+  }
+}
+
+fun run(limit) {
+  var i = 0;
+  var total = 0;
+
+  while (i < limit) {
+    var item = Derived(i);
+    total = total + item.bump(1) + item.read();
+
+    var method = item.bump;
+    total = total + method(2);
+
+    i = i + 1;
+  }
+
+  return total;
+}
+
+var start = clock();
+var answer = run(1200000);
+print clock() - start;
+print answer;

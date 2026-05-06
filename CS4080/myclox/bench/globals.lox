@@ -1,0 +1,40 @@
+var g0 = 1;
+var g1 = 2;
+var g2 = 3;
+var g3 = 4;
+var g4 = 5;
+var g5 = 6;
+var g6 = 7;
+var g7 = 8;
+
+fun run(limit) {
+  var i = 0;
+  var total = 0;
+
+  while (i < limit) {
+    g0 = g0 + g1;
+    g2 = g2 + g3;
+    g4 = g4 + g5;
+    g6 = g6 + g7;
+
+    if (g0 > 1000000) {
+      g0 = 1;
+      g2 = g2 - 500000;
+    }
+
+    if (g4 > 1000000) {
+      g4 = 5;
+      g6 = g6 - 500000;
+    }
+
+    total = total + g0 + g2 - g4 + g6;
+    i = i + 1;
+  }
+
+  return total + g0 + g2 + g4 + g6;
+}
+
+var start = clock();
+var answer = run(9000000);
+print clock() - start;
+print answer;
