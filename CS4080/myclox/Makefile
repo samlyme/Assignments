@@ -2,7 +2,11 @@
 CC = gcc
 
 # Define compiler flags
+GPERFTOOLS_PREFIX ?= $(shell brew --prefix gperftools 2>/dev/null)
+CPPFLAGS += $(if $(GPERFTOOLS_PREFIX),-I$(GPERFTOOLS_PREFIX)/include)
 CFLAGS = -Wall -Wextra -Werror=implicit-function-declaration
+LDFLAGS += $(if $(GPERFTOOLS_PREFIX),-L$(GPERFTOOLS_PREFIX)/lib)
+LDLIBS += -lprofiler
 DEPFLAGS = -MMD -MP
 
 # Define directories
@@ -23,13 +27,13 @@ DEPS = $(OBJS:.o=.d)
 all: $(TARGET)
 
 # Rule to link the final executable
-$(TARGET): $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $^
+$(TARGET): $(OBJS) Makefile
+	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LDLIBS)
 
 # Pattern rule to compile .c files into .o files
 # Looks for .c files in SRC_DIR and outputs .o files to BUILD_DIR
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | $(BUILD_DIR)
-	$(CC) $(CFLAGS) $(DEPFLAGS) -c $< -o $@
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c Makefile | $(BUILD_DIR)
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(DEPFLAGS) -c $< -o $@
 
 # Rule to create the build directory
 $(BUILD_DIR):
@@ -41,9 +45,13 @@ repl: $(TARGET)
 run: $(TARGET)
 	./$(TARGET) test.lox
 
+perf: $(TARGET)
+	mkdir -p prof
+	CPUPROFILE=prof/prof.out ./$(TARGET) test.lox
+
 clean:
 	rm -rf $(BUILD_DIR)
 
-.PHONY: all clean repl run
+.PHONY: all clean repl run perf
 
 -include $(DEPS)
