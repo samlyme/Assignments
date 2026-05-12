@@ -1,28 +1,29 @@
+
 fun run(limit) {
   var i = 0;
   var total = 0;
-  var left = "alpha";
-  var right = "beta";
+  var left = "a";
+  var right = "b";
 
   while (i < limit) {
     var pair = left + right;
 
-    if (pair == "alphabeta") {
+    if (pair == "ab") {
       total = total + 1;
-      left = "gamma";
-      right = "delta";
-    } else if (pair == "gammadelta") {
+      left = "g";
+      right = "d";
+    } else if (pair == "gd") {
       total = total + 2;
-      left = "alpha";
-      right = "delta";
-    } else if (pair == "alphadelta") {
+      left = "a";
+      right = "d";
+    } else if (pair == "ad") {
       total = total + 3;
-      left = "gamma";
-      right = "beta";
+      left = "g";
+      right = "b";
     } else {
       total = total + 4;
-      left = "alpha";
-      right = "beta";
+      left = "a";
+      right = "b";
     }
 
     i = i + 1;
